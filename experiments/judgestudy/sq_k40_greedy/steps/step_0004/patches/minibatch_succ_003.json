@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating quoted phrases in questions as exact verbatim anchors for title/snippet scanning rather than stripping them.",
+    "Using temporal markers and specific roles as primary disambiguation filters to rapidly narrow candidate pools.",
+    "Mapping multi-clause or compound descriptions to a single intersecting entity in the context."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently rely on three refined strategies: preserving quoted strings as exact search anchors, leveraging dates/roles as hard filters for disambiguation, and resolving compound descriptors by finding the entity that satisfies all clauses simultaneously. These patterns are partially noted but can be reinforced for greater robustness and faster execution.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+        "content": "- **Direct Keyword Matching & Scanning**: Preserve quoted phrases in the question as exact verbatim anchors for scanning document titles and snippets. Strip only non-essential punctuation, filler words (e.g., \"&\", \"who\"), and ellipses to extract core anchor phrases. Prioritize exact matches in titles/snippets before verifying with paragraph content."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity. Explicitly check the *requested entity type* in the question (e.g., \"this territory\", \"this sport\") against candidate matches to avoid answering with a related but incorrect entity (e.g., answering a university name when asked for a state/territory). When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+        "content": "\n- **Temporal & Role Anchoring**: Treat explicit dates, eras, and professional titles mentioned in the question as primary disambiguation filters. Use them to immediately narrow the candidate pool before evaluating secondary descriptors, especially when multiple similar entities appear in the context."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Resolving Implicit References**: Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.",
+        "content": "\n- **Multi-Clause Description Mapping**: When a question contains multiple descriptors or roles joined by \"&\" or commas (e.g., \"late California governor & U.S. Chief Justice\"), treat each clause as a required filter. Locate the single entity in the context that satisfies the intersection of all clauses, ignoring tangential figures who may match only one descriptor."
+      }
+    ]
+  },
+  "source_type": "success"
+}

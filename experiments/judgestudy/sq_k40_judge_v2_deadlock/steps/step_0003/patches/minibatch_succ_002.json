@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treat Jeopardy-style or truncated clues as direct definitions requiring exact entity extraction.",
+    "Map descriptive phrases ('this man', 'this phenomenon') directly to named entities in the context without paraphrasing.",
+    "Maintain strict conciseness and grammatical alignment (singular/plural, capitalization) with the gold standard."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories involve Jeopardy-style trivia or definition clues where the agent must extract a precise entity or term from the context. The agents succeed by treating fragmented prompts as direct queries, mapping descriptors to exact matches, and outputting strictly concise answers without expansion or conversational filler. Encoding these patterns will prevent common failures like over-explaining, paraphrasing, or selecting incorrect examples.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Principles & Strategy\n- **Clue-to-Context Mapping**: Treat descriptive, fragmented, or Jeopardy-style prompts as direct definitions. Map key descriptors (e.g., \"this man\", \"this phenomenon\") directly to named entities in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute)."
+      },
+      {
+        "op": "insert_after",
+        "target": "select the one that directly satisfies the specific constraint (date, location, or attribute).",
+        "content": "\n## Precision Extraction Rules\n- **Exact Match Priority**: For trivia, fill-in-the-blank, or definition questions, output the *exact* word or short phrase requested. Do not paraphrase or add descriptive clauses.\n- **Name Granularity & Form**: Default to the surname or shortest widely recognized identifier for people unless a full name is explicitly requested. Strictly match the grammatical number and form of the question.\n- **Abstract vs. Concrete Targeting**: When a question describes a function, category, property, or role, extract the abstract category or functional term. Do not answer with a concrete instance or specific product mentioned in the context unless explicitly asked."
+      },
+      {
+        "op": "insert_after",
+        "target": "Do not answer with a concrete instance or specific product mentioned in the context unless explicitly asked.",
+        "content": "\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format (typically a single entity or short phrase).\n- **Concise Output**: Limit answers to a few words or a short phrase. Omit conversational filler, restatements of the question, or introductory phrases.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

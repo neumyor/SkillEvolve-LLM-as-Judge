@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied failure-driven patches with highest priority, overriding conflicting success-driven edits on Principles 2 and 7, and the 'Revisiting searched locations' mistake. Preserved all non-conflicting success-driven patches (Principles 4, 6, 8 additions, and Common Mistakes additions). Maintained structural integrity by placing new protocol sections logically within the General Principles and Common Mistakes areas. All edits retain their original support counts and source types. [optimizer-ranked: selected 4/10 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+      "content": "4. **Manage appliance states**: Always open closed appliances (microwave, fridge, sink) before attempting to heat, cool, clean, or place items. Ensure doors are open for placement interactions.\n5. **Verify transformation state**: Before final placement, confirm the object's state matches the goal (e.g., 'hot', 'cold', 'clean'). If the state is incorrect, return to the appliance to re-process rather than placing a mismatched item.\n6. **Clear inventory for multi-object tasks**: When handling multiple items, place the first acquired object at the destination to free your inventory before searching for and acquiring the remaining items.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "3. **Grab immediately**: When a required object is visible and reachable, take it right away before moving elsewhere.",
+      "content": "\n## Search & Navigation Protocol\n\n1. **Track Visited Locations**: Explicitly state which containers/surfaces have been checked in your thinking. Do not move to a location unless it is unvisited or contains a known target object.\n2. **Remember Object Spots**: If you see a target object on a surface or inside a container, record its exact name and location. After completing transformations or deliveries, navigate directly back to that recorded location. Do not resume blind searching if the object's whereabouts are known.\n3. **Verify Before Shuttling**: Check your inventory and object states (e.g., temperature, cleanliness) with a single `examine` or `inventory` call. Only travel between appliances and destinations when the current sub-goal is fully satisfied. Avoid oscillating between locations without advancing the task.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "3. **Verify Before Shuttling**: Check your inventory and object states (e.g., temperature, cleanliness) with a single `examine` or `inventory` call. Only travel between appliances and destinations when the current sub-goal is fully satisfied. Avoid oscillating between locations without advancing the task.",
+      "content": "\n- **Placement & Receptacle States**: If the `put` action is unavailable, examine the receptacle to check if it is closed or requires a specific interaction. Do not attempt to place objects into closed or incompatible receptacles. Verify object states once, then proceed directly to the next step without unnecessary returns.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+      "content": "\n10. **Leverage admissible actions**: If an action like `take [object] from [location]` appears in the admissible list but the object isn't visible, navigate to that location immediately. Admissible actions often reveal hidden or nearby objects.\n11. **Check inventory when stuck**: If unsure about held items or progress, use the `inventory` command to verify carried objects and adjust your search strategy accordingly.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [6] has the highest systematic impact as it expands a single vague rule into three concrete, high-impact principles covering appliance interaction, state verification, and multi-object inventory management—critical failure points across nearly all ALFWorld tasks. Edit [2] provides a comprehensive Search & Navigation Protocol that directly addresses inefficient searching and oscillation, filling a major gap in the current skill. Edit [3] complements this by targeting a frequent placement failure (attempting to put items into closed/incompatible receptacles) with clear verification steps. Edit [8] offers robust fallback strategies (leveraging admissible actions and inventory checks) to recover from dead ends, ensuring the agent remains productive when standard paths fail. Together, these four edits cover the full task lifecycle (search, transform, place, fallback) with high actionability and minimal redundancy.",
+    "selected_indices": [
+      6,
+      2,
+      3,
+      8
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "batch_size": 5,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 5,
+      "description": "Agents over-specify answers by retaining full names, titles, or descriptive categories when the gold standard requires a concise core identifier or surname."
+    },
+    {
+      "failure_type": "rule_wrong",
+      "count": 5,
+      "description": "Existing guidance to 'preserve essential modifiers' causes agents to include non-essential descriptors and compound phrases instead of stripping to the exact trivia target."
+    }
+  ],
+  "patch": {
+    "reasoning": "All 5 failures share a systematic pattern: the agent retains non-essential titles, full given names, or descriptive categories (e.g., 'Jean-Honoré Fragonard' vs 'Fragonard', 'Giblet Gravy' vs 'Giblets') when the gold answer is a strict core identifier. The current skill's instruction to 'preserve essential modifiers' is being misapplied to trivia clues that demand exact core nouns or surnames. Replacing the final bullet in 'Answer Precision and Conciseness' with a targeted rule will enforce core-term priority and prevent over-specification.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier.",
+        "content": "- **Core Identifier & Surname Preference**: In Jeopardy-style and trivia contexts, the answer is almost always the exact core noun, surname, or single-word identifier filling the blank. Aggressively strip non-essential titles, full given names (default to surnames), and descriptive categories (e.g., output 'Fragonard' not 'Jean-Honoré Fragonard', 'Giblets' not 'Giblet Gravy', 'Massachusetts' not 'Massachusetts Senators'). Only retain multi-word compounds if they constitute a fixed proper name or are explicitly demanded by the clue."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

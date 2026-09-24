@@ -1,0 +1,31 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 7,
+      "description": "Agents consistently over-specify answers by appending categorical nouns, prepositional phrases, or full titles instead of returning the concise canonical form."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Agents select common aliases or foreign variants instead of the formal English canonical name when both are available."
+    },
+    {
+      "failure_type": "other",
+      "count": 1,
+      "description": "Severe clue misinterpretation/hallucination unrelated to the primary pattern."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates a persistent failure where agents append categorical nouns, full titles, or descriptive modifiers to answers that require a shorter canonical form. Additionally, agents frequently choose informal aliases or non-English variants over formal English names. These edits explicitly enforce strict canonical truncation and formal-name prioritization with concrete examples to override the agent's tendency to mirror context phrasing.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Canonical Phrasing & Granularity Alignment**: Prioritize exact canonical string matching over heuristic expansion or contraction. Trivia and Jeopardy answers often require specific articles, honorifics, titles, or full names (e.g., \"Sir Isaac Newton\", \"the Amazon\", \"a eucalyptus tree\") that must be preserved exactly. Do not strip titles, articles, or generic descriptors (like \"River\" or \"Speech\") unless explicitly instructed by the clue. Conversely, do not append explanatory modifiers or default to full names if the canonical answer is a surname or short phrase. Match the exact capitalization, plurality, and phrasing of the expected answer.",
+        "content": "- **Strict Canonical Truncation**: When extracting titles, organizations, or concepts, prefer the recognized short or canonical form over the full descriptive title. Do not append categorical nouns (e.g., \"Party\", \"Show\", \"Structure\", \"Book\") or prepositional phrases unless they are strictly part of the official short name (e.g., output \"Bull Moose\" not \"Bull Moose Party\", \"Studio 60\" not \"Studio 60 on the Sunset Strip\", \"Pyre\" not \"funeral pyre\").\n- **Formal vs. Alias Resolution**: When both a formal/full name and a common alias or foreign variant appear in the context, prioritize the formal English name for historical/trivia queries (e.g., \"Patricia Hearst\" over \"Patty Hearst\", \"Pitti Palace\" over \"Palazzo Pitti\") unless the clue explicitly signals the alias or foreign term."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

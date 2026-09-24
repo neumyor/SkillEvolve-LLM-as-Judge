@@ -1,0 +1,29 @@
+{
+  "batch_size": 5,
+  "success_patterns": [
+    "Treating Jeopardy-style clues as direct pointers to a target headword, ignoring the pointer's own content.",
+    "Prioritizing document titles/headings over passage bodies in noisy search-result contexts.",
+    "Strictly preserving exact capitalization and title casing of canonical answers."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle Jeopardy-style clues by recognizing them as pointers/definitions to a single lexical item, extracting the exact headword while ignoring the pointer's content. They also navigate noisy search-result contexts by prioritizing titles/headings for canonical terms, and strictly preserve exact capitalization/casing. These patterns are not fully emphasized in the current skill and should be encoded to prevent mirroring, over-extraction, or casing mismatches.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Declarative Clue Parsing & Implicit Query Resolution**:",
+        "content": "\n- **Pointer & Reference Clue Handling**: When a clue uses referential phrases like \"stands for\", \"means\", \"preceded\", \"another way of saying\", or quotes lyrics/titles, treat the prompt as a direct lookup request for the *target headword*. Ignore the pointer's descriptive content and extract only the precise term it points to."
+      },
+      {
+        "op": "replace",
+        "target": "- **Noise Filtering**: In search-result-style or repetitive contexts, rapidly scan titles and snippets for exact keyword matches, then verify in the passage body before extracting. Ignore duplicated passages.",
+        "content": "- **Noise Filtering & Title Priority**: In search-result-style or repetitive contexts, prioritize scanning `[TLE]` and `[DOC]` headings for canonical terms before verifying in passage bodies. Quickly discard fragmented or duplicate snippets that lack the exact target entity, focusing solely on the semantic gap."
+      },
+      {
+        "op": "replace",
+        "target": "Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler.",
+        "content": "Preserve exact capitalization and title casing from the context or standard usage. Omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler."
+      }
+    ]
+  },
+  "source_type": "success"
+}

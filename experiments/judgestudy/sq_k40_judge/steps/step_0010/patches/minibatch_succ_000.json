@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Attribute-Specific Extraction: Correctly isolating requested sub-components (e.g., first names, years, specific titles) rather than returning the full entity.",
+    "Colon-Separated Anchor Parsing: Effectively using post-colon hints/entities as high-signal contextual anchors to resolve pre-colon queries.",
+    "Demonstrative Resolution via Contextual Constraints: Accurately mapping 'this [category]' prompts to the exact matching entity by treating descriptive clauses as active filters."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate three key behaviors: (1) extracting only the specific attribute requested when prompted (e.g., 'First name of...'), (2) leveraging colon-separated hints as strong contextual anchors to verify or locate targets, and (3) rigorously filtering demonstrative prompts ('this holiday', 'this movie') against passage constraints. While demonstrative resolution is partially covered, the explicit handling of attribute-specific requests and non-standard colon-formatted clues are missing and should be encoded to prevent over-extraction and improve hint utilization.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.",
+        "content": "\n- **Attribute-Specific Extraction**: When a prompt explicitly requests a sub-component or attribute of the target entity (e.g., \"First name of...\", \"Year of...\", \"Full title of...\"), isolate and extract *only* that specific attribute. Do not return the full entity unless the prompt implicitly asks for it."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Demonstrative-Category Anchoring**: When clues use phrases like 'this film series', 'one of these bombs', or 'the Denver type of this', treat the demonstrative + category noun as a direct pointer to the target class. Isolate the specific instance within that class that satisfies the unique constraints provided.",
+        "content": "\n- **Colon-Separated Anchor Parsing**: Treat prompts formatted as `[Query/Clue]:[Hint/Entity]` as direct pointers. Use the post-colon entity as a high-confidence contextual anchor to verify constraints or locate the pre-colon query target within the passage. Strip the anchor from the final answer if it serves only as a reference point."
+      }
+    ]
+  },
+  "source_type": "success"
+}

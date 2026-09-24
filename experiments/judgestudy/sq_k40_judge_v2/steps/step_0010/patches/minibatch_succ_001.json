@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Snippet & Title Leverage for rapid extraction",
+    "Direct Cloze/Definition Mapping for Fragments",
+    "Single-Sentence Verification Trace"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently prioritize scanning document titles ([TLE]) and opening snippets to locate exact matches quickly. They treat Jeopardy-style clues as direct fill-in-the-blank requests, isolating the core subject entity while ignoring tangential attributes. Additionally, they provide concise, single-sentence verification traces rather than extended step-by-step breakdowns, improving speed and precision for trivia queries.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, prioritize scanning document titles (`[TLE]`) and opening snippets first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full paragraphs."
+      },
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and declarative statements as direct fill-in-the-blank requests. Isolate the core subject entity being described, strictly ignoring tangential attributes, genres, or secondary examples. Map the clue's descriptive phrasing directly to the exact terminology in the `[DOC]` passages."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a concise, single-sentence verification trace linking the question's core descriptor to the extracted entity. Skip extended analysis for straightforward trivia matches to maintain speed and conciseness."
+      }
+    ]
+  },
+  "source_type": "success"
+}

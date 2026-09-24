@@ -1,0 +1,18 @@
+{
+  "batch_size": 2,
+  "success_patterns": [
+    "Treating declarative and Jeopardy-style prompts as direct identification requests rather than open-ended questions",
+    "Extracting exact entities or terms from context without adding descriptive filler or conversational framing"
+  ],
+  "patch": {
+    "reasoning": "Both successful cases involve non-interrogative, declarative clues requiring precise entity identification. Encoding this pattern prevents agents from defaulting to full sentences, true/false responses, or overly verbose outputs, ensuring exact-match compliance and concise formatting.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Handling Declarative & Trivia Clues\n- Recognize Jeopardy-style, crossword, or declarative prompts as direct identification requests.\n- Map the description to the exact target entity or term found in the context.\n- Output ONLY the core entity or exact term. Do not add descriptors, categories, or conversational filler.\n- Maintain strict conciseness: place the final answer inside `<answer>...</answer>` tags with no surrounding explanation.\n\n## General QA Workflow\n1. **Parse Intent**: Identify whether the prompt asks for a fact, definition, or entity identification.\n2. **Locate Evidence**: Scan titles and opening sentences for direct matches to key clues.\n3. **Extract Precisely**: Pull the exact phrase or name. Apply requested filters (e.g., surname only, translation).\n4. **Finalize**: Verify the answer stands alone as a concise response before closing tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

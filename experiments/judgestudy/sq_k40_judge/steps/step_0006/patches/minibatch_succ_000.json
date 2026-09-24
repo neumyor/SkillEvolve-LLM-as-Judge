@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Foreign term and translation resolution",
+    "Comparative and superlative clue mapping",
+    "Event-location co-occurrence extraction",
+    "Strict constraint intersection for multi-attribute clues"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently resolved foreign terms, comparative/superlative phrasing, and event-location links by treating them as direct constraint filters rather than literal matches. Encoding these patterns will prevent agents from mirroring prompt phrasing or selecting overly broad/narrow entities when relational or translational cues are present.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Avoid converting declarative clues into Yes/No answers.",
+        "content": "- **Foreign Term & Translation Resolution**: When clues introduce non-English terms, nicknames, or etymological references, resolve them to their standard English equivalent or canonical form as defined in the context. Do not output the foreign term unless it is the established proper noun.\n- **Comparative & Superlative Mapping**: Treat phrases indicating rank, magnitude, or sequence (e.g., \"greater than\", \"most famous\", \"first\", \"last\") as direct filters. Cross-reference these relational cues with explicit historical, statistical, or narrative anchors in the context to isolate the target entity."
+      },
+      {
+        "op": "insert_after",
+        "target": "Direct Extraction & Context Scanning",
+        "content": "- **Event-Location & Landmark Co-occurrence**: For clues tying an event, tradition, or landmark to a geographic region, extract the primary city or place explicitly named alongside the landmark in the context. Ignore broader regions or secondary locations unless uniquely specified."
+      },
+      {
+        "op": "replace",
+        "target": "When multiple entities appear in the context, select the one that directly completes the clue or matches the expected brevity.",
+        "content": "When multiple entities appear in the context, intersect all explicit constraints (role, location, date, attribute) to isolate the single matching entity. Discard candidates that satisfy only a subset of conditions or belong to a related but distinct category."
+      }
+    ]
+  },
+  "source_type": "success"
+}

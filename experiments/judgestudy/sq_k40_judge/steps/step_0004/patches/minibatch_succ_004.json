@@ -1,0 +1,24 @@
+{
+  "batch_size": 4,
+  "success_patterns": [
+    "Delimiter-aware extraction in scraped/flashcard contexts (e.g., parsing `CLUE | ANSWER` or `TERM, ANSWER` structures)",
+    "Zero-to-minimal reasoning for direct retrieval tasks, avoiding conversational completion",
+    "Treating declarative fragments as strict fill-in-the-blank slots requiring exact entity isolation"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handle noisy, list-like, or flashcard-style contexts by scanning for exact clue-answer adjacency (often delimited by pipes or commas) and extracting the precise term. They also demonstrate that verbose reasoning is unnecessary for direct retrieval, favoring immediate extraction. These patterns should be explicitly encoded to prevent over-explanation or semantic drift.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Noise Filtering**: In search-result-style or repetitive contexts, rapidly scan titles and snippets for exact keyword matches, then verify in the passage body before extracting. Ignore duplicated passages.",
+        "content": "\n- **Delimiter-Aware Extraction**: When contexts resemble flashcards, search dumps, or pipe/comma-delimited lists (e.g., `CLUE | ANSWER` or `TERM, ANSWER`), treat structural delimiters as direct extraction boundaries. Extract the exact token immediately following the clue without adding contextual modifiers or completing sentences grammatically.\n"
+      },
+      {
+        "op": "replace",
+        "target": "- **Minimal Reasoning**: Skip verbose derivations for straightforward retrieval tasks. If step-by-step reasoning is performed, place it outside the answer tags and keep it brief.",
+        "content": "- **Minimal Reasoning**: For direct retrieval or fill-in-the-blank queries, skip step-by-step derivation entirely. If reasoning is included, limit it to a single line confirming the exact match location. Place all reasoning outside `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

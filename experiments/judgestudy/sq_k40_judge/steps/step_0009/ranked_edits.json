@@ -1,0 +1,41 @@
+{
+  "reasoning": "Prioritized failure-driven patches per guidelines, preserving their high-confidence directives on canonical name handling and anecdote/container resolution. Deduplicated overlapping concepts regarding descriptor rejection and canonical isolation, retaining the failure-driven version for stricter operational boundaries. Preserved all success-driven patches as they address distinct semantic gaps (meta-text stripping, zero-leakage enforcement, declarative-to-slot conversion, trailing demonstratives, acronym expansion, and quote exceptions) without conflicting with failure patches. All edits carry forward original support counts and source types. Edits are ordered to integrate seamlessly into the existing skill structure. [optimizer-ranked: selected 4/10 edits]",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "\n- **Meta-Text & Conversational Filler Stripping**: When clues contain director cues, stage directions, conversational asides, or self-referential commentary (e.g., '(Schumacher reads his clue.)', 'hey, it was basically...'), strip these non-factual elements entirely. Focus exclusively on the underlying factual constraints and the semantic gap they define.\n- **Direct Extraction Priority**: For declarative trivia prompts, treat the task as a direct lookup rather than a complex reasoning problem. Identify the missing variable and extract the exact verbatim entity from document titles or passage headers. Avoid over-deriving or rephrasing; the correct answer is typically a direct string match present in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer. Ensure zero-leakage by stripping any leading labels, reasoning fragments, trailing punctuation, or prompt artifacts before closing the tag.",
+      "content": "\n- **Zero-Leakage Enforcement**: Never include reasoning steps, conversational framing, or transitional phrases inside `<answer>` tags. The tag content must contain ONLY the isolated entity or phrase. Place all derivation logic strictly outside the tags.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "- **Canonical Name & Variant Handling**: When extracting names or terms with multiple textual variants, aggressively strip middle initials, middle names, and redundant category nouns (e.g., \"Mint\", \"Cards\", \"Kings\"). Prioritize the concise, widely recognized canonical form that aligns with standard trivia usage. Preserve necessary definite articles only if integral to the canonical name (e.g., \"the Adirondacks\"). For synonymous terms, select the variant that best matches the clue's specific descriptors rather than mirroring contextual strings.",
+      "support_count": 10,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Pun & Riddle Decoding**: Treat playful language, puns, metaphors, or wordplay in clues as semantic descriptors. Map them to their literal factual referents using context verification before extraction. Strip all figurative phrasing from the final answer.",
+      "content": "\n- **Acronym & Abbreviation Expansion**: When clues use acronyms, initialisms, or shortened forms (e.g., PIP, uke, NASA), expand them to their full canonical terms if the context supports it. Prioritize the unabbreviated form unless the gold answer explicitly requires the short version.\n- **Playful & Cultural Aside Filtering**: Treat pop-culture references, jokes, historical anecdotes, or non-factual asides in clues as secondary constraints or distractors. Prioritize hard factual anchors (dates, locations, proper nouns, explicit categories) to isolate the target entity, and strip away any humorous or conversational framing from the final answer.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [3] addresses a pervasive failure mode where models over-complicate simple prompts or get derailed by stage directions and conversational filler, introducing a clear 'direct extraction' principle that drastically reduces unnecessary reasoning overhead. Edit [4] targets a critical structural failure (reasoning leaking into answer tags) with a strict, actionable enforcement rule that ensures formatting compliance. Edit [0] (highest support score) fills a significant gap in name/variant handling, providing concrete guidance on stripping redundancies to match canonical trivia standards without duplicating existing truncation rules. Edit [9] systematically handles acronyms and cultural asides, which are frequent noise sources in trivia datasets, complementing existing playful-language rules. Together, they maximize systematic impact, fill distinct gaps across retrieval, formatting, and extraction phases, and offer highly actionable guidance.",
+    "selected_indices": [
+      3,
+      4,
+      0,
+      9
+    ]
+  }
+}

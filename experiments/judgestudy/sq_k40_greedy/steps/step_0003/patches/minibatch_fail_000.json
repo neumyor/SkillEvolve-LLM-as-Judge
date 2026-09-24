@@ -1,0 +1,46 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 4,
+      "description": "Over-stripping necessary modifiers, plurals, and original titles results in exact match failures."
+    },
+    {
+      "failure_type": "rule_wrong",
+      "count": 1,
+      "description": "Agents select the comparative reference entity instead of resolving to the target role/category."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Lack of explicit instruction to verify the requested entity type prevents filtering out related but incorrect candidates."
+    },
+    {
+      "failure_type": "other",
+      "count": 1,
+      "description": "Severely truncated/keyword-only questions lead to guessing prominent named entities instead of temporal/contextual answers."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals systematic over-stripping of canonical modifiers and plurals, confusion with comparative references in clues, and failure to validate the requested entity type against candidates. These edits tighten precision rules to preserve essential identifiers, add a directive to ignore clue analogies, and strengthen constraint verification to enforce entity-type matching.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.",
+        "content": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.\n- Retain necessary descriptors, species names, or qualifiers if they are part of the standard name or required to distinguish the entity (e.g., output \"Brown pelican\", \"American football\", or \"Il Postino\" rather than stripping to \"Pelican\", \"Football\", or \"The Postman\").\n- Match plurality exactly as presented in the context or gold standard (e.g., \"Pineapples\" not \"Pineapple\").\n- When multiple titles exist (e.g., original vs. translated), prefer the original or canonical title unless the question explicitly asks for the localized version.\n- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier."
+      },
+      {
+        "op": "insert_after",
+        "target": "When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+        "content": "\n- **Handling Clue Comparisons & Analogies**: Questions frequently use a known entity as a comparative anchor (e.g., \"like [Name]\", \"similar to [Entity]\"). Never output the comparison term itself. Instead, extract the target category, role, or relationship being described, and resolve the pointer to the actual subject of the query."
+      },
+      {
+        "op": "replace",
+        "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity. When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+        "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity. Explicitly check the *requested entity type* in the question (e.g., \"this territory\", \"this sport\") against candidate matches to avoid answering with a related but incorrect entity (e.g., answering a university name when asked for a state/territory). When keywords overlap across candidates, prioritize the intersection of all stated constraints."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

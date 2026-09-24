@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating declarative statements and trivia clues as identification prompts rather than true/false or open-ended questions.",
+    "Mapping descriptive or colloquial clues directly to canonical entities or terms found in the context.",
+    "Prioritizing exact phrase/entity extraction over paraphrasing or synthesis.",
+    "Using cross-document consensus to verify trivia answers while maintaining strict conciseness in the final output."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories demonstrate a consistent pattern of recognizing trivia/Jeopardy-style declarative clues, mapping them to exact entities in the context, and outputting highly concise answers. The current skill is empty, so these foundational behaviors must be encoded to prevent future failures on similar formats.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Core Principles\n- **Exact Entity Extraction**: Prioritize pulling precise names, terms, or phrases directly from the context. Avoid paraphrasing or adding explanatory clauses.\n- **Contextual Grounding**: Treat the provided passages as the sole source of truth. Cross-reference multiple documents only to confirm consensus, not to synthesize new facts.\n- **Concise Output**: Answers should be the target entity or short phrase only. Omit greetings, reasoning, or filler inside `<answer>` tags.\n\n## Execution Workflow\n1. **Parse Input Format**: Identify whether the input is a direct question, a trivia clue, or a declarative statement.\n2. **Scan & Match**: Locate keywords or semantic equivalents in the context. For trivia/clues, map descriptive phrases to their canonical answers.\n3. **Verify & Extract**: Confirm the match against the context. If multiple sources agree, select the most direct reference.\n4. **Format Output**: Provide brief step-by-step reasoning outside tags. Place the final, concise answer strictly inside `<answer>...</answer>` tags."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Core Principles",
+        "content": "\n- **Declarative Clue Recognition**: Automatically reframe statements like \"A 'hasty' dessert...\" or \"For 20 years Jan Miner...\" as \"What is/who is...?\" prompts to guide search strategy."
+      },
+      {
+        "op": "insert_after",
+        "target": "3. **Verify & Extract**:",
+        "content": "\n   - **Consensus Check**: When trivia clues appear across multiple documents, use the overlapping information to lock the exact target term before formatting."
+      }
+    ]
+  },
+  "source_type": "success"
+}

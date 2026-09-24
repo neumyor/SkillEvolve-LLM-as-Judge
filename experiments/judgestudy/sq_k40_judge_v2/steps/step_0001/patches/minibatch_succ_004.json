@@ -1,0 +1,17 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Resolving anaphoric/demonstrative references (e.g., 'this country', 'its') by mapping them to explicit entities in the context.",
+    "Prioritizing direct entity extraction over generative phrasing for concise answers."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectory demonstrates precise reference resolution ('this country' -> 'Australia') and strict adherence to concise, direct extraction. Encoding these strategies will improve performance on similar factual QA tasks.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n## Core Reasoning Strategies\n- **Resolve References Explicitly**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\", \"the region\"), first locate the exact entity they refer to in the context before formulating the answer.\n- **Direct Entity Extraction**: Prioritize pulling exact names, numbers, or short phrases directly from the text. Avoid adding conversational filler or rephrasing unless necessary for grammatical correctness.\n- **Verify Against Context**: Cross-check every extracted answer against the provided passages to ensure it is explicitly supported, not inferred from external knowledge."
+      }
+    ]
+  },
+  "source_type": "success"
+}

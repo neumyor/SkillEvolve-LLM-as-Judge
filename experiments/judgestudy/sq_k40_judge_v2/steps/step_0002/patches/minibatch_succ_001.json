@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct extraction for unambiguous trivia clues",
+    "Temporal and superlative qualifier awareness for disambiguation",
+    "Conditional reasoning brevity to prevent verbosity"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories show that agents perform best when they skip verbose step-by-step reasoning for straightforward trivia clues, reserving detailed justification only for ambiguous contexts. Additionally, several questions rely on historical markers or superlatives (e.g., 'largest African nation', 'Cyclone State') that require explicit temporal/qualifier awareness to avoid picking modern or alternative entities. Encoding these patterns will reduce verbosity failures and improve disambiguation accuracy.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a concise verification statement. Skip multi-step analysis if the clue maps directly to a single entity; reserve detailed justification only for ambiguous or overlapping contexts."
+      },
+      {
+        "op": "append",
+        "content": "- **Conditional Reasoning Brevity**: For straightforward trivia or direct clue matches, skip extended analysis and proceed directly to extraction. Over-explaining increases the risk of violating strict conciseness rules."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Core Analytical Strategies",
+        "content": "- **Temporal & Qualifier Awareness**: Scrutinize historical markers, superlatives (e.g., 'largest', 'first'), and dates in the question. These qualifiers often distinguish between past/present entities, renamed locations, or similar namesakes, guiding you to the exact intended match."
+      }
+    ]
+  },
+  "source_type": "success"
+}

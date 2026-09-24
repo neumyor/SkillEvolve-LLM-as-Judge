@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Managing inventory constraints by dropping held items before picking up new ones",
+    "Verifying agent state using the inventory action when progress stalls",
+    "Attempting direct appliance interactions (heat/cool) before complex open/close cycles"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals three recurring operational gaps not fully covered in the current skill: (1) agents frequently get blocked when holding an item and trying to pick up another (Traj 3), requiring explicit drop-before-take logic; (2) agents occasionally lose track of their carried state during long searches (Traj 6), making periodic inventory checks a valuable troubleshooting step; (3) heating/cooling tasks succeed fastest when agents attempt direct appliance actions first, avoiding unnecessary open/close loops (Traj 5 vs 4). These patterns enhance robustness in multi-object manipulation and appliance interaction.",
+    "edits": [
+      {
+        "op": "append",
+        "target": "8. **Only choose admissible actions**: Always pick an action from the admissible list. Do not invent actions.",
+        "content": "\n9. **Manage inventory constraints**: If you are already holding an object, you cannot pick up another. You must place the current item down (`move <item> to <location>`) before attempting to take the target object.\n10. **Verify state when stuck**: If you are unsure what you are carrying or why actions are unavailable, use the `inventory` action to check your current load before proceeding.\n11. **Direct appliance interaction**: For heating/cooling tasks, try the direct action (`heat <object> with <appliance>` or `cool <object> with <appliance>`) while standing at the appliance. If unavailable, place the object inside and follow the open/close cycle."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative-to-Slot Normalization",
+    "Passage-Body Verification Priority",
+    "Deictic/Pronoun Anchor Resolution",
+    "Zero-Leakage Canonical Output"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently normalize declarative, fragmented, or headline-style prompts into explicit fill-in-the-blank queries, resolve pronouns/deictics ('he', 'this', 'here') as primary anchors filtered by descriptive clauses, and prioritize passage-body verification over noisy titles/snippets. Reinforcing these strategies reduces mirroring errors and improves constraint intersection in dense contexts.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+        "content": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Direct Extraction & Context Scanning**:",
+        "content": "\n- **Verification Hierarchy & Noise Isolation**: In dense or repetitive contexts, strictly prioritize verifying constraints in `[PAR]` (passage body) blocks over `[TLE]` (titles) or snippets. Titles and snippets often contain duplicated metadata or truncated phrasing; always confirm the candidate's factual alignment in the full passage before extraction."
+      },
+      {
+        "op": "replace",
+        "target": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as primary query anchors. Crucially, treat the accompanying descriptive clauses as *active filtering constraints*, not noise. Use them to narrow down candidates and discard entities that fail the specific attributes mentioned.",
+        "content": "- **Implicit Reference Resolution**: Treat pronouns (\"he\", \"she\", \"it\") and deictics (\"this\", \"here\", \"seen here\") as primary query anchors. Crucially, treat the accompanying descriptive clauses as *active filtering constraints*, not noise. Resolve the implicit subject by mapping the anchor to its concrete referent using the descriptive clauses to filter candidates."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Zero-Leakage Canonical Output**: Ensure the final answer inside `<answer>` tags contains *only* the isolated entity. Strip all leading labels, reasoning fragments, trailing punctuation, and conversational filler. Never append explanatory clauses or default to full sentences."
+      }
+    ]
+  },
+  "source_type": "success"
+}

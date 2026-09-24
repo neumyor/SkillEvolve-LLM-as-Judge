@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Strict adherence to <answer>...</answer> tags for final output",
+    "Exact entity extraction without descriptive expansion",
+    "Keyword-driven scanning of dense document passages",
+    "Interpreting trivia/clue-based questions as direct entity requests"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories demonstrate a consistent pattern of extracting precise entities from dense contexts, interpreting trivia clues as direct entity requests, and strictly formatting the final answer within <answer> tags without expansion or filler. Encoding these patterns will standardize precision and format compliance.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Execution Strategy\n1. **Identify Key Identifiers**: Extract unique names, numbers, dates, or quoted phrases from the question.\n2. **Scan & Match**: Locate these identifiers in the `[DOC]`/`[PAR]` blocks. Prioritize passages where the clue appears verbatim or with minimal paraphrasing.\n3. **Extract & Verify**: Pull the precise answer span. Cross-check details across overlapping snippets to confirm the correct entity.\n\n## Answer Precision & Format Rules\n- **Exact Match Priority**: Return exactly the target word or phrase. Do not add descriptors, titles, or explanations (e.g., use 'C' not 'Vitamin C', 'Genet' not 'Jean Genet').\n- **Minimal Output**: Keep answers to the absolute minimum required. Single-word answers should never be expanded into phrases.\n- **Clue Interpretation**: Questions may be trivia clues or sentence fragments. Identify the specific missing entity or term that completes the clue. Do not answer with 'Yes/No' or conversational filler unless explicitly asked.\n\n## Output Formatting\n- Always enclose the final concise answer within `<answer>...</answer>` tags.\n- Do not repeat the question or include unnecessary explanation inside the answer tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

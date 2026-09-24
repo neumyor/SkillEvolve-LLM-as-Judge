@@ -1,0 +1,19 @@
+{
+  "batch_size": 4,
+  "success_patterns": [
+    "Exact-match extraction for trivia, Jeopardy-style, and fill-in-the-blank questions",
+    "Direct clue-to-entity mapping via keyword scanning and explicit link verification",
+    "Strict conciseness and zero conversational filler inside <answer> tags"
+  ],
+  "patch": {
+    "reasoning": "All four successful trajectories involve trivia or incomplete-sentence questions where the optimal strategy is treating the prompt as a direct clue, scanning for exact keyword overlaps, and returning only the precise entity. Encoding these behaviors prevents paraphrasing, reduces verbosity, and aligns with the exact-match evaluation metric used in the batch.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Answer Extraction & QA Principles\n- **Exact Match Priority**: For trivia, fill-in-the-blank, or Jeopardy-style questions, output *only* the exact word or short phrase requested. Do not paraphrase, add descriptive clauses, or expand abbreviations unless explicitly asked.\n- **Clue-to-Context Mapping**: Treat descriptive or fragmented questions as clues. Quickly scan document titles and snippets for overlapping keywords, then verify the passage explicitly connects the clue to the candidate answer.\n- **Strict Conciseness**: Keep answers strictly within `<answer>...</answer>` tags. Limit output to a few words or a short phrase. Omit full sentences, conversational filler, or restatements of the question.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer, ensuring the reasoning never leaks into the answer tag."
+      }
+    ]
+  },
+  "source_type": "success"
+}

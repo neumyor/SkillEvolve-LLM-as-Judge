@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Interpreting 'Nothing happens' during pickup as an inventory-full signal and immediately delivering the held item",
+    "Prioritizing the inspection of closed containers (drawers, cabinets, fridges) during active search phases",
+    "Strictly consolidating multi-object deliveries into a single target receptacle to prevent inventory fragmentation"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the batch reveals three critical operational patterns that improve efficiency and robustness. First, agents frequently encounter 'Nothing happens' when attempting to pick up a second item while holding one; encoding this as a definitive 'inventory full' signal prevents wasted retries. Second, successful trajectories consistently prioritize opening closed containers early in the search phase, reducing blind surface scanning. Third, multi-object tasks succeed when agents commit to a single destination receptacle for all items, avoiding fragmented placements that complicate verification.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "3. **Co-located Efficiency**: If the target object and the required appliance (e.g., desklamp, sink, fridge) are on the same surface, perform actions sequentially at that location without navigating away.",
+        "content": "- **Interpret Pickup Failure Signals**: If attempting to `take [object]` returns `'Nothing happens'`, your inventory is full. Do not retry or drop items randomly. Immediately navigate to the target receptacle and place the held object there to free your hands for subsequent items."
+      },
+      {
+        "op": "insert_after",
+        "target": "1. **Track Visited Locations**: Explicitly state which containers/surfaces have been checked in your thinking. Do not move to a location unless it is unvisited or contains a known target object.",
+        "content": "- **Prioritize Closed Container Inspection**: When searching, actively prioritize opening and inspecting closed containers (drawers, cabinets, fridges) that are visible or listed in admissible actions. They frequently hide target objects and significantly reduce blind surface scanning time."
+      },
+      {
+        "op": "replace",
+        "target": "- **Sequential Multi-Object Workflow**: For tasks requiring multiple items, always transport the first acquired item directly to the destination receptacle and place it before searching for the second. Never attempt to hold multiple objects or search for the second item while carrying the first, as this blocks inventory and wastes steps. After placing the first item, scan your immediate surroundings for the remainder before departing.",
+        "content": "- **Sequential Multi-Object Workflow**: For tasks requiring multiple items, always transport the first acquired item directly to the *exact same* destination receptacle and place it before searching for the second. Never attempt to hold multiple objects or split items across different containers. After placing the first item, clear your inventory and resume searching specifically for the remaining quantity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

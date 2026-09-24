@@ -1,0 +1,33 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Distinguishing mandatory appliance cycling from wasteful surface revisits",
+    "Inferring held objects from available admissible actions when visibility is ambiguous",
+    "Using periodic inventory checks as a grounding mechanism during long searches",
+    "Explicitly verifying temperature/state conditions before final placement"
+  ],
+  "patch": {
+    "reasoning": "Trajectories consistently show agents successfully navigating the distinction between exploring surfaces (avoid revisits) and operating appliances (mandatory cycles). Agents also leverage admissible action lists to deduce inventory state when objects aren't visible, use inventory calls routinely to prevent mental drift during long searches, and rigorously verify temperature states before final delivery to avoid premature termination with cold/hot items.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Once a container is opened and confirmed empty, or a surface is checked and found lacking the target, **do not revisit it** until all other unexplored locations have been exhausted. Prioritize moving to new, unvisited areas over returning to previously checked ones.",
+        "content": "Once a container is opened and confirmed empty, or a surface is checked and found lacking the target, **do not revisit it** unless you are cycling through an appliance's operational sequence. For appliances (microwave, fridge, sink), repeated visits are mandatory to complete state-change workflows (open -> interact -> close -> interact -> open -> retrieve). Prioritize moving to new, unvisited areas over returning to previously checked surfaces."
+      },
+      {
+        "op": "append",
+        "content": "11. **Action List Inference**: When an object is not visible in your observation but a `move <object> to <location>` action appears in the admissible list, you are almost certainly holding that object. Use available actions to infer your inventory state rather than guessing or calling `inventory` unnecessarily."
+      },
+      {
+        "op": "append",
+        "content": "12. **Routine Grounding Checks**: During extended searches or complex multi-step tasks, periodically call `inventory` (e.g., every 3-4 steps or after returning from a search) to anchor your mental state. This prevents reasoning drift, confirms held objects, and helps detect if you've accidentally dropped or misplaced an item."
+      },
+      {
+        "op": "replace",
+        "target": "- **Verify post-appliance state**: Immediately after using a transformation appliance (microwave, fridge, sink), execute `inventory` to confirm you are holding the transformed object before navigating to the final destination. Appliance interactions may auto-transfer items or require explicit retrieval.",
+        "content": "- **Temperature & State Verification**: After heating/cooling, do not assume the state change succeeded without verification. If the task requires a specific state (e.g., 'hot potato'), explicitly check your inventory or observe the object upon retrieval. If the state is missing, repeat the appliance cycle. Never place an object at its final destination without confirming it meets the required state condition."
+      }
+    ]
+  },
+  "source_type": "success"
+}

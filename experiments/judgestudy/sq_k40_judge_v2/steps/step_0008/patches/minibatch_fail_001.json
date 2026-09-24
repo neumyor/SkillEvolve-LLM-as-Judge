@@ -1,0 +1,20 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Agent over-specifies nicknames by appending generic suffixes (e.g., 'Party') instead of returning the core distinctive term requested."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent correctly located the nickname in the context but appended the generic suffix 'Party', causing an exact match failure against the gold answer 'Bull Moose'. The current skill lacks explicit guidance for stripping generic organizational suffixes when extracting nicknames or short identifiers, leading to consistent over-specification in this pattern.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n- **Nickname & Suffix Stripping**: When questions ask for a nickname, moniker, or short identifier, extract only the distinctive core term. Strip generic suffixes (e.g., 'Party', 'Club', 'Group', 'Association') unless explicitly required by the question or integral to the unique identity."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

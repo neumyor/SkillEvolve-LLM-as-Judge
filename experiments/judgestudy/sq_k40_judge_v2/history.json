@@ -1,0 +1,1078 @@
+[
+  {
+    "step": 1,
+    "epoch": 1,
+    "step_in_epoch": 0,
+    "timing": {
+      "rollout_s": 20.7,
+      "reflect_s": 34.1,
+      "aggregate_s": 55.5,
+      "select_s": 0.0,
+      "update_s": 0.0,
+      "evaluate_s": 32.3
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 57260,
+        "completion_tokens": 18303
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 6727,
+        "completion_tokens": 3427
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 3133,
+        "completion_tokens": 6679
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 47960,
+        "completion_tokens": 27770
+      }
+    },
+    "rollout_hard": 0.825,
+    "rollout_soft": 0.860185,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1043,
+        "n_envs": 40,
+        "hard": 0.825,
+        "soft": 0.8601851851851852,
+        "n_failure_patches": 1,
+        "n_success_patches": 5
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 1,
+    "n_success_patches": 5,
+    "n_edits_merged": 1,
+    "n_edits_ranked": 1,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      7
+    ],
+    "candidate_hash": "9100a6cbbab52fc0",
+    "candidate_skill_len": 1891,
+    "edit_apply_summary": {
+      "total": 1,
+      "applied": 1,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "medium",
+    "judge_reason": "The five visible failures consistently produce verbose descriptions or misidentify target entities, directly addressed by the candidate's new rules on strict conciseness, exact term preference, and reference resolution. With growth unconstrained and no conflicting history, the changes are well-targeted and likely to raise accuracy.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 810,
+    "judge_usage": {
+      "prompt_tokens": 6727,
+      "completion_tokens": 3427,
+      "total_tokens": 10154
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Verbose extractions and failure to isolate target entities in fragmentary/trivia clues",
+    "judge_evidence_count": 5,
+    "judge_counter_evidence_count": 15,
+    "judge_expected_window_delta": "improve",
+    "judge_falsifier": "A subsequent window shows a measurable drop in exact match scores on tasks requiring multi-word answers or contextual qualifiers, indicating the strict conciseness rule is over-truncating valid responses.",
+    "judge_rule_override": "",
+    "judge_accepted": true,
+    "rollout_hard_after": 0.825,
+    "candidate_gate_score": 0.73,
+    "action": "accept_new_best",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 142.6
+  },
+  {
+    "step": 2,
+    "epoch": 1,
+    "step_in_epoch": 1,
+    "timing": {
+      "rollout_s": 13.4,
+      "reflect_s": 38.4,
+      "aggregate_s": 50.3,
+      "select_s": 0.0,
+      "update_s": 0.0,
+      "evaluate_s": 16.6
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 76318,
+        "completion_tokens": 21998
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7373,
+        "completion_tokens": 2827
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 3987,
+        "completion_tokens": 6500
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 63230,
+        "completion_tokens": 19754
+      }
+    },
+    "rollout_hard": 0.925,
+    "rollout_soft": 0.941667,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1044,
+        "n_envs": 40,
+        "hard": 0.925,
+        "soft": 0.9416666666666667,
+        "n_failure_patches": 1,
+        "n_success_patches": 5
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 1,
+    "n_success_patches": 5,
+    "n_edits_merged": 3,
+    "n_edits_ranked": 3,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      3,
+      8,
+      8
+    ],
+    "candidate_hash": "036ea3c6480a4d56",
+    "candidate_skill_len": 3502,
+    "edit_apply_summary": {
+      "total": 3,
+      "applied": 3,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "REJECT",
+    "judge_confidence": "medium",
+    "judge_reason": "The candidate introduces six new rules, but four lack direct ties to the visible failures, violating the strict growth allowance. A prior attempt targeting similar over-specification and verbosity issues yielded zero improvement, suggesting the proposed heuristics may dilute rather than refine the skill. Without clear evidence that the added complexity drives measurable gains, the risk of regression outweighs the benefit.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 864,
+    "judge_usage": {
+      "prompt_tokens": 7373,
+      "completion_tokens": 2827,
+      "total_tokens": 10200
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Over-specification and grammatical mismatch in trivia/cloze answers",
+    "judge_evidence_count": 2,
+    "judge_counter_evidence_count": 0,
+    "judge_expected_window_delta": "flat",
+    "judge_falsifier": "A subsequent window showing a statistically significant increase in accuracy specifically on category-vs-example and plural-vs-singular trivia questions, without new formatting regressions.",
+    "judge_rule_override": "",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.925,
+    "candidate_gate_score": 0.73,
+    "action": "reject",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 118.8
+  },
+  {
+    "step": 3,
+    "epoch": 1,
+    "step_in_epoch": 2,
+    "timing": {
+      "rollout_s": 15.2,
+      "reflect_s": 34.1,
+      "aggregate_s": 108.0,
+      "select_s": 34.8,
+      "update_s": 0.0,
+      "evaluate_s": 42.6
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 80638,
+        "completion_tokens": 21441
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7756,
+        "completion_tokens": 4813
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 5538,
+        "completion_tokens": 14136
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1529,
+        "completion_tokens": 3456
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 62830,
+        "completion_tokens": 24427
+      }
+    },
+    "rollout_hard": 0.775,
+    "rollout_soft": 0.847976,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1045,
+        "n_envs": 40,
+        "hard": 0.775,
+        "soft": 0.8479761904761904,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 8,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "4b4d8da72ee9229b",
+    "candidate_skill_len": 3345,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "medium",
+    "judge_reason": "The candidate addresses 7 independent failures involving pluralization, truncated compounds, synonym substitution, and over-specification. Each added rule maps directly to these observed defects, satisfying the growth constraint. While previous attempts targeted similar issues, the new evidence provides sufficient independent failures to justify the refined rules.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 810,
+    "judge_usage": {
+      "prompt_tokens": 7756,
+      "completion_tokens": 4813,
+      "total_tokens": 12569
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Entity form, modifier, and synonym mismatch in trivia/cloze extraction",
+    "judge_evidence_count": 7,
+    "judge_counter_evidence_count": 17,
+    "judge_expected_window_delta": "improve",
+    "judge_falsifier": "Future windows showing increased failures on tasks requiring exact pluralization, compound terms, or precise entity types, or a drop in overall accuracy below the current 0.775 threshold.",
+    "judge_rule_override": "v2: growth 1.77x exceeds max_growth_ratio=1.50x without an explicit per-rule tie to a failure",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.775,
+    "candidate_gate_score": 0.73,
+    "action": "reject",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 234.7
+  },
+  {
+    "step": 4,
+    "epoch": 1,
+    "step_in_epoch": 3,
+    "timing": {
+      "rollout_s": 14.7,
+      "reflect_s": 47.1,
+      "aggregate_s": 72.0,
+      "select_s": 30.8,
+      "update_s": 0.0,
+      "evaluate_s": 32.4
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 85052,
+        "completion_tokens": 25553
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7863,
+        "completion_tokens": 3573
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 4757,
+        "completion_tokens": 9644
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1314,
+        "completion_tokens": 3399
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 62483,
+        "completion_tokens": 23860
+      }
+    },
+    "rollout_hard": 0.875,
+    "rollout_soft": 0.930833,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1046,
+        "n_envs": 40,
+        "hard": 0.875,
+        "soft": 0.9308333333333334,
+        "n_failure_patches": 1,
+        "n_success_patches": 5
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 1,
+    "n_success_patches": 5,
+    "n_edits_merged": 6,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      5,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "8194cf765639a666",
+    "candidate_skill_len": 3036,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "REJECT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate exceeds the growth allowance by including three success-driven modifications that are not tied to any failing task, directly violating the replacement criteria. It also re-proposes mechanisms previously rejected in attempts 2 and 3 without materially new evidence, making further improvement highly unlikely.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 732,
+    "judge_usage": {
+      "prompt_tokens": 7863,
+      "completion_tokens": 3573,
+      "total_tokens": 11436
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Over-specification and tangential entity selection in trivia extraction",
+    "judge_evidence_count": 5,
+    "judge_counter_evidence_count": 0,
+    "judge_expected_window_delta": "flat",
+    "judge_falsifier": "Consistent accuracy gains on suffix-heavy or ambiguous multi-entity trivia questions in subsequent windows without new mismatches on standard factual queries.",
+    "judge_rule_override": "",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.875,
+    "candidate_gate_score": 0.73,
+    "action": "reject",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 197.1
+  },
+  {
+    "step": 5,
+    "epoch": 1,
+    "step_in_epoch": 4,
+    "timing": {
+      "rollout_s": 21.2,
+      "reflect_s": 46.2,
+      "aggregate_s": 103.4,
+      "select_s": 27.4,
+      "update_s": 0.0,
+      "evaluate_s": 26.4
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 90475,
+        "completion_tokens": 25570
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 8057,
+        "completion_tokens": 2991
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 6421,
+        "completion_tokens": 13361
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1364,
+        "completion_tokens": 2941
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 63512,
+        "completion_tokens": 27362
+      }
+    },
+    "rollout_hard": 0.75,
+    "rollout_soft": 0.857143,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1047,
+        "n_envs": 40,
+        "hard": 0.75,
+        "soft": 0.8571428571428571,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 5,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "f04728d495bf39ae",
+    "candidate_skill_len": 3380,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "REJECT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate correctly identifies over-specification and attribute-subject confusion across 6 failures, but adds three success-driven rules that violate the strict 1.50x growth allowance since they cannot be tied to specific failing tasks. Previous attempts targeting this identical mechanism also yielded flat accuracy, making this a re-proposal with unnecessary bloat rather than a verified improvement.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 841,
+    "judge_usage": {
+      "prompt_tokens": 8057,
+      "completion_tokens": 2991,
+      "total_tokens": 11048
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Over-specification and attribute-subject confusion in trivia extraction",
+    "judge_evidence_count": 6,
+    "judge_counter_evidence_count": 18,
+    "judge_expected_window_delta": "flat",
+    "judge_falsifier": "A subsequent window demonstrating consistent resolution of the 6 specific failure modes while maintaining overall accuracy above 85%, proving the added rules do not cause regression.",
+    "judge_rule_override": "",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.75,
+    "candidate_gate_score": 0.73,
+    "action": "reject",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 224.6
+  },
+  {
+    "step": 6,
+    "epoch": 1,
+    "step_in_epoch": 5,
+    "timing": {
+      "rollout_s": 17.8,
+      "reflect_s": 49.8,
+      "aggregate_s": 99.5,
+      "select_s": 18.4,
+      "update_s": 0.0,
+      "evaluate_s": 25.5
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 94231,
+        "completion_tokens": 26552
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7697,
+        "completion_tokens": 3074
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 6185,
+        "completion_tokens": 13679
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1499,
+        "completion_tokens": 3079
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 62358,
+        "completion_tokens": 30425
+      }
+    },
+    "rollout_hard": 0.725,
+    "rollout_soft": 0.834583,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1048,
+        "n_envs": 40,
+        "hard": 0.725,
+        "soft": 0.8345833333333333,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 7,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      11,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "c4eaf1a2ed803610",
+    "candidate_skill_len": 3334,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "REJECT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate exceeds the 1.50x size limit while introducing rules justified solely by success evidence, violating the strict growth allowance. Additionally, it re-proposes mechanisms already evaluated in attempts 3-5 without material new evidence, indicating a flat or worse expected delta.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 758,
+    "judge_usage": {
+      "prompt_tokens": 7697,
+      "completion_tokens": 3074,
+      "total_tokens": 10771
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Over-specification and entity form mismatch in trivia/cloze extraction",
+    "judge_evidence_count": 6,
+    "judge_counter_evidence_count": 7,
+    "judge_expected_window_delta": "flat",
+    "judge_falsifier": "A subsequent execution window demonstrating statistically significant accuracy gains on tasks requiring precise article/plural preservation or short-name extraction, without regression on previously successful items.",
+    "judge_rule_override": "",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.725,
+    "candidate_gate_score": 0.73,
+    "action": "reject",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 211.0
+  },
+  {
+    "step": 7,
+    "epoch": 1,
+    "step_in_epoch": 6,
+    "timing": {
+      "rollout_s": 98.4,
+      "reflect_s": 40.2,
+      "aggregate_s": 130.0,
+      "select_s": 28.4,
+      "update_s": 0.0,
+      "evaluate_s": 35.4
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 100004,
+        "completion_tokens": 24548
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7759,
+        "completion_tokens": 4022
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 7004,
+        "completion_tokens": 17951
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1929,
+        "completion_tokens": 4052
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 62478,
+        "completion_tokens": 42593
+      }
+    },
+    "rollout_hard": 0.775,
+    "rollout_soft": 0.807917,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1049,
+        "n_envs": 40,
+        "hard": 0.775,
+        "soft": 0.8079166666666667,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 10,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "d524b18d4a7f63be",
+    "candidate_skill_len": 2682,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "REJECT",
+    "judge_confidence": "medium",
+    "judge_reason": "The candidate targets the identical mechanism (over-specification and tangential attribute extraction) as three prior rejected attempts. Reproposing with reworded rules lacks material novelty, making it unlikely to break the observed stagnation despite acceptable growth and strong local support counts.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 722,
+    "judge_usage": {
+      "prompt_tokens": 7759,
+      "completion_tokens": 4022,
+      "total_tokens": 11781
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Over-specification and tangential attribute extraction in trivia/cloze questions",
+    "judge_evidence_count": 5,
+    "judge_counter_evidence_count": 0,
+    "judge_expected_window_delta": "flat",
+    "judge_falsifier": "A future window showing sustained >85% success on suffix-dropping and subject-vs-attribute tasks while maintaining performance on exact-match trivia.",
+    "judge_rule_override": "",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.775,
+    "candidate_gate_score": 0.73,
+    "action": "reject",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 332.4
+  },
+  {
+    "step": 8,
+    "epoch": 1,
+    "step_in_epoch": 7,
+    "timing": {
+      "rollout_s": 19.3,
+      "reflect_s": 42.6,
+      "aggregate_s": 80.2,
+      "select_s": 16.6,
+      "update_s": 0.0,
+      "evaluate_s": 24.6
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 104134,
+        "completion_tokens": 22907
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7563,
+        "completion_tokens": 4744
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 6013,
+        "completion_tokens": 11104
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1352,
+        "completion_tokens": 2659
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 61856,
+        "completion_tokens": 26709
+      }
+    },
+    "rollout_hard": 0.775,
+    "rollout_soft": 0.890119,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1050,
+        "n_envs": 40,
+        "hard": 0.775,
+        "soft": 0.8901190476190477,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 6,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      9,
+      8,
+      8
+    ],
+    "candidate_hash": "8da71fe0c88eb263",
+    "candidate_skill_len": 2950,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "REJECT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate correctly targets over-specification in three tasks, but introduces \"Title & Snippet Prioritization\" and expanded reference rules not tied to any failing task, violating the strict 1.50x growth allowance. Furthermore, prior attempts already targeted this exact mechanism without improving window accuracy, making this a rejected re-proposal.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 817,
+    "judge_usage": {
+      "prompt_tokens": 7563,
+      "completion_tokens": 4744,
+      "total_tokens": 12307
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Over-specification / inclusion of generic suffixes or descriptive qualifiers in trivia answers",
+    "judge_evidence_count": 3,
+    "judge_counter_evidence_count": 0,
+    "judge_expected_window_delta": "improve",
+    "judge_falsifier": "Consistent failure to strip generic suffixes/qualifiers in subsequent windows despite the new rule, or degradation on tasks previously answered correctly by the leaner current skill.",
+    "judge_rule_override": "",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.775,
+    "candidate_gate_score": 0.73,
+    "action": "reject",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 183.4
+  },
+  {
+    "step": 9,
+    "epoch": 1,
+    "step_in_epoch": 8,
+    "timing": {
+      "rollout_s": 16.0,
+      "reflect_s": 41.5,
+      "aggregate_s": 98.1,
+      "select_s": 29.3,
+      "update_s": 0.0,
+      "evaluate_s": 30.2
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 109550,
+        "completion_tokens": 22383
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7784,
+        "completion_tokens": 3345
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 5990,
+        "completion_tokens": 15781
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1581,
+        "completion_tokens": 3302
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 62434,
+        "completion_tokens": 26610
+      }
+    },
+    "rollout_hard": 0.775,
+    "rollout_soft": 0.861667,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1051,
+        "n_envs": 40,
+        "hard": 0.775,
+        "soft": 0.8616666666666667,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 7,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "12501b22f5200581",
+    "candidate_skill_len": 3113,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "REJECT",
+    "judge_confidence": "high",
+    "judge_reason": "Three prior attempts (6-8) already targeted this exact mechanism and yielded no accuracy gain (0.775 -> 0.775). The candidate violates the 1.50x growth cap without tying every new rule to a specific failure, and two failures stem from fundamental clue misinterpretation rather than entity form issues, making the patch ineffective for the observed error distribution.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 835,
+    "judge_usage": {
+      "prompt_tokens": 7784,
+      "completion_tokens": 3345,
+      "total_tokens": 11129
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Over-specification and entity form mismatch",
+    "judge_evidence_count": 6,
+    "judge_counter_evidence_count": 10,
+    "judge_expected_window_delta": "flat",
+    "judge_falsifier": "A subsequent execution window showing a complete elimination of the identified suffix/variant mismatches while maintaining or improving the overall success rate, proving the new alignment rules resolve the root cause without collateral damage.",
+    "judge_rule_override": "",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.775,
+    "candidate_gate_score": 0.73,
+    "action": "reject",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 215.1
+  },
+  {
+    "step": 10,
+    "epoch": 1,
+    "step_in_epoch": 9,
+    "timing": {
+      "rollout_s": 14.6,
+      "reflect_s": 38.8,
+      "aggregate_s": 91.2,
+      "select_s": 13.3,
+      "update_s": 0.0,
+      "evaluate_s": 32.8
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 114303,
+        "completion_tokens": 22887
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7514,
+        "completion_tokens": 4034
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 6950,
+        "completion_tokens": 14596
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1638,
+        "completion_tokens": 2215
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 62328,
+        "completion_tokens": 25085
+      }
+    },
+    "rollout_hard": 0.775,
+    "rollout_soft": 0.808333,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1052,
+        "n_envs": 40,
+        "hard": 0.775,
+        "soft": 0.8083333333333333,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 8,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      9,
+      9,
+      9,
+      8
+    ],
+    "candidate_hash": "1ec54b33e326cb06",
+    "candidate_skill_len": 3019,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "medium",
+    "judge_reason": "The candidate targets a distinct failure mode from previous attempts: distractor context and slot misalignment causing wrong entity/category selection (evident in 7 failures). The added rules are explicitly tied to these failures, satisfying the growth constraint. While size increased, the changes are justified by the evidence and should improve accuracy on similar cloze/trivia tasks.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 801,
+    "judge_usage": {
+      "prompt_tokens": 7514,
+      "completion_tokens": 4034,
+      "total_tokens": 11548
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Semantic slot misinterpretation and distractor-driven entity selection",
+    "judge_evidence_count": 7,
+    "judge_counter_evidence_count": 12,
+    "judge_expected_window_delta": "improve",
+    "judge_falsifier": "A subsequent window showing a drop in success rate below 0.775, particularly on simple trivia where the new filtering rules incorrectly reject valid matches.",
+    "judge_rule_override": "v2: growth 1.60x exceeds max_growth_ratio=1.50x without an explicit per-rule tie to a failure",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.775,
+    "candidate_gate_score": 0.73,
+    "action": "reject",
+    "current_score": 0.73,
+    "best_score": 0.73,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 1891,
+    "wall_time_s": 190.8
+  }
+]

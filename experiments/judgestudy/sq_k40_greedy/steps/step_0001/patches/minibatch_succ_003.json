@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Mapping trivia-style clues or definitions in the question to explicit terms/entities in the context",
+    "Filtering redundant/noisy multi-document contexts to find direct associations",
+    "Extracting concise, exact-match entities for the final answer without extra explanation"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories involve trivia/factual questions phrased as clues or definitions. Agents succeed by mapping these clues to explicit entities in noisy, redundant contexts and returning concise, exact-match answers. Encoding this pattern will improve robustness for similar entity-extraction tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Clue-to-Entity Mapping**: Treat questions as trivia clues or definitions. Identify the target concept (person, place, term, work) and scan the context for direct matches or explicit associations.\n- **Noise & Redundancy Filtering**: Contexts often contain multiple overlapping sources. Prioritize explicit definitions, titles, or direct links over peripheral details or repeated metadata.\n- **Concise Extraction**: Return only the exact entity or short phrase requested. Do not include full sentences, explanations, or conversational filler inside `<answer>` tags.\n- **Constraint Verification**: Cross-check the extracted entity against specific constraints in the question (e.g., years, roles, locations) using the context to ensure accuracy."
+      }
+    ]
+  },
+  "source_type": "success"
+}

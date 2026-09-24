@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Inferring inventory state from admissible action lists (e.g., absence of 'take X' implies hands are full or item is already held)",
+    "Managing single-item inventory constraints by temporarily placing down non-target items to free hands for the target object"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the batch reveals two critical operational patterns not fully covered in the current skill. First, agents frequently encounter inventory limits (holding one item max). When a held non-target item (like a dishsponge) blocks acquisition of the actual target, successful agents recognize this constraint and place the held item down to free their hands. Second, agents successfully use the presence or absence of 'take <object>' in the admissible action list to deduce their current state (whether they are already holding an item or if their hands are full), preventing wasted navigation steps. Encoding these patterns will significantly improve agent robustness in constrained interaction scenarios.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "\n9. **Manage inventory constraints**: You can typically only hold one object at a time. If holding a non-target item blocks you from picking up the target, place the held item down temporarily to free your hands.\n10. **Infer state from admissible actions**: Check if `take <object>` is available in the admissible list. If missing, you may already be holding it or your hands are full. Use this signal to adjust your strategy rather than assuming the object is elsewhere."
+      }
+    ]
+  },
+  "source_type": "success"
+}

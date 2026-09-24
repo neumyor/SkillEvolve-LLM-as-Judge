@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Jeopardy/Cloze Clue Recognition",
+    "Snippet & Title Leverage",
+    "Direct Entity Isolation"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle Jeopardy-style clues, cloze blanks, and trivia fragments by treating them as direct requests for a missing subject. Agents also rapidly locate answers by prioritizing document titles and opening snippets over deep paragraph reading. Reinforcing these patterns will streamline retrieval, improve speed, and prevent unnecessary verbosity.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment Handling**: Treat Jeopardy-style clues, cloze blanks, and declarative fragments as direct requests for the missing subject. Map descriptive phrases directly to the exact entity named in the context, ignoring narrative framing or trailing punctuation."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase, allowing rapid extraction before reading full paragraphs."
+      },
+      {
+        "op": "replace",
+        "target": "2. Search the context for those identifiers or their immediate synonyms. Ignore irrelevant tangential documents.",
+        "content": "2. Search the context for those identifiers, prioritizing document titles and opening snippets for quick matches. Ignore irrelevant tangential documents."
+      },
+      {
+        "op": "replace",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. Strip unnecessary articles, adjectives, or plurals unless strictly required. Output only the core entity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

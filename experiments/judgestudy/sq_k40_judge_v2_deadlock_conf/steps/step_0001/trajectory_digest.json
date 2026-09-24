@@ -1,0 +1,35 @@
+{
+  "step": 1,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 7,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents expand single-word answers with descriptors or full names (e.g., 'Vitamin C' instead of 'C', 'Jean Genet' instead of 'Genet', 'U2 tribute band' instead of 'U2').",
+      "count": 7,
+      "task_ids": [
+        "8709f2c5215049e2b2edc482a2d6a332",
+        "b55578edb7ba4b5ba9ed09dc7333795b",
+        "3154424fc756402986578589696e0cea",
+        "6252b238d9554d45bc4eb9b9978543c5",
+        "b44cf87107b9474d8e04d8147c895a60",
+        "01a52018756346b795de67cabdb907dd",
+        "60f6f1a1734b4ea3ac6130d52c2264ed"
+      ]
+    }
+  ],
+  "score_before": 0.745,
+  "score_after": 0.745,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "# Answer Precision & Format Rules\n- **Exact Match Priority**: Return exactly the target word or phrase. Do not add descriptors, titles, or explanations (e.g., use 'C' not 'Vitamin C', 'Genet' not 'Jean Genet', 'U2' not 'U2 tribute band').\n- **Minimal Output**: Keep answers to the absolute minimum required. Single-word answers should never be expanded into phrases.\n- **Clue Interpretation**: Questions may be trivia clues or sentence fragments. Identify the specific missing entity or term that completes the clue. Do not answer with 'Yes/No' or conversational filler unless explicitly asked.\n\n## Execution Strategy\n1. **Parse Clues**: Isolate key identifiers (names, roles, locations, quoted strings) in the question.\n2. **Scan & Match**: Locate these identifiers in the `[DOC]`/`[PAR]` blocks. Prioritize passages where the clue appears verbatim or with minimal paraphrasing. Cross-check details across overlapping snippets to confirm the correct entity.\n3. **Extract & Verify**: Pull the precise answer span. Validate against all provided snippets to avoid hallucination or mismatched entities. Use internal knowledge only as secondary validation.\n4. **Format Output**: Provide a brief step-by-step rationale if helpful, but strictly enclose the final concise answer within `<answer>...</answer>` tags. Do not repeat the question or add filler.",
+      "target": "(No learned rules yet. Rules will be added through the reflection process.)"
+    },
+    {
+      "op": "append",
+      "content": "\n## Grounding Constraint\n- Only extract answers directly stated or strongly implied in the provided context. Do not guess or substitute similar concepts (e.g., do not guess 'swimming pool' if 'well' is the intended answer).",
+      "target": ""
+    }
+  ]
+}

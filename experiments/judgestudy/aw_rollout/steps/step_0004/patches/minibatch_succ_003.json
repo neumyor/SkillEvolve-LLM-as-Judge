@@ -1,0 +1,19 @@
+{
+  "batch_size": 5,
+  "success_patterns": [
+    "Prioritize high-probability locations based on object category during search",
+    "Select any visible instance of the target object without hesitation",
+    "Maintain strict separation between search and interaction phases"
+  ],
+  "patch": {
+    "reasoning": "Across all trajectories, agents consistently succeed by quickly identifying target objects upon arrival, selecting any available instance, and strictly adhering to task phases (search → acquire → transform/deliver). Adding heuristics for location prioritization and phase discipline will reduce search inefficiency, prevent mixed-phase errors, and generalize across all task types.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "\n9. **Prioritize high-probability locations**: When searching, start with furniture types most likely to contain the target object based on its category (e.g., food → fridge, countertop, dining table; utensils → countertop, cabinet; electronics/lamps → desk, shelf).\n10. **Instance agnosticism**: If multiple valid instances of the target object are visible, pick any one immediately. Do not hesitate or search for a specific ID.\n11. **Strict phase discipline**: Maintain clear separation between the \"Search\" phase and the \"Acquire/Transform/Deliver\" phase. Do not attempt to interact with appliances or target receptacles until the object is in hand."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Prioritize direct appliance commands (e.g., `heat X with Y`) when holding the object near the target appliance, bypassing the full open/move/close cycle.",
+    "Strictly map transformation verbs to their correct locations: `clean` requires a sink, while `heat`/`cool` require microwaves/fridges. Never assume one satisfies the other.",
+    "When expected appliance actions are missing from the admissible list, immediately check `inventory` and the appliance's state to diagnose whether the object is held, inside, or misplaced, then adapt accordingly."
+  ],
+  "patch": {
+    "reasoning": "Analysis of 8 trajectories reveals three highly consistent success patterns: (1) Agents overwhelmingly prefer direct appliance commands over the verbose open/move/close sequence when holding the object, saving significant steps. (2) One trajectory failed initially by conflating 'cool' with 'clean', requiring a backtrack to the sink, highlighting a need to explicitly separate transformation locations. (3) Another trajectory demonstrated robust recovery when the standard heating sequence blocked, using `inventory` and state checks to pivot to a direct command. These patterns are either under-emphasized or missing in the current skill and should be reinforced to improve efficiency and error recovery.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "**Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Always close appliances** immediately after interaction and retrieval to maintain environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance.",
+        "content": "**Appliance & Receptacle Workflow**: When holding the target object near an appliance, **always attempt the direct command first** (e.g., `heat <object> with <appliance>` or `cool <object> with <appliance>`). This bypasses unnecessary open/move/close cycles and is the preferred efficient path. Only resort to the full `open` -> `move in` -> `close` -> `interact` -> `open` -> `take` sequence if the direct command is unavailable or fails. Always verify receptacles are open before placing items. **Always close appliances** immediately after interaction and retrieval to maintain environment state."
+      },
+      {
+        "op": "insert_after",
+        "target": "10. **State Verification & Precision**: Call `inventory` whenever unsure what you hold or if expected actions are missing. Immediately confirm an object's exact name upon pickup. When multiple instances exist, always use the full admissible action string (e.g., `take X from Y`).",
+        "content": "11. **Transformation Location Mapping**: Strictly associate task verbs with their required locations. `clean` must be performed at a `sinkbasin`; `heat` requires a `microwave` or `stoveburner`; `cool` requires a `fridge`. Placing an item in a fridge cools it but does *not* clean it. Never assume a transformation at one location satisfies a requirement for another. If the task specifies `clean`, navigate to the sink regardless of other transformations completed."
+      },
+      {
+        "op": "replace",
+        "target": "- **Revisiting searched locations**: Keep track of which surfaces/containers have been checked; do not re-examine them unnecessarily.",
+        "content": "- **Revisiting searched locations**: Keep track of which surfaces/containers have been checked; do not re-examine them unnecessarily.\n- **Conflating transformations**: Do not assume `cool` satisfies `clean`, or vice versa. Each state change has a specific location requirement (sink vs. appliance). Verify the exact verb in the goal before executing."
+      },
+      {
+        "op": "replace",
+        "target": "- **Accept functional equivalents**: If the exact target object (e.g., 'pan', 'mug', 'keychain') is not found after thorough searching, consider taking functionally similar items (e.g., 'pot', 'cup', 'tag') that fulfill the task's physical requirements. Do not let strict naming conventions cause indefinite loops.",
+        "content": "- **Accept functional equivalents**: If the exact target object (e.g., 'pan', 'mug', 'keychain') is not found after thorough searching, consider taking functionally similar items (e.g., 'pot', 'cup', 'tag') that fulfill the task's physical requirements. Do not let strict naming conventions cause indefinite loops.\n- **Fallback on missing actions**: If a standard appliance step (e.g., `heat X with Y`) is missing from the admissible list, immediately run `inventory` and inspect the appliance's state. Determine if the object is still held, accidentally left inside, or moved elsewhere. Adjust your workflow (e.g., switch to direct commands or retrieve the object) rather than looping."
+      }
+    ]
+  },
+  "source_type": "success"
+}

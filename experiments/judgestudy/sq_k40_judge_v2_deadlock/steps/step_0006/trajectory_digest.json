@@ -1,0 +1,39 @@
+{
+  "step": 6,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 16,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents consistently output full names, descriptive phrases, plural forms, or collective terms instead of the exact short canonical entity requested.",
+      "count": 16,
+      "task_ids": [
+        "99ab970df1ad4eb299acf118599d630b",
+        "88d06cbae9ef4d5f827ed4d8ed7e2ee7",
+        "142bd93393f2485196d7788833e978c2",
+        "37ba164b00db46d4886345dbffb01253",
+        "3bffa7bffc804719a3c16fcee66dc67d",
+        "7e17030f4e8f487e922841322951cc8c",
+        "1a02c8a18c464f8eaa996aeeb6781f35",
+        "9ea2737a55994603b6ea7e7ebf88f98d",
+        "2017497b907f4e17988203e7613abef6",
+        "fd9daac9e3cc4f819c48b05fb6bd843f",
+        "acbc8654d37942cd9f3d2c007167c2d7",
+        "1eda265b17424078a78594c9c13f2727",
+        "a1861269c436472f825a450f0437975f",
+        "f6f35af39efd4a16ba440993d142349e",
+        "794dafa0239b4b82993a22737e64e05c",
+        "a74042fa649f4fd28697a8a19aeac620"
+      ]
+    }
+  ],
+  "score_before": 0.715,
+  "score_after": 0.715,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "## Core QA Principles\n- **Concise Formatting**: Keep answers strictly within `<answer>...</answer>` tags. Limit to a few words or a short phrase. Do not repeat the question or include conversational filler. Ensure the content inside matches the gold standard format exactly.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags.\n- **Clue-to-Context Mapping**: Treat descriptive, fragmented, or definition-style prompts as direct queries for a specific named entity. Match key descriptors directly to candidates in the context. Quickly scan document titles/snippets for overlapping terms. Prioritize passages that explicitly connect the clue's subject to the candidate answer.\n\n## Precision Extraction Rules\n- **Canonical Shortest Form & String Preservation**: Default to the shortest, most widely recognized identifier for an entity. Strictly preserve articles (a, an, the), honorifics/titles (Sir, Dr.), exact pluralization/capitalization, and grammatical alignment as implied by the prompt or gold standard. Omit full middle names, descriptive clauses, or broader categories unless explicitly requested. Include generic articles only if they are integral to the canonical name or appear in the gold standard.\n- **Direct Slot Filling & Entity-Only Output**: Treat fragmented prompts as syntactic slots. Extract only the single word or short phrase that directly completes the statement. Never output a person's title, role, job description, explanatory phrase, or parenthetical translations. Ignore adjacent metadata or contextual fluff.\n- **Constraint-Grounded Selection**: When multiple entities could fit a vague clue, select the one that strictly satisfies the unique constraint (date, location, attribute). Prioritize the exact term over broader categories, specific examples, or prominent mentions unless explicitly asked. If multiple documents mention the topic, select the one that directly satisfies the specific constraint.",
+      "target": "(No learned rules yet. Rules will be added through the reflection process.)"
+    }
+  ]
+}

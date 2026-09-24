@@ -1,0 +1,108 @@
+[09:08:24] warmup[0] https://redacted.invalid/v1: --base-url https://redacted.invalid/v1 --model qwen3.6-flash-distill --api-key-env ALF_LLM_KEY --ramp 1,2,4,8,16 --per-level 2 --out experiments/judgestudy/t2s_aw_replay_same_session/warmup.json
+warmup: https://redacted.invalid/v1 model=qwen3.6-flash-distill
+probe ok (2.209s, 186 completion tokens)
+sequential 1/3: ok (2.56s)
+sequential 2/3: ok (1.72s)
+sequential 3/3: ok (1.196s)
+ramp c=1: ok=2/2 429=0 median=1.999s wall=3.251s
+ramp c=2: ok=2/2 429=0 median=2.444s wall=2.445s
+ramp c=4: ok=4/4 429=0 median=2.3s wall=3.12s
+ramp c=8: ok=8/8 429=0 median=1.856s wall=2.559s
+ramp c=16: ok=16/16 429=0 median=1.804s wall=2.343s
+warmup report -> experiments/judgestudy/t2s_aw_replay_same_session/warmup.json
+warmup done: max clean concurrency = 16
+[09:08:52] warmup: max clean concurrency = 16
+[09:08:52] method=trace2skill shards=16 episodes=134
+[09:08:52] launch shard 0/16 -> shard0of16.log
+[09:08:53] launch shard 1/16 -> shard1of16.log
+[09:08:54] launch shard 2/16 -> shard2of16.log
+[09:08:55] launch shard 3/16 -> shard3of16.log
+[09:08:56] launch shard 4/16 -> shard4of16.log
+[09:08:57] launch shard 5/16 -> shard5of16.log
+[09:08:58] launch shard 6/16 -> shard6of16.log
+[09:08:59] launch shard 7/16 -> shard7of16.log
+[09:09:00] launch shard 8/16 -> shard8of16.log
+[09:09:01] launch shard 9/16 -> shard9of16.log
+[09:09:02] launch shard 10/16 -> shard10of16.log
+[09:09:03] launch shard 11/16 -> shard11of16.log
+[09:09:04] launch shard 12/16 -> shard12of16.log
+[09:09:05] launch shard 13/16 -> shard13of16.log
+[09:09:06] launch shard 14/16 -> shard14of16.log
+[09:09:07] launch shard 15/16 -> shard15of16.log
+[09:42:35] shard 0/16 exited code=0 (2023s elapsed)
+[09:42:35] shard 1/16 exited code=0 (2023s elapsed)
+[09:42:35] shard 2/16 exited code=0 (2023s elapsed)
+[09:42:35] shard 3/16 exited code=0 (2023s elapsed)
+[09:42:35] shard 4/16 exited code=0 (2023s elapsed)
+[09:42:35] shard 5/16 exited code=0 (2023s elapsed)
+[09:42:35] shard 6/16 exited code=0 (2023s elapsed)
+[09:42:35] shard 7/16 exited code=0 (2023s elapsed)
+[09:42:35] shard 8/16 exited code=0 (2023s elapsed)
+[09:48:39] shard 9/16 exited code=0 (2386s elapsed)
+[09:48:39] shard 10/16 exited code=0 (2386s elapsed)
+[09:48:39] shard 11/16 exited code=0 (2386s elapsed)
+[09:48:39] shard 12/16 exited code=0 (2386s elapsed)
+[09:48:39] shard 13/16 exited code=0 (2386s elapsed)
+[09:48:39] shard 14/16 exited code=0 (2386s elapsed)
+[09:48:39] shard 15/16 exited code=0 (2386s elapsed)
+[09:48:39] merge: packages/alfworld-eval/scripts/merge_shards.py experiments/judgestudy/t2s_aw_replay_same_session/shard0of16 experiments/judgestudy/t2s_aw_replay_same_session/shard1of16 experiments/judgestudy/t2s_aw_replay_same_session/shard2of16 experiments/judgestudy/t2s_aw_replay_same_session/shard3of16 experiments/judgestudy/t2s_aw_replay_same_session/shard4of16 experiments/judgestudy/t2s_aw_replay_same_session/shard5of16 experiments/judgestudy/t2s_aw_replay_same_session/shard6of16 experiments/judgestudy/t2s_aw_replay_same_session/shard7of16 experiments/judgestudy/t2s_aw_replay_same_session/shard8of16 experiments/judgestudy/t2s_aw_replay_same_session/shard9of16 experiments/judgestudy/t2s_aw_replay_same_session/shard10of16 experiments/judgestudy/t2s_aw_replay_same_session/shard11of16 experiments/judgestudy/t2s_aw_replay_same_session/shard12of16 experiments/judgestudy/t2s_aw_replay_same_session/shard13of16 experiments/judgestudy/t2s_aw_replay_same_session/shard14of16 experiments/judgestudy/t2s_aw_replay_same_session/shard15of16 --out experiments/judgestudy/t2s_aw_replay_same_session/merged
+Merged 134 episodes from 16 shards -> experiments/judgestudy/t2s_aw_replay_same_session/merged
+{
+  "n_episodes": 134,
+  "success_rate": 0.6418,
+  "avg_steps": 26.83,
+  "invalid_action_rate": 0.0083,
+  "invalid_request_rate": 0.0083,
+  "uncorrected_invalid_request_rate": 0.0,
+  "corrections": {
+    "invalid_requests": 30,
+    "uncorrected_invalid_requests": 0,
+    "correction_attempts": 30,
+    "correction_successes": 30,
+    "truncated_responses": 0
+  },
+  "termination": {
+    "success": 86,
+    "environment_done": 48,
+    "step_limit": 0
+  },
+  "per_task_type": {
+    "look_at_obj_in_light": {
+      "count": 18,
+      "success_rate": 0.6667,
+      "avg_steps": 22.44
+    },
+    "pick_and_place": {
+      "count": 24,
+      "success_rate": 0.9167,
+      "avg_steps": 16.25
+    },
+    "pick_clean_then_place_in_recep": {
+      "count": 31,
+      "success_rate": 0.5484,
+      "avg_steps": 30.81
+    },
+    "pick_cool_then_place_in_recep": {
+      "count": 21,
+      "success_rate": 0.6667,
+      "avg_steps": 24.95
+    },
+    "pick_heat_then_place_in_recep": {
+      "count": 23,
+      "success_rate": 0.6087,
+      "avg_steps": 29.57
+    },
+    "pick_two_obj_and_place": {
+      "count": 17,
+      "success_rate": 0.4118,
+      "avg_steps": 37.76
+    }
+  },
+  "usage": {
+    "prompt_tokens": 3271449,
+    "completion_tokens": 2268917,
+    "api_calls": 3625,
+    "api_errors": 24
+  }
+}
+[09:48:39] done in 2387s -> experiments/judgestudy/t2s_aw_replay_same_session/merged

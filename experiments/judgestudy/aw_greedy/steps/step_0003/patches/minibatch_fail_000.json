@@ -1,0 +1,46 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "action_loop",
+      "count": 5,
+      "description": "Agents repeatedly verify object state or re-process items after successful transformations, causing infinite loops."
+    },
+    {
+      "failure_type": "navigation_loop",
+      "count": 4,
+      "description": "Agents cycle through the same few locations during search instead of using admissible actions to jump to unvisited areas."
+    },
+    {
+      "failure_type": "premature_stop",
+      "count": 3,
+      "description": "Agents fail to recognize task completion after successful placement, performing unnecessary verification or re-search steps."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch exhibits two dominant failure modes: (1) contradictory instructions on state verification causing agents to loop on `examine`/`inventory` after transformations, and (2) inefficient search strategies where agents manually cycle through locations instead of leveraging admissible jumps. Additionally, agents lack a clear termination signal, leading to post-success loops. These edits resolve contradictions, enforce admissible-based search breaks, mandate immediate termination upon successful placement, and prevent agents from storing transformed items prematurely.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "6. **Verify Transformation State**: After using an appliance, explicitly check the object's state (e.g., via `examine`). If the state does not match the goal, return to the appliance to re-process immediately. Do not assume the transformation succeeded on the first try.",
+        "content": "6. **Trust Transformation & Proceed**: After a successful `heat`, `cool`, or `clean` action, trust the outcome immediately. Do not use `examine` or `inventory` to re-verify the object's state, as this often triggers infinite loops. Proceed directly to the next sub-goal (usually delivery) without delay."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Location Exhaustion Rule**: If you visit a container or surface twice and find it empty, mark it as permanently searched. Immediately navigate to a completely different, unvisited location or room. Never repeat the same search pattern more than once.",
+        "content": "\n- **Admissible Jump Strategy**: When manual searching yields no results after 2-3 attempts, stop walking back and forth. Use the `admissible actions` list to jump directly to unvisited rooms or container types. Prioritize teleports to break search cycles efficiently."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **State Verification Trust**: After a successful `heat`, `cool`, or `clean` action, proceed directly to the next step. Do not repeatedly `examine` the object to verify its state, as observations may lag or report generic names. Trust the action success and advance.",
+        "content": "\n- **Success Termination Protocol**: Once the final placement action succeeds (observation confirms movement to target), the task is complete. Cease all further actions. Do not perform `look`, `inventory`, or `examine` after successful completion unless the goal explicitly requires tracking multiple distinct items."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Co-located Efficiency**: If the target object and the required appliance (e.g., desklamp, sink, fridge) are on the same surface, perform actions sequentially at that location without navigating away.",
+        "content": "\n- **No Intermediate Storage**: After transforming an object (heating/cooling/cleaning), do not place it back into appliances, cabinets, or storage. Maintain hold or proceed directly to the final destination receptacle to avoid losing track or triggering retrieval loops."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

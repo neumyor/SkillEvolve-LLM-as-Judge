@@ -1,0 +1,33 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Conjunction (&) as a strict logical AND filter for co-occurring attributes",
+    "Fill-in-the-blank completion strategy for declarative trivia clues",
+    "Snippet-first search prioritizing title/first-line matches for rapid validation"
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates that successful agents consistently treat '&' and commas as mandatory intersection filters rather than optional alternatives, recognize declarative clues as fill-in-the-blank prompts requiring exact term completion, and heavily rely on title/snippet density for immediate answer location. These patterns are currently fragmented or buried under distractor management, warranting explicit reinforcement in core principles and statement handling.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Core Principles",
+        "content": "\n- **Conjunction (&) as Logical AND Filter**: When clues join descriptors, roles, or items with \"&\" or commas, treat each element as a mandatory constraint. The correct entity must satisfy *all* connected attributes simultaneously. Locate the single intersection point in the context rather than evaluating clauses separately."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Handling Statement or Fragment Questions",
+        "content": "\n- **Fill-in-the-Blank Completion**: Declarative trivia clues often omit the target term at the end or middle of the sentence (e.g., \"...starting points of a miniature this\"). Identify the grammatical slot being left open and extract the exact noun or phrase that completes the factual statement."
+      },
+      {
+        "op": "replace",
+        "target": "- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+        "content": "- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. **Always scan titles and first sentences first.** When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or opening line, as this is where the canonical answer is most likely located."
+      },
+      {
+        "op": "delete",
+        "target": "- **Multi-Clause Description Mapping**: When a question contains multiple descriptors or roles joined by \"&\" or commas (e.g., \"late California governor & U.S. Chief Justice\"), treat each clause as a required filter. Locate the single entity in the context that satisfies the intersection of all clauses, ignoring tangential figures who may match only one descriptor."
+      }
+    ]
+  },
+  "source_type": "success"
+}

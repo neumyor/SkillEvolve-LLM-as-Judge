@@ -1,0 +1,23 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Declarative Attribute Mapping: Treating statement-style questions listing multiple attributes (connected by '&', 'and', etc.) as direct subject-identification tasks requiring simultaneous constraint satisfaction.",
+    "Core Entity Isolation: Prioritizing the bare entity name over document titles, metadata strings, or extended phrases when the question describes defining attributes."
+  ],
+  "patch": {
+    "reasoning": "Previous steps show persistent failures in over-specification and distractor selection. The successful trajectory demonstrates clean isolation of the core entity ('San Francisco') from metadata-rich contexts and correct handling of a multi-attribute declarative clue. These patterns reinforce existing rules but need explicit reinforcement to prevent regression on statement-based queries and title-stripping edge cases.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Handling Statement or Fragment Questions",
+        "content": "\n- **Declarative Statement Resolution**: When a question is phrased as a declarative statement listing multiple attributes (often connected by \"&\", \"and\", or commas), treat it as a direct request to identify the subject entity. Do not parse it as a complex relational query. Instead, extract each attribute as a mandatory filter and verify they converge on a single entity.\n"
+      },
+      {
+        "op": "replace",
+        "target": "- **Snippet/Title Exact Match Priority**: Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning document titles and snippets for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis.",
+        "content": "- **Snippet/Title Exact Match Priority**: Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning document titles and snippets for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis. **Crucially, always strip document title prefixes/suffixes and metadata artifacts (e.g., \"- Wikipedia\", \"Official Flag of\") to isolate the core entity requested by the clue.**\n"
+      }
+    ]
+  },
+  "source_type": "success"
+}

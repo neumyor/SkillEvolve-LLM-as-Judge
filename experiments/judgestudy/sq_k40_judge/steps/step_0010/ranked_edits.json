@@ -1,0 +1,41 @@
+{
+  "reasoning": "Applied all 4 failure-driven patches first to address critical entity isolation, canonical naming, and container/attribute resolution failures. Replaced existing rules where failure patches targeted them directly. Integrated all 10 success-driven patches afterward, which introduce complementary heuristics for pronoun resolution, colon parsing, trade/generic mapping, quoted material handling, and direct lookup. No direct conflicts existed; overlapping targets were resolved by prioritizing the failure versions while allowing success patches to insert adjacent or append new rules. All edits retain their original support counts and source types. [optimizer-ranked: selected 4/14 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.",
+      "content": "- **No Syntactic Mirroring & Category Exclusion**: Never repeat the prompt's phrasing, complete sentences grammatically, or append categorical nouns/classifiers explicitly stated in the clue (e.g., output \"bear\" not \"bear market\", \"Minsk\" not \"Capital cities\"). Treat the prompt's category label as a structural pointer, not part of the answer. Output only the isolated entity requested.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n- **Pronoun & Possessive Resolution**: Treat possessive pronouns (\"his\", \"her\", \"their\") and standalone subject pronouns (\"it\", \"he\") in declarative clues as primary query anchors. Map them to the missing entity and use the accompanying descriptive clauses as active filtering constraints, just as with demonstratives.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Strict Canonical Truncation**: When extracting titles, organizations, or concepts, prefer the recognized short or canonical form over the full descriptive title. Do not append categorical nouns (e.g., \"Party\", \"Show\", \"Structure\", \"Book\") or prepositional phrases unless they are strictly part of the official short name (e.g., output \"Bull Moose\" not \"Bull Moose Party\", \"Studio 60\" not \"Studio 60 on the Sunset Strip\", \"Pyre\" not \"funeral pyre\").",
+      "content": "- **Preservation of Standard Prefixes**: Do not strip standard geographical, administrative, or institutional prefixes (e.g., \"Lake,\" \"Mount,\" \"St.,\" \"Republic,\" \"People's\") when they constitute the recognized canonical name. Prioritize exact lexical matching over heuristic shortening.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Container-Part Disambiguation**: When a clue references a sub-component, building, or feature located *within* a larger site or entity (e.g., 'building at this site'), always resolve the query to the *container* or *primary subject* requested by the prompt's anchor. Do not answer with the sub-component itself.",
+      "content": "- **Attribute vs. Container Resolution**: When a clue references a collective, organization, or container and queries its constituent parts or defining attributes (e.g., \"alliance of these Chinese businesses\"), isolate the specific attribute, type, or component requested. Do not default to the overarching entity name unless it directly fills the semantic gap.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [0] upgrades a core formatting rule to explicitly prevent category-label inclusion and syntactic mirroring, addressing a highly frequent extraction failure. Edit [4] fills a critical gap in reference resolution by extending anchor mapping to pronouns and possessives, which are ubiquitous in natural language queries and currently under-addressed. Edit [1] provides a necessary counterbalance to the existing truncation rule, systematically preventing over-shortening of geographical and administrative names. Edit [2] clarifies the logical boundary between containers and their attributes/components, reducing ambiguity in multi-constraint queries. Together, these four edits maximize systematic impact, fill distinct gaps without duplication, and offer highly actionable, generalizable principles.",
+    "selected_indices": [
+      0,
+      4,
+      1,
+      2
+    ]
+  }
+}

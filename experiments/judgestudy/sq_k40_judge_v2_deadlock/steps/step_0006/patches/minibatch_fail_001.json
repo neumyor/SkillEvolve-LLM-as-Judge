@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 8,
+      "description": "Agent outputs descriptive phrases, full names, or related concepts instead of the exact short canonical entity requested by trivia/Jeopardy clues."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 8,
+      "description": "Skill lacks explicit instructions for preserving articles, titles, and exact grammatical forms in exact-match trivia questions."
+    }
+  ],
+  "patch": {
+    "reasoning": "All 8 failures stem from the agent's inability to handle Jeopardy/trivia-style clues correctly. The agent consistently over-specifies answers, drops necessary articles/titles, mismatches pluralization, or selects semantically related terms instead of the exact canonical string. The proposed rules enforce strict canonical string preservation, direct syntactic slot-filling, and anti-descriptive constraints specifically tailored to trivia formats.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Principles\n- **Concise Formatting**: Keep answers strictly within `<answer>...</answer>` tags. Limit to a few words or a short phrase. Do not repeat the question or include conversational filler.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      },
+      {
+        "op": "append",
+        "content": "\n## Trivia & Exact-Match Extraction Rules\n- **Canonical String Preservation**: For trivia, Jeopardy-style, or fill-in-the-blank questions, output the *exact* canonical noun phrase requested. Strictly preserve articles (a, an, the), honorifics/titles (Sir, Dr.), and exact pluralization/capitalization as they appear in the standard answer or are structurally required by the clue.\n- **Direct Slot Filling**: Treat fragmented or definition-style prompts as syntactic slots. Extract only the single word or short phrase that directly completes the statement. Do not substitute semantically related terms, add descriptive clauses, or output parenthetical translations.\n- **Anti-Descriptive Constraint**: Never output full sentences, explanatory notes, or related concepts. If the clue asks for an object, person, place, or category, provide only that entity's precise name. Ignore adjacent metadata or contextual fluff.\n- **Constraint-Grounded Selection**: When multiple entities could fit a vague clue, select the one that strictly satisfies the unique constraint. Prioritize the exact term over broader categories or specific examples unless explicitly asked."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

@@ -1,0 +1,109 @@
+{
+  "step": 10,
+  "epoch": 1,
+  "step_in_epoch": 9,
+  "timing": {
+    "rollout_s": 14.6,
+    "reflect_s": 38.8,
+    "aggregate_s": 91.2,
+    "select_s": 13.3,
+    "update_s": 0.0,
+    "evaluate_s": 32.8
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 114303,
+      "completion_tokens": 22887
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 7514,
+      "completion_tokens": 4034
+    },
+    "merge": {
+      "calls": 3,
+      "prompt_tokens": 6950,
+      "completion_tokens": 14596
+    },
+    "ranking": {
+      "calls": 1,
+      "prompt_tokens": 1638,
+      "completion_tokens": 2215
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 62328,
+      "completion_tokens": 25085
+    }
+  },
+  "rollout_hard": 0.775,
+  "rollout_soft": 0.808333,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1052,
+      "n_envs": 40,
+      "hard": 0.775,
+      "soft": 0.8083333333333333,
+      "n_failure_patches": 2,
+      "n_success_patches": 4
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 2,
+  "n_success_patches": 4,
+  "n_edits_merged": 8,
+  "n_edits_ranked": 4,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    9,
+    9,
+    9,
+    8
+  ],
+  "candidate_hash": "1ec54b33e326cb06",
+  "candidate_skill_len": 3019,
+  "edit_apply_summary": {
+    "total": 4,
+    "applied": 4,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_prompt_variant": "v2",
+  "judge_verdict": "ACCEPT",
+  "judge_confidence": "medium",
+  "judge_reason": "The candidate targets a distinct failure mode from previous attempts: distractor context and slot misalignment causing wrong entity/category selection (evident in 7 failures). The added rules are explicitly tied to these failures, satisfying the growth constraint. While size increased, the changes are justified by the evidence and should improve accuracy on similar cloze/trivia tasks.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 801,
+  "judge_usage": {
+    "prompt_tokens": 7514,
+    "completion_tokens": 4034,
+    "total_tokens": 11548
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "judge_defect_mechanism": "Semantic slot misinterpretation and distractor-driven entity selection",
+  "judge_evidence_count": 7,
+  "judge_counter_evidence_count": 12,
+  "judge_expected_window_delta": "improve",
+  "judge_falsifier": "A subsequent window showing a drop in success rate below 0.775, particularly on simple trivia where the new filtering rules incorrectly reject valid matches.",
+  "judge_rule_override": "v2: growth 1.60x exceeds max_growth_ratio=1.50x without an explicit per-rule tie to a failure",
+  "judge_accepted": false,
+  "rollout_hard_after": 0.775,
+  "candidate_gate_score": 0.73,
+  "action": "reject",
+  "current_score": 0.73,
+  "best_score": 0.73,
+  "best_step": 1,
+  "current_origin": "step_0001",
+  "best_origin": "step_0001",
+  "skill_len": 1891,
+  "wall_time_s": 190.8
+}

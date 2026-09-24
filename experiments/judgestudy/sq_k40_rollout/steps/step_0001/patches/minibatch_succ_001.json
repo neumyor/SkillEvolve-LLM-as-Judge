@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Keyword-driven context scanning across DOC/TLE/PAR blocks",
+    "Direct extraction of concise, exact-match answers",
+    "Decomposing multi-constraint trivia/Jeopardy-style clues",
+    "Using a brief one-sentence reasoning step only when necessary"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories successfully answered factual/trivia questions by rapidly scanning document metadata and paragraphs for exact keyword matches, then extracting concise answers. Several agents also demonstrated a useful pattern of providing a single-sentence justification before the final answer. Encoding these strategies will improve retrieval accuracy and adherence to the requested output format.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Strategy\n- **Keyword Mapping**: Scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact matches of names, dates, and unique phrases from the question.\n- **Direct Extraction**: Extract the precise entity or phrase answering the question. Avoid paraphrasing unless necessary for grammar.\n- **Clue Decomposition**: Treat trivia/Jeopardy-style prompts as multi-constraint queries. Verify that the extracted answer satisfies all constraints (e.g., role, date, location).\n\n## Execution Steps\n1. Identify key constraints in the question (who, what, when, where).\n2. Locate matching snippets in the context. Cross-reference titles and paragraphs.\n3. Extract the exact answer string.\n4. Wrap the final answer in `<answer>...</answer>` tags. Keep it concise (typically a few words or a short phrase).\n5. Optionally, precede the answer with a single-sentence reasoning step linking the question constraints to the found evidence."
+      }
+    ]
+  },
+  "source_type": "success"
+}

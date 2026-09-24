@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "alfworld-eval"
+version = "0.1.0"
+description = "A reproducible text-only ALFWorld evaluation harness."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "alfworld==0.4.2",
+    "pyyaml>=6.0,<7",
+    # 1.6.2 has a CPython 3.11 macOS arm64 wheel. Newer releases may
+    # otherwise force a local TextWorld build on the current machine.
+    "textworld[pddl]==1.6.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4,<9",
+    "ruff>=0.12,<0.13",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/alfworld_eval"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+

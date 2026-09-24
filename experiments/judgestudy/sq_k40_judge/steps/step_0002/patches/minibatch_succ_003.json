@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating Jeopardy-style prompts as direct slot-filling queries rather than open-ended questions.",
+    "Preserving canonical phrasing (including necessary articles) for trivia answers while stripping non-essential modifiers.",
+    "Rapid noise filtering in search-result-style contexts to isolate the definitive passage matching the clue keywords."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories involve Jeopardy-style trivia where the model must act as a slot-filler rather than a conversational responder. Previous failures stemmed from overly descriptive answers or misinterpreting clue types. Reinforcing slot-filling behavior, canonical phrasing preservation, and rapid noise filtering will align the agent with the expected concise, exact-match output format.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- Many questions are incomplete clues or trivia statements. Identify the missing subject, object, or keyword rather than summarizing the context.\n- When multiple entities appear in the context, select the one that directly completes the clue or matches the expected brevity.",
+        "content": "- **Slot-Filling Strategy**: Treat Jeopardy-style prompts as sentence-completion tasks. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.\n- **Canonical Phrasing**: Preserve definite articles or standard modifiers if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"), but strip non-essential adjectives or full biographical names.\n- **Noise Filtering**: In search-result-style contexts, rapidly scan titles and snippets for exact keyword matches to the clue, then verify in the passage body before extracting."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Gold Alignment**: Match the granularity and phrasing of the gold answer exactly. If the gold answer is a single word or short phrase, do not expand it into a full sentence or add explanatory clauses inside the answer tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

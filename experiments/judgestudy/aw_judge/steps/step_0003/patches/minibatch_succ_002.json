@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Prioritize direct appliance commands (e.g., cool/clean/heat X with Y) over manual move-in/move-out sequences when holding the target object.",
+    "Verify appliance/receptacle state upon arrival; skip 'open' if already open to save steps.",
+    "Use the admissible action list to infer inventory status and object locations when visual observations are ambiguous or incomplete.",
+    "Close receptacles immediately after single-item placements to maintain environment state and free hands for subsequent searches."
+  ],
+  "patch": {
+    "reasoning": "Multiple trajectories demonstrate that direct transformation commands are faster and more reliable than manual appliance workflows. Agents also benefit from checking appliance states upon arrival to avoid redundant 'open' actions. Furthermore, leveraging admissible actions to infer inventory/object presence resolves ambiguity during search phases. These patterns improve efficiency and robustness across task types.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "9. **Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Always close appliances** immediately after interaction and retrieval to maintain environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance.",
+        "content": "9. **Appliance & Receptacle Workflow**: Upon arriving at an appliance or receptacle, **check its state first**. If it is already open, proceed directly to interaction; do not issue redundant `open` commands. For heating, cooling, or cleaning tasks, **prioritize direct commands** (e.g., `cool <object> with <appliance>`) over manual move-in/move-out sequences when you are holding the object. Manual sequences (`open` -> `move in` -> `close` -> `transform` -> `open` -> `take`) are only required if direct commands fail or are unavailable. **Always close appliances/receptacles** immediately after single interactions or retrievals to maintain environment state and prevent clutter."
+      },
+      {
+        "op": "insert_after",
+        "target": "10. **State Verification & Precision**: Call `inventory` whenever unsure what you hold or if expected actions are missing. Immediately confirm an object's exact name upon pickup. When multiple instances exist, always use the full admissible action string (e.g., `take X from Y`).",
+        "content": "11. **Action-Driven Inference**: When visual observations are ambiguous or incomplete, rely on the **admissible action list** to infer your inventory status and object locations. Actions like `move <object> to <location>` or `examine <object>` appearing in the list strongly indicate you are holding that object or it exists nearby. Use this signal to guide navigation and reduce unnecessary searching."
+      },
+      {
+        "op": "replace",
+        "target": "- **Neglecting appliance/receptacle states**: Attempting to use or store items in closed appliances causes errors. Always open microwaves, fridges, and cabinets before interacting.",
+        "content": "- **Redundant appliance toggling**: Issuing `open` commands to already-open appliances wastes steps. Always inspect the observation state upon arrival and skip `open` if the container/appliance is already open.\n- **Ignoring admissible action cues**: Failing to notice that actions like `move <object> to <location>` appear in the list can lead to missed inventory confirmations or location deductions. Use available actions as a secondary map to verify holdings and plan next moves."
+      }
+    ]
+  },
+  "source_type": "success"
+}

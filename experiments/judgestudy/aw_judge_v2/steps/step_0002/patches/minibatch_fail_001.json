@@ -1,0 +1,20 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "action_loop",
+      "count": 1,
+      "description": "Agent repeatedly cools and places the same object after task completion, failing to recognize success and terminate."
+    }
+  ],
+  "patch": {
+    "reasoning": "The trajectory shows the agent successfully completing the cool-and-place cycle multiple times but failing to call `done` and instead restarting the search or re-processing the object. It also incorrectly discards a valid 'pan' to search for a literal 'pot'. The appended Completion Protocol enforces immediate termination upon verification, prohibits post-success exploration, and clarifies object synonymy handling to break the loop.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "### Completion Protocol\n1. **Final Verification**: After placing the object in the target receptacle, read the observation carefully. If the goal object is listed as present in the receptacle, the task is complete.\n2. **Immediate Termination**: Execute `done` immediately upon verification. Do not follow up with `look`, `inventory`, or any other exploratory actions. Repeatedly executing `done` or continuing after success wastes steps.\n3. **Object Equivalence**: In ALFWorld, task descriptions often use generic names (e.g., \"pot\", \"container\") while the environment provides specific instances (e.g., \"pan\", \"bowl\"). Accept the first reachable object that functionally matches the goal. Once acquired and processed, do not abandon it to search for a literal name match."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

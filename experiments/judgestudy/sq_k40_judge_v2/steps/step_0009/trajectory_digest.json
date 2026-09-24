@@ -1,0 +1,47 @@
+{
+  "step": 9,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 9,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents consistently select longer, formal, or expanded entity variants (adding middle initials, full names, or generic suffixes) instead of the concise core term requested.",
+      "count": 9,
+      "task_ids": [
+        "db8cf44331be40b993b053f5f0e4a996",
+        "9ccac9b7c91c4747b36dcae64742e3a1",
+        "0fe06452bd2645dc8fabe1ff397d352f",
+        "553f1b511f044102b9a5a31fb23d7fd4",
+        "55f92cd27974459aa893c131216a075c",
+        "4edd282826b84986a11ca56b62daaba6",
+        "dcbf2ef2cdf1480797460be29a1ee070",
+        "445d4959a0a94d06adfb86d80c5a9dbd",
+        "d95612fc584b4fb68f15b416ba9924be"
+      ]
+    }
+  ],
+  "score_before": 0.73,
+  "score_after": 0.73,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "- **Exact Term & Variant Alignment**: When multiple variants of an entity exist in the context (e.g., full vs. short names, formal vs. nicknames, expanded vs. abbreviated), strictly default to the shortest, most direct identifier that matches the question's implied length. For company, organization, or location names, strip generic descriptive suffixes (e.g., 'Cards', 'Inc.', 'Company', 'Group', 'Foundation', 'Mountains', 'of Venus') unless explicitly required by the question or integral to the official short name. Strip non-essential middle names, initials, and geographic/event suffixes. Prefer the most commonly used or context-primary variant over obscure alternatives.",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Primary Subject Isolation**: When contexts mention multiple related entities or tangential examples, isolate the single entity that directly satisfies the question's core descriptor. Discard loosely matching items, historical anecdotes, or secondary mentions to prevent over-specification.",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Clue & Fragment Parsing**: For Jeopardy-style clues, name pairs, or declarative statements, isolate the single core entity, location, or concept being queried. Do not infer relationships, repeat parts of the question, or output descriptive phrases. Anchor strictly to the definitive factual noun or proper name.",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer."
+    },
+    {
+      "op": "replace",
+      "content": "3. Perform a rapid, single-sentence verification linking the question's core descriptor to the extracted entity, confirming exact textual alignment and grammatical slot satisfaction. Skip extended analysis for straightforward matches to maintain speed.",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Explicitly opening and closing appliances (microwave, fridge) during heating/cooling tasks.",
+    "Verifying object state and inventory before and after transformations.",
+    "Ensuring target receptacles are opened prior to placement actions."
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals consistent reliance on explicit appliance management (open/close microwave/fridge), state verification (using inventory or checking observations), and receptacle access protocols. These patterns were either implicit or missing in the original skill, which could lead to agents attempting transformations on closed appliances or placing items into inaccessible receptacles.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "4. **Appliance & Transformation Protocol**: Navigate to the appliance, **open it** if closed, perform the clean/heat/cool action, and **close it** afterward. Verify the transformation completes successfully before navigating to the destination."
+      },
+      {
+        "op": "replace",
+        "target": "5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.",
+        "content": "5. **Receptacle Access & Delivery**: Always **open the target receptacle** (fridge, cabinet, shelf) before attempting to place an object. For multi-object tasks, place the first item at the destination before returning to search for the next."
+      },
+      {
+        "op": "replace",
+        "target": "6. **Track progress**: Maintain an internal count of how many objects still need to be found and placed. Only stop searching when the count reaches zero.",
+        "content": "6. **State Verification**: Use `inventory` or re-examine observations to confirm you are holding the correct object(s) and that transformations have applied. Cross-reference admissible actions with your current state to avoid invalid placements."
+      }
+    ]
+  },
+  "source_type": "success"
+}

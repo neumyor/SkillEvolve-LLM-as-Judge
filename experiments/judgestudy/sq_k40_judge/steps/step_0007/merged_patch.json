@@ -1,0 +1,108 @@
+{
+  "reasoning": "Prioritized failure-driven edits per guidelines, specifically overriding the success-driven replacement for 'Gold Alignment & Morphological Precision' with the failure version to enforce canonical lexical priority over forced syntactic agreement. Applied all remaining success-driven edits targeting distinct rules or sections. Preserved original support counts and source types. No protected sections were present.",
+  "edits": [
+    {
+      "op": "append",
+      "target": "## Core Retrieval & Reasoning Principles",
+      "content": "\n- **Distributed Fact Correlation**: When a clue's constraints are split across multiple `[DOC]` blocks, actively correlate them rather than evaluating each snippet in isolation. Use temporal, numerical, or proper-noun anchors to bridge disjointed facts and isolate the target entity.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Declarative Clue Parsing & Implicit Query Resolution**:",
+      "content": "\n- **Pointer & Reference Clue Handling**: When a clue uses referential phrases like \"stands for\", \"means\", \"preceded\", \"another way of saying\", or quotes lyrics/titles, treat the prompt as a direct lookup request for the *target headword*. Ignore the pointer's descriptive content and extract only the precise term it points to.",
+      "support_count": 5,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as primary query anchors. Crucially, treat the accompanying descriptive clauses as *active filtering constraints*, not noise. Use them to narrow down candidates and discard entities that fail the specific attributes mentioned.",
+      "content": "- **Implicit Reference Resolution**: Treat pronouns (\"he\", \"she\", \"it\") and deictics (\"this\", \"here\", \"seen here\") as primary query anchors. Crucially, treat the accompanying descriptive clauses as *active filtering constraints*, not noise. Resolve the implicit subject by mapping the anchor to its concrete referent using the descriptive clauses to filter candidates.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "\n- **Title-Passage Triangulation**: Prioritize document titles (`[TLE]`) as high-signal candidate generators for trivia queries. Use titles to rapidly narrow the search space, then verify constraints against the passage body (`[PAR]`) before finalizing the answer.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Slot-Filling Strategy**:",
+      "content": "\n- **Informal Descriptor Resolution**: Treat casual or colloquial clue descriptors (e.g., \"this guy\", \"that raft\", \"witty saying\") as categorical placeholders. Map them directly to the precise canonical entity type requested, prioritizing factual alignment over literal interpretation of the descriptor.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Slot-Filling Strategy**:",
+      "content": "\n- **Acronym & Initialism Preservation**: If the canonical answer is an acronym or initialism (e.g., SCTV, NASA), output it exactly as such. Do not expand abbreviations into full phrases unless the clue explicitly demands it.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Clue Syntax Mapping**:",
+      "content": "\n- **Scare Quote & Metaphor Normalization**: Strip quotation marks around terms in the clue (e.g., \"network\", \"soft-shell\") and treat them as standard categorical or descriptive filters. Do not let stylistic punctuation obscure the core semantic constraint.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Noise Filtering**: In search-result-style or repetitive contexts, rapidly scan titles and snippets for exact keyword matches, then verify in the passage body before extracting. Ignore duplicated passages.",
+      "content": "- **Noise Filtering & Title Priority**: In search-result-style or repetitive contexts, prioritize scanning `[TLE]` and `[DOC]` headings for canonical terms before verifying in passage bodies. Quickly discard fragmented or duplicate snippets that lack the exact target entity, focusing solely on the semantic gap.",
+      "support_count": 5,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses.",
+      "content": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Do not force syntactic agreement with the clue if it conflicts with the canonical form; prioritize the exact lexical item (e.g., singular vs. plural, verb vs. adjective) over grammatical consistency with the prompt.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler.",
+      "content": "Preserve exact capitalization and title casing from the context or standard usage. Omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler.",
+      "support_count": 5,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "## Answer Formatting Rules",
+      "content": "\n- **Zero-Leakage Canonical Output**: Ensure the final answer inside `<answer>` tags contains *only* the isolated entity. Strip all leading labels, reasoning fragments, trailing punctuation, and conversational filler. Never append explanatory clauses or default to full sentences.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Avoid converting declarative clues into Yes/No answers.**",
+      "content": "\n- **Acronym & Abbreviation Priority**: When the context provides both a full name and its acronym/abbreviation (e.g., \"Ladies Professional Golf Association (LPGA)\"), default to the acronym/abbreviation unless the clue explicitly requests the full name.\n- **Alternative & Compound Exclusion**: Strictly avoid outputting combined alternatives (e.g., \"Sheep or goat\"), broader categories, or semantically related distractors. Isolate the single most specific, canonical term that directly satisfies the clue.",
+      "support_count": 3,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "- **Redundant Category Stripping**: If the clue explicitly names a category or type (e.g., 'island', 'company', 'fruit', 'satellite radio'), do not append it to the extracted proper noun unless it is strictly part of the official name. Output only the core identifier (e.g., 'Roanoke' not 'Roanoke Island', 'Sirius' not 'Sirius Satellite Radio').",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "- **Container-Part Disambiguation**: When a clue references a sub-component, building, or feature located *within* a larger site or entity (e.g., 'building at this site'), always resolve the query to the *container* or *primary subject* requested by the prompt's anchor. Do not answer with the sub-component itself.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ]
+}

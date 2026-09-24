@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treat trivia and Jeopardy-style prompts as direct queries for specific named entities rather than true/false or descriptive questions.",
+    "Extract exact short phrases or entities from the context, preserving original capitalization, singular/plural forms, and necessary articles.",
+    "Prioritize explicit contextual links over prominent entities when resolving vague clues.",
+    "Maintain strict formatting by wrapping only the final entity in <answer> tags, keeping reasoning minimal and outside the tags."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle trivia/Jeopardy-style clues by mapping descriptors directly to exact short entities in the context. They preserve exact wording (including articles and capitalization), avoid conversational filler, and strictly separate minimal reasoning from the final answer tag. Encoding these core strategies will establish a robust baseline for exact-match QA tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat trivia, Jeopardy-style, or definition prompts as direct queries for a specific named entity. Match key descriptors directly to candidates in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint.\n\n## Precision Extraction Rules\n- **Exact Short Phrase Priority**: Output only the precise word or short phrase requested. Never output descriptive sentences, full explanations, or conversational filler.\n- **Grammatical & Specificity Alignment**: Strictly match the exact number (singular/plural), capitalization, and specificity of the target. Preserve exact wording, including articles (e.g., \"a bouncer\") if they appear in the context or expected answer.\n- **Constraint Over Prominence**: When multiple entities fit a vague clue, select the one that strictly satisfies the unique constraint in the question. Ignore adjacent metadata or descriptive phrases.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format.\n- **Concise Output**: Limit answers to a few words or a short phrase. Omit restatements of the question or introductory phrases.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

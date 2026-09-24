@@ -1,0 +1,18 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Scanning multi-document contexts for question keywords",
+    "Leveraging explicit textual clues like parentheses or direct definitions",
+    "Extracting concise, exact entities without extra explanation"
+  ],
+  "patch": {
+    "reasoning": "The trajectory shows the agent successfully navigating a cluttered, multi-document context to locate a specific quoted phrase and extract the correct entity. Encoding a structured approach to keyword scanning, clue utilization, and concise extraction will generalize this success to similar reading-comprehension tasks.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Context Navigation & Extraction Guidelines\n- **Targeted Scanning**: When presented with multiple documents or passages, quickly scan for exact or near-exact keyword matches from the question to isolate the relevant segment.\n- **Exploit Explicit Clues**: Look for direct definitions, synonyms, or parenthetical clarifications (e.g., `(Disneyland)`) that resolve references or fill-in-the-blank prompts.\n- **Strict Conciseness**: Once the target information is identified, extract only the precise entity, name, or short phrase. Omit full sentences, conversational filler, or restatements of the question."
+      }
+    ]
+  },
+  "source_type": "success"
+}

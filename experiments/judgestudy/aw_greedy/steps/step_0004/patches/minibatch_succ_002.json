@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Sequential surface/container scanning when targets are not immediately visible",
+    "Pre-delivery inventory verification to confirm object state and hand clearance",
+    "Post-transformation appliance closure to maintain environment state"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently exhibit three behaviors: systematic sequential scanning of surfaces when targets are hidden, explicit inventory checks before final delivery to prevent state mismatches, and immediate closure of appliances after transformations. Encoding these reduces search loops, prevents placement failures, and maintains clean environment states.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "4. **Manage Appliance States**: Always open closed appliances/containers before interacting. For heating or cleaning, prioritize performing the transformation while **holding the object** at the open appliance. Ensure doors are open for placement interactions.",
+        "content": "4. **Manage Appliance States**: Always open closed appliances/containers before interacting. Perform transformations while **holding the object** at the open appliance. **Immediately close the appliance** after a successful `heat`, `cool`, or `clean` action to reset the environment state. Proceed directly to the next step."
+      },
+      {
+        "op": "replace",
+        "target": "8. **Track Progress & Proactive Checks**: Maintain an internal count of remaining objectives. Use `inventory` immediately after picking up or transforming objects to confirm holdings and states before navigating. Adjust search strategy early if the expected item is missing.",
+        "content": "8. **Pre-Delivery Verification**: Before navigating to the final receptacle, execute a single `inventory` call to confirm you are holding the transformed object and that your hands are clear of irrelevant items. Resolve any discrepancies immediately to avoid failed placements or state mismatches."
+      },
+      {
+        "op": "replace",
+        "target": "10. **Prioritize Search by Category**: Focus initial searches on high-probability locations based on object type (e.g., food on dining tables/counters/fridges, kitchenware on countertops/sinks, electronics on desks/shelves) to minimize blind exploration.",
+        "content": "10. **Structured Sequential Scanning**: When a target is not immediately visible, iterate through available surfaces and containers in a logical sequence (e.g., countertop 1 → 2 → 3, or fridge → counter → table). Avoid random jumps. If a zone yields nothing, pivot to a completely different room or category rather than re-scanning."
+      }
+    ]
+  },
+  "source_type": "success"
+}

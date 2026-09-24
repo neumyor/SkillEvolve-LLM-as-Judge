@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct mapping of definitions, synonyms, and cultural references to the exact entity in the context.",
+    "Prioritizing document titles and opening snippets for rapid fact retrieval.",
+    "Minimalist reasoning traces for straightforward trivia, avoiding unnecessary step-by-step breakdowns."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate rapid extraction via titles/snippets, accurate mapping of definitional/cultural clues (e.g., 'lambi', 'Clio') to standard terms, and concise verification traces instead of verbose step-by-step reasoning. These patterns address common verbosity and misalignment failures while reinforcing efficient reading strategies.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a concise, single-sentence verification trace linking the clue to the extracted entity, or skip entirely for straightforward matches to prevent verbosity."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Title & Snippet Prioritization**: For factual and trivia queries, scan document titles (`[TLE]`) and opening paragraphs first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full passages."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Definition & Reference Mapping**: When questions use synonyms, local terms, or cultural/mythological references (e.g., 'lambi', 'muse of history'), map them directly to the standard entity named in the context. Ignore conversational framing or trailing metadata in the clue."
+      }
+    ]
+  },
+  "source_type": "success"
+}

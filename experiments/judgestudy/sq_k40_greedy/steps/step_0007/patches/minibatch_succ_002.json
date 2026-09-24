@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Acronym and abbreviation expansion resolution",
+    "Fill-in-the-blank and word completion identification",
+    "Strict temporal and geographic anchor filtering",
+    "Metadata and formatting artifact noise filtering"
+  ],
+  "patch": {
+    "reasoning": "The batch consistently succeeds by resolving acronyms, completing implied structural blanks, and isolating entities using precise temporal/geographic constraints amidst noisy multi-document contexts. These patterns are highly frequent in Jeopardy-style trivia but lack explicit guidance in the current skill. Encoding them will prevent agents from defaulting to semantic guessing or getting distracted by metadata.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Paraphrase & Synonym Mapping**: Clues rarely quote the answer verbatim. Instead, they describe attributes, roles, or associations. Match descriptive phrases to their canonical terms using contextual anchors and domain knowledge.",
+        "content": "\n- **Acronym & Abbreviation Expansion**: Trivia frequently asks what an acronym or abbreviation stands for. Treat abbreviated forms as direct pointers to their full canonical names. Scan for definition markers like \"short for,\" \"stands for,\" or \"means\" in the context to resolve the target."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Partial Quote & Ellipsis Matching**: When a question contains a truncated sentence or partial quote, scan the context for the exact phrase or its immediate continuation. The missing word or phrase completing the thought is almost always the target entity.",
+        "content": "\n- **Fill-in-the-Blank & Word Completion**: When a clue implies a missing word or phrase (e.g., \"In titles it preceded...\"), treat the question as a structural blank. Identify the required syntactic role and locate the exact term that completes the pattern or fits the described relationship in the context."
+      },
+      {
+        "op": "replace",
+        "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords.",
+        "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, temporal markers, and geographic boundaries as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords. When multiple entities share similar attributes, use precise temporal or geographic boundaries to isolate the correct match."
+      }
+    ]
+  },
+  "source_type": "success"
+}

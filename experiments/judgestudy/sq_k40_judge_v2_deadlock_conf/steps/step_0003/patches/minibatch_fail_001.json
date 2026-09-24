@@ -1,0 +1,21 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Agent over-expanded the expected answer by adding a qualifier ('American') not present in the gold answer or required by the prompt."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent substituted the exact context term 'Football' with a more specific synonym 'American Football'. Adding a strict exact-match rule prevents unnecessary expansion and synonym substitution, ensuring alignment with the gold answer's granularity.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Answer Precision Rules\n- **Exact Context Match**: Always extract the exact word or phrase used in the `[DOC]`/`[PAR]` blocks. Do not substitute synonyms or add qualifiers (e.g., use 'Football' not 'American Football', 'Soccer' not 'Association Football').\n- **Minimal Span**: Return the shortest span that answers the question. Strip adjectives, titles, or explanatory phrases.\n- **Format**: Enclose the final answer strictly within `<answer>...</answer>` tags. No extra text inside."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

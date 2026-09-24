@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Demonstrative/Pointer Resolution in Trivia Clues",
+    "Exact Entity Extraction & Granularity Alignment",
+    "Direct Context Scanning for Statistical/Numerical Anchors"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories feature Jeopardy-style or trivia prompts that use demonstratives ('this...', 'that...') or descriptive clauses to point to a target entity. Success consistently relied on mapping these pointers directly to exact names/terms in the context, avoiding paraphrasing, and aligning the answer's granularity with the clue's implication. Encoding these strategies will prevent over-explanation and improve precision on clue-based QA.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Exact Entity Extraction**: Prioritize pulling exact names, terms, or phrases directly from the context. Avoid paraphrasing or adding categorical descriptors.\n- **Pointer Resolution**: Questions often use demonstratives (\"this...\", \"that...\") or descriptive clauses to point to a target. Map these pointers directly to the corresponding entity in the text.\n- **Granularity Matching**: Align the answer's scope with the clue's implication (e.g., surname vs. full name, city vs. state). When in doubt, default to the most specific identifier mentioned in the context.\n\n## Execution Workflow\n1. **Parse & Isolate**: Break down the prompt into key identifiers, numerical/statistical anchors, and relational cues.\n2. **Locate & Verify**: Scan the context for exact keyword matches or synonymous descriptions. Cross-check multiple documents if needed, but trust the most direct statement.\n3. **Extract & Trim**: Return only the core answer. Remove surrounding context, dates, or explanatory phrases unless explicitly requested.\n4. **Format**: Think step-by-step outside tags. Place the final, concise answer strictly inside `<answer>...</answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

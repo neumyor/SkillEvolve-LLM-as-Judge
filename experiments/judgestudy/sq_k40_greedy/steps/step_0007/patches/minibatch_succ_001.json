@@ -1,0 +1,33 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Recognizing Quiz/Flashcard Structures: Treating questions as direct lookups from catalog entries or trivia databases where the answer is a verbatim or near-verbatim field value.",
+    "Abbreviation & Acronym Resolution: Expanding or mapping common location codes, state abbreviations, and acronyms to their full contextual forms.",
+    "Strong Semantic Association Bridging: Using high-confidence domain collocations (e.g., dipper → honey, Emmentaler → Swiss cheese) when exact keyword overlap is partial."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently treat questions as direct trivia/flashcard lookups, relying on exact string anchors, abbreviation expansion (e.g., PHL → Philadelphia), and strong semantic collocations (e.g., dipper → honey). These patterns are not explicitly codified in the current skill and should be reinforced to prevent over-reasoning or missing abbreviated entities.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Verbatim Context Lifting",
+        "content": "- **Quiz & Flashcard Format Recognition**: Many prompts originate from trivia databases, flashcards, or catalog entries. Treat these as direct lookup requests. Prioritize finding the exact entity name or title in document headers and snippets before attempting complex semantic parsing."
+      },
+      {
+        "op": "insert_after",
+        "target": "Typo & Variant Tolerance",
+        "content": "- **Abbreviation & Acronym Resolution**: Trivia clues frequently use location codes, state abbreviations, or industry acronyms (e.g., \"PHL\", \"NYC\", \"USA\"). Always attempt to expand or map these to their full canonical forms present in the context. If the context uses the abbreviation, output it; if it uses the full form, prefer the full form unless the clue strictly demands the abbreviation."
+      },
+      {
+        "op": "replace",
+        "target": "Snippet/Title Density Heuristic: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+        "content": "Snippet/Title Density Heuristic: Trivia questions are typically sourced from summaries, catalog entries, or flashcards where the target entity is explicitly named. When multiple candidates exist, prioritize the document where the *highest concentration* of query anchors aligns with the title or opening sentence, indicating a direct definition or catalog match."
+      },
+      {
+        "op": "append",
+        "content": "- **Strong Association Bridging**: When exact keyword matches are sparse, leverage high-confidence domain collocations and functional associations (e.g., \"dipper\" → honey, \"Emmentaler\" → Swiss cheese). Map the clue's functional descriptor to its standard real-world counterpart found in the context."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,36 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 4,
+      "description": "Agents over-specify answers by retaining titles, corporate suffixes, middle initials, and event qualifiers instead of the core identifier."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 2,
+      "description": "Agents misidentify the target dimension, substituting relationships or phenomena for the requested location, person, or original phrase."
+    },
+    {
+      "failure_type": "other",
+      "count": 1,
+      "description": "Minor spelling/casing variants (e.g., Filo vs phyllo) cause mismatches despite semantic equivalence."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals two dominant failure modes: excessive verbosity in entity names (retaining titles, suffixes, initials, and qualifiers) and misalignment with the question's target dimension (answering with relationships or phenomena instead of the specific entity/location/phrase requested). The proposed edits tighten extraction rules for conciseness and enforce explicit dimension verification to prevent conceptual substitution.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. Prioritize the shortest canonical identifier that satisfies all constraints (e.g., \"Roanoke\" not \"Roanoke Island\", \"Sirius\" not \"Sirius Satellite Radio\", \"George Bush\" not \"George H. W. Bush\").",
+        "content": "- **Strict Minimal Entity Extraction**: Aggressively strip non-essential modifiers, corporate suffixes (e.g., \"Cards\", \"Inc.\"), middle initials (e.g., \"B.\"), titles, and roles (e.g., \"King of\", \"President\"). For events or phenomena, extract only the core term (e.g., \"transit\" not \"Transit of Venus\"). Always prioritize the shortest, most direct identifier that satisfies all constraints."
+      },
+      {
+        "op": "insert_after",
+        "target": "Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+        "content": "\n\n- **Target Dimension Verification**: Before finalizing, explicitly verify the exact dimension requested (e.g., location, person, original phrase, specific term). Never substitute related concepts such as relationships (\"Sisters\"), phenomena (\"Spoonerism\"), or categories. If the clue describes a place or entity via attributes, output the place/entity itself, not the descriptor or relational link."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

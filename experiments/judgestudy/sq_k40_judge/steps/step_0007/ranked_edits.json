@@ -1,0 +1,41 @@
+{
+  "reasoning": "Prioritized failure-driven edits per guidelines, specifically overriding the success-driven replacement for 'Gold Alignment & Morphological Precision' with the failure version to enforce canonical lexical priority over forced syntactic agreement. Applied all remaining success-driven edits targeting distinct rules or sections. Preserved original support counts and source types. No protected sections were present. [optimizer-ranked: selected 4/15 edits]",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "\n- **Title-Passage Triangulation**: Prioritize document titles (`[TLE]`) as high-signal candidate generators for trivia queries. Use titles to rapidly narrow the search space, then verify constraints against the passage body (`[PAR]`) before finalizing the answer.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses.",
+      "content": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Do not force syntactic agreement with the clue if it conflicts with the canonical form; prioritize the exact lexical item (e.g., singular vs. plural, verb vs. adjective) over grammatical consistency with the prompt.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "- **Container-Part Disambiguation**: When a clue references a sub-component, building, or feature located *within* a larger site or entity (e.g., 'building at this site'), always resolve the query to the *container* or *primary subject* requested by the prompt's anchor. Do not answer with the sub-component itself.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [4] introduces a critical, actionable retrieval workflow (prioritizing titles for candidate generation, then verifying in passages) that fills a major gap in the current cross-referencing guidance, directly addressing widespread search-result noise failures. Edit [9] corrects a pervasive LLM failure mode where models force grammatical agreement over factual canonical forms, significantly boosting answer accuracy. Edit [3] generalizes prompt parsing by instructing the model to mentally convert fragmented or headline-style inputs into explicit queries, improving robustness across diverse formats. Edit [14] resolves a high-frequency logical disambiguation trap (part-vs-whole/container) that consistently causes incorrect entity selection in location-based clues, offering clear, concrete guidance for a recurring failure pattern.",
+    "selected_indices": [
+      4,
+      9,
+      3,
+      14
+    ]
+  }
+}

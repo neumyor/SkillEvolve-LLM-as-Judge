@@ -1,0 +1,34 @@
+{
+  "batch_size": 4,
+  "failure_summary": [
+    {
+      "failure_type": "rule_wrong",
+      "count": 1,
+      "description": "Heuristic to pick most frequent/prominent entity overrides specific question constraints, causing distractor selection."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 2,
+      "description": "Skill lacks guidance on preserving definite articles and normalizing formal names (dropping middle initials/suffixes)."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch shows systematic failures in three areas: (1) agents default to prominent/distractor entities instead of matching specific constraints; (2) agents omit definite articles that are part of canonical names; (3) agents retain overly formal name variations (middle initials/suffixes) when the standard name is expected. These edits correct the distractor heuristic and add precision rules for articles and name normalization.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+        "content": "When multiple candidates fit, strictly prioritize the one that exactly matches the specific constraints or descriptive phrases in the question, even if another entity is more prominent or frequently mentioned in the context."
+      },
+      {
+        "op": "append",
+        "content": "- Preserve definite articles (e.g., \"the\") if they are part of the canonical name or consistently used in the context/gold standard (e.g., output \"the Sahara\" rather than \"Sahara\")."
+      },
+      {
+        "op": "append",
+        "content": "- Normalize personal names by preferring the standard/common form over formal variations. Drop middle initials or suffixes (e.g., \"Jr.\", \"Sr.\", \"III\") unless the question explicitly requires them or the context exclusively uses the formal version."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

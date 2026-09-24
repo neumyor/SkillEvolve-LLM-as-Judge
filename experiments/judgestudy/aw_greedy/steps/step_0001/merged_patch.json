@@ -1,0 +1,75 @@
+{
+  "reasoning": "Applied failure-driven patches with highest priority, overriding conflicting success-driven edits on Principles 2 and 7, and the 'Revisiting searched locations' mistake. Preserved all non-conflicting success-driven patches (Principles 4, 6, 8 additions, and Common Mistakes additions). Maintained structural integrity by placing new protocol sections logically within the General Principles and Common Mistakes areas. All edits retain their original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+      "content": "2. **Systematic exploration**: Maintain a strict mental log of every surface and container visited. Mark each as 'checked' immediately upon arrival. Never revisit a 'checked' location until all other unvisited options in the current room are exhausted. Open closed containers to inspect contents before marking them checked.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Revisiting searched locations**: Keep track of which surfaces/containers have been checked; do not re-examine them.",
+      "content": "- **Blind looping**: Repeatedly cycling through the same set of locations (e.g., cabinet 1 -> 2 -> 1 -> 2) wastes steps. Force yourself to move to a completely different, unvisited location or use `inventory` to assess progress before changing direction.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "target": "3. **Grab immediately**: When a required object is visible and reachable, take it right away before moving elsewhere.",
+      "content": "\n## Search & Navigation Protocol\n\n1. **Track Visited Locations**: Explicitly state which containers/surfaces have been checked in your thinking. Do not move to a location unless it is unvisited or contains a known target object.\n2. **Remember Object Spots**: If you see a target object on a surface or inside a container, record its exact name and location. After completing transformations or deliveries, navigate directly back to that recorded location. Do not resume blind searching if the object's whereabouts are known.\n3. **Verify Before Shuttling**: Check your inventory and object states (e.g., temperature, cleanliness) with a single `examine` or `inventory` call. Only travel between appliances and destinations when the current sub-goal is fully satisfied. Avoid oscillating between locations without advancing the task.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "3. **Verify Before Shuttling**: Check your inventory and object states (e.g., temperature, cleanliness) with a single `examine` or `inventory` call. Only travel between appliances and destinations when the current sub-goal is fully satisfied. Avoid oscillating between locations without advancing the task.",
+      "content": "\n- **Placement & Receptacle States**: If the `put` action is unavailable, examine the receptacle to check if it is closed or requires a specific interaction. Do not attempt to place objects into closed or incompatible receptacles. Verify object states once, then proceed directly to the next step without unnecessary returns.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "7. **Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+      "content": "7. Verify completion & avoid loops: After placing the transformed object, immediately check the observation. If the object is on the target receptacle and you are empty-handed, the task is complete—do not re-pick or continue acting. Never repeat the same action more than twice in a row without new progress.",
+      "support_count": 1,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "7. Verify completion & avoid loops: After placing the transformed object, immediately check the observation. If the object is on the target receptacle and you are empty-handed, the task is complete—do not re-pick or continue acting. Never repeat the same action more than twice in a row without new progress.",
+      "content": "\n## Termination & Validation Protocol\n- **Immediate Stop Condition**: After placing the transformed object, verify via observation that it rests on the target receptacle and your inventory is empty. If confirmed, cease all further actions. Do not re-pick, re-examine, or perform redundant checks; the episode terminates automatically upon success.\n- **Object Naming Precision**: Tasks require exact object matches. If the goal specifies \"pan\", strictly search for \"pan\". Do not substitute similar items (e.g., \"pot\", \"bowl\") unless absolutely necessary, as substitutions frequently fail validation. Exhaustively search standard locations for the exact name before considering alternatives.",
+      "support_count": 1,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+      "content": "4. **Manage appliance states**: Always open closed appliances (microwave, fridge, sink) before attempting to heat, cool, clean, or place items. Ensure doors are open for placement interactions.\n5. **Verify transformation state**: Before final placement, confirm the object's state matches the goal (e.g., 'hot', 'cold', 'clean'). If the state is incorrect, return to the appliance to re-process rather than placing a mismatched item.\n6. **Clear inventory for multi-object tasks**: When handling multiple items, place the first acquired object at the destination to free your inventory before searching for and acquiring the remaining items.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "6. **Track progress**: Maintain an internal count of how many objects still need to be found and placed. Only stop searching when the count reaches zero.",
+      "content": "8. **Track progress & locations**: Maintain a mental log of visited surfaces and opened containers. If an object isn't found after checking high-probability locations, systematically scan remaining areas. Stop searching only when the object is acquired or all viable locations are exhausted.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+      "content": "\n10. **Leverage admissible actions**: If an action like `take [object] from [location]` appears in the admissible list but the object isn't visible, navigate to that location immediately. Admissible actions often reveal hidden or nearby objects.\n11. **Check inventory when stuck**: If unsure about held items or progress, use the `inventory` command to verify carried objects and adjust your search strategy accordingly.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "Common Mistakes to Avoid",
+      "content": "- **Leaving appliances open**: Failing to close microwaves, fridges, or sinks after use can block future interactions or cause state confusion. Always close them immediately after the transformation step.\n- **Misinterpreting prepositions**: Placing an item \"on\" a desk when the goal says \"in\" (or vice versa) will fail. Match the preposition strictly, favoring internal compartments for \"in\" goals.\n- **Inventory mismatches**: Attempting to hold multiple objects simultaneously or failing to verify possession after transformations leads to errors. Place items sequentially and verify inventory when stuck.",
+      "support_count": 6,
+      "source_type": "success"
+    }
+  ]
+}

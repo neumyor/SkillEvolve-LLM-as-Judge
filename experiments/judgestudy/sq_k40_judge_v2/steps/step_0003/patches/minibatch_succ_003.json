@@ -1,0 +1,29 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Semantic Paraphrase Mapping: Agents successfully bridge descriptive or cloze-style question phrasing to exact contextual terms (e.g., mapping 'this way' to 'backwards' or 'phenomenon... giant snake' to 'rainbow').",
+    "Alias & Variant Resolution: Agents correctly resolve translated titles, aliases, or partial descriptions to the exact primary name as it appears in the context.",
+    "Full-Clue Structural Matching: Agents scan for sentences that structurally match the entire trivia clue rather than isolated keywords, ensuring accurate fact extraction."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently show that agents excel when they treat descriptive trivia and Jeopardy-style clues as semantic bridging tasks. They map paraphrased question phrasing directly to exact contextual terminology and resolve aliases/variants to the primary name in the text. Encoding these patterns will prevent failures where agents rely on superficial keyword matching instead of structural or semantic alignment.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "\n- **Semantic Paraphrase Mapping**: Questions frequently rephrase factual statements using synonyms, descriptors, or cloze-style blanks. Map the question's descriptive phrasing directly to the exact terminology in the `[DOC]` passages before extraction."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Alias & Variant Resolution**: For entities like films, songs, or locations, questions may use translated titles, common aliases, or partial descriptions. Anchor strictly to the exact title or primary name as presented in the context's `[TLE]` or opening lines."
+      },
+      {
+        "op": "replace",
+        "target": "2. Search the context for those identifiers or their immediate synonyms. Ignore irrelevant tangential documents.",
+        "content": "2. Search the context for those identifiers or their immediate synonyms. Match the full clue structure to definitive factual statements in the text, ignoring tangential anecdotes or incorrect guesses."
+      }
+    ]
+  },
+  "source_type": "success"
+}

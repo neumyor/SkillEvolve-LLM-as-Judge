@@ -1,0 +1,41 @@
+{
+  "reasoning": "Prioritized failure-driven patches for canonical phrasing, quote resolution, semantic category verification, and modifier discipline. Integrated success-driven patches addressing implicit reference filtering, shared-attribute inference, fragment completion, technical gap filling, multi-snippet constraint intersection, event-location mapping, standalone entity resolution, convergent clues, granular morphological alignment, foreign terms, and comparative mapping. All edits target distinct regions or address non-overlapping aspects of the skill. Appended low-priority success patterns where failure patches did not cover them. Maintained original support counts and source types. Edits are sequenced by document flow to ensure stable target matching during application. [optimizer-ranked: selected 4/15 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as the primary query anchors. Map them directly to the concrete entity described in the context, ignoring intervening descriptive clauses.",
+      "content": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as primary query anchors. Crucially, treat the accompanying descriptive clauses as *active filtering constraints*, not noise. Use them to narrow down candidates and discard entities that fail the specific attributes mentioned.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "- **Semantic Category Constraint Verification**: Cross-check the clue's explicit categorical keywords (e.g., \"acid\", \"tree\", \"artist\", \"river\") against candidate entities. If a clue specifies a type (e.g., \"caustic acid\"), discard candidates that belong to a different category (e.g., \"caustic soda\"/base) even if they share other attributes. Ensure the selected entity strictly satisfies the semantic type requested by the prompt.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Canonical Phrasing & Granularity Alignment**: Strictly match the canonical trivia answer's length and form. Do not arbitrarily expand names (e.g., output \"Boss\" not \"Boss Tweed\", \"Napoleon\" not \"Napoleon Bonaparte\") or contract them unless the clue dictates otherwise. Distinguish between descriptive modifiers and integral parts of a proper noun or compound name; retain established multi-word entity names exactly as they appear in the context (e.g., \"Forbes magazine\"), but strip purely descriptive terms when the core concept suffices. For fill-in-the-blank clues presenting partial names, extract the full canonical entity name, not just the missing word.",
+      "content": "- **Canonical Phrasing & Granularity Alignment**: Prioritize exact canonical string matching over heuristic expansion or contraction. Trivia and Jeopardy answers often require specific articles, honorifics, titles, or full names (e.g., \"Sir Isaac Newton\", \"the Amazon\", \"a eucalyptus tree\") that must be preserved exactly. Do not strip titles, articles, or generic descriptors (like \"River\" or \"Speech\") unless explicitly instructed by the clue. Conversely, do not append explanatory modifiers or default to full names if the canonical answer is a surname or short phrase. Match the exact capitalization, plurality, and phrasing of the expected answer.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts, cross-reference every constraint from the clue against candidate passages. Ignore duplicated entries and discard any entity that matches only some attributes or belongs to a different category.",
+      "content": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. When a clue contains multiple independent attributes, actively cross-reference across *multiple* document snippets to intersect constraints. Discard candidates that satisfy only a subset of conditions or belong to a different category.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [0] addresses a critical flaw in the original skill ('ignoring intervening descriptive clauses') that causes widespread entity misidentification, giving it the highest systematic impact. Edit [13] fills a major gap in semantic validation, preventing category-mismatch errors across diverse tasks. Edit [9] resolves internal contradictions in the canonical phrasing rule, providing clear, actionable guidance to eliminate over/under-specification formatting failures. Edit [6] strengthens the retrieval phase by explicitly instructing cross-snippet constraint intersection, directly addressing a common failure pattern in noisy, multi-constraint contexts. Together, they cover parsing, validation, formatting, and retrieval with maximum generality and actionability.",
+    "selected_indices": [
+      0,
+      13,
+      9,
+      6
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "step": 3,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 9,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents consistently misalign the answer's entity type, grammatical form (singular/plural), or phrase completeness with the question's explicit request, often providing verbose descriptions, truncated terms, synonyms, or the wrong entity class.",
+      "count": 9,
+      "task_ids": [
+        "1e2d47768a16419688fcffb970f20c45",
+        "2be20bbbb7fb4e8d8cf61d3863457b3b",
+        "1ea2851b642c4b15af816e0af9d8aa7e",
+        "06173fc595e842c6abfbd7d904bba79a",
+        "2899eea4efa7475cb3f553968f335d25",
+        "a40a4414307640f4a89cc84e00e56ea2",
+        "7ebc5c81713a4197ac303dec72719c0f",
+        "1400ca67c580458d91e3cb319ce25a74",
+        "a6eb760a3753499881a8bbbf9e60749c"
+      ]
+    }
+  ],
+  "score_before": 0.73,
+  "score_after": 0.73,
+  "rejected_edits": [
+    {
+      "op": "insert_after",
+      "content": "\n- **Cloze & Definition Mapping**: Treat fragment questions as direct definition requests. Locate the exact sentence matching the clue and extract the subject term verbatim.\n- **Primary Subject Isolation**: When multiple entities are mentioned, isolate the one that directly satisfies the question's descriptor. Ignore tangential examples, historical anecdotes, or secondary mentions to prevent over-specification.\n- **Semantic Paraphrase Mapping**: Questions frequently rephrase factual statements using synonyms, descriptors, or cloze-style blanks. Map the question's descriptive phrasing directly to the exact terminology in the `[DOC]` passages before extraction.",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer."
+    },
+    {
+      "op": "append",
+      "content": "- **Entity Type & Form Alignment**: Parse the question to identify the exact entity type requested (e.g., territory, sport, species). Answer strictly with that entity, avoiding tangential details or related institutions. Strictly preserve the exact grammatical form (singular/plural), retain all necessary modifiers, and output the complete compound term (e.g., 'Brown pelican', 'the South Sea Bubble') as it appears in the context. Do not truncate, expand, or substitute with synonyms.",
+      "target": ""
+    },
+    {
+      "op": "replace",
+      "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and declarative statement prompts (e.g., 'It's the...', 'This [noun]...') as direct fill-in-the-blank or definition requests. Ignore non-semantic tokens like trailing clue numbers, colons, or parentheses. Identify the target entity immediately without describing relationships or generating categories.",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories."
+    },
+    {
+      "op": "replace",
+      "content": "3. Provide a concise, single-sentence grounded justification that directly links the question's clue to the extracted entity, confirming context alignment. Skip extended analysis for straightforward trivia queries to prevent verbosity.",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context."
+    }
+  ]
+}

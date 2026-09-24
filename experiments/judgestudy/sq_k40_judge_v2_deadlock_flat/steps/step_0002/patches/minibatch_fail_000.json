@@ -1,0 +1,25 @@
+{
+  "batch_size": 6,
+  "failure_summary": [
+    {
+      "failure_type": "rule_missing",
+      "count": 6,
+      "description": "Skill lacks rules for Jeopardy-style clues, definitions, and trivia prompts, causing agents to output full names, plurals, or specific examples instead of the exact target term."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 4,
+      "description": "Agents fail to match exact granularity (surname vs full name, singular vs plural, category vs example) required by clue-based questions."
+    }
+  ],
+  "patch": {
+    "reasoning": "All 6 failures stem from clue/definition-style questions where the agent over-extracts information (full names, plurals, specific examples, or multiple candidates) instead of providing the concise, exact target term implied by the prompt. The current skill provides no guidance on handling these formats. The proposed edit adds explicit rules for clue-style identification, enforcing strict granularity matching (surname-only, singular forms, category-over-example), constraint adherence, and single-entity selection.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Handling Clues, Definitions, and Trivia\nWhen the question is a descriptive clue, definition, or trivia statement (often lacking a direct question word):\n- Identify the core concept or entity being defined. Output ONLY the precise target term. Do not add descriptors, categories, or explanatory clauses.\n- Match expected granularity strictly: if the clue implies a surname, abbreviation, or single word, provide only that (e.g., `Brutus` not `Marcus Junius Brutus`, `Arthur` not `Chester A. Arthur`).\n- Prefer the general category or term over specific examples found in the text (e.g., answer `Anti-perspirant` for a description of sweat-reducing agents, not `Witch hazel`).\n- Maintain grammatical number: if the clue uses singular phrasing (\"this is the term\"), output the singular form (`an insulator` not `Insulators`).\n- Strictly enforce all noun/adjective constraints in the prompt (e.g., \"fruit crop\" excludes non-fruits like coffee).\n- If multiple candidates appear in the context, select the primary/most direct match and omit alternatives or parenthetical additions.\n- Treat declarative statements as identification prompts, not True/False questions. Keep the final answer strictly concise."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

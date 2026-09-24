@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Perform heating/cooling transformations while holding the object at the open appliance, retaining it in inventory afterward.",
+    "Verify inventory immediately after closing an appliance to confirm holdings before navigating.",
+    "Execute a strict take-deliver-return shuttle loop for multi-object tasks when carrying capacity is limited.",
+    "Leverage admissible action availability to infer inventory state and object locations when observations are ambiguous."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently show agents heating/cooling items while holding them and keeping them in inventory, directly contradicting the current 'Appliance Retrieval Protocol'. Agents also benefit from explicit post-appliance inventory checks, strict shuttling for multi-object tasks, and using admissible actions to resolve state ambiguities. These edits correct a critical flaw and reinforce efficient execution strategies.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Appliance Retrieval Protocol**: When heating, cooling, or cleaning, always follow the sequence: interact with appliance -> close/appliance cycle -> open appliance -> **take/retrieve item** -> proceed to destination. Do not assume the item stays in your inventory automatically after appliance interactions.",
+        "content": "- **Appliance Interaction & Retention**: For heating, cooling, or cleaning, perform the transformation **while holding the object** at the open appliance. After the action completes, close the appliance. **Do not reopen** to retrieve the item; successful transformations typically leave the object in your inventory. Proceed directly to delivery."
+      },
+      {
+        "op": "replace",
+        "target": "- **State Verification Trust**: After a successful `heat`, `cool`, or `clean` action, proceed directly to the next step. Do not repeatedly `examine` the object to verify its state, as observations may lag or report generic names. Trust the action success and advance.",
+        "content": "- **Post-Transformation Verification**: After closing an appliance, immediately run `inventory` to confirm the transformed object is still held. Do not assume automatic retention or loss. Once verified, trust the transformation state and proceed directly to the destination without redundant examinations."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Object Local Scan**: For tasks requiring multiple items (e.g., `pick_two_obj_and_place`), after successfully placing the first item, immediately scan your current location for the remaining target(s). Only leave the area if the second item is not visible or reachable here.",
+        "content": "\n- **Multi-Object Shuttling**: When multiple target items are co-located but carrying capacity is limited, enforce a strict shuttle loop: acquire first item -> navigate to destination -> place -> return to source -> acquire second item -> deliver. Never attempt to hold multiple non-target items or delay retrieval of the second object."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Object Synonymy**: If the exact goal object is missing after thorough searching, accept functionally equivalent items commonly used in the environment (e.g., treat `pot` as `pan`, `cup` as `mug`, `bowl` as `plate`) to prevent infinite search loops.",
+        "content": "\n- **Admissible Action Inference**: Use the presence or absence of admissible actions to deduce inventory state and object locations. If `take [obj]` is missing despite visibility, the object may already be held or inaccessible. If `move [obj] to [loc]` appears without prior placement, the object is likely in your inventory. Resolve ambiguities instantly using these cues."
+      }
+    ]
+  },
+  "source_type": "success"
+}

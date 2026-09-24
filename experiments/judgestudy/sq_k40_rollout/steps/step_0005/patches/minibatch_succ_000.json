@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Formulaic Context-Grounded Reasoning",
+    "Fragment & Keyword-First Lookup Strategy",
+    "Prioritizing Explicit Definitions in Multi-Passage Contexts",
+    "Direct Constraint-to-Evidence Mapping"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently use a standardized, context-grounded reasoning template ('The context explicitly identifies/describes X as Y, directly satisfying the constraints') to prevent hallucination and ensure alignment. They also treat short or keyword-dense prompts as direct lookup tasks, prioritizing exact matches in titles/openings over deep semantic parsing. Additionally, when multiple documents exist, they converge on the most explicit definition. These patterns reinforce strict context reliance and efficient scanning.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+        "content": "- **Standardized Justification Structure**: Precede the final tag with a single-sentence reasoning step using a fixed template: '[Context explicitly states/describes X as Y], directly satisfying the question's constraints.' This enforces direct grounding, eliminates filler, and ensures every answer is traceable to the text."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "\n- **Prioritize Explicit Definitions Across Passages**: When multiple documents discuss the same entity, prefer spans that contain direct definitions, titles, or explicit attribute mappings over narrative descriptions or peripheral details. Use convergence to confirm, but let the most explicit statement dictate the extraction."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Fragment & Keyword-First Parsing**: For short questions, standalone nouns, or keyword-dense prompts, skip deep semantic parsing. Immediately scan for exact keyword matches or co-occurring proper nouns in `[TLE]` and paragraph openings. Treat these as direct lookup tasks rather than complex reasoning problems."
+      }
+    ]
+  },
+  "source_type": "success"
+}

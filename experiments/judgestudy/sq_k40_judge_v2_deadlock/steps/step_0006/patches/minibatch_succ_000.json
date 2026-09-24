@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating declarative statements, quotes, and trivia prompts as direct queries for a missing entity or term.",
+    "Extracting only the precise, canonical short phrase or word requested without descriptive filler.",
+    "Mapping key descriptors from the clue directly to explicit matches in document titles and snippets.",
+    "Maintaining strict adherence to <answer> tags with minimal external reasoning."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle Jeopardy-style clues, quotes, and definition prompts by mapping descriptors to exact short entities in the context. Previous edits failed due to overly granular or conflicting rules. This patch consolidates the winning behavior into generalized principles for clue mapping, exact extraction, and strict formatting, ensuring broad applicability without over-constraining.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Declarative Clue Handling**: Treat complete sentences, quotes, or trivia prompts as direct queries for a missing entity, word, or category. Map key descriptors directly to candidates in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Prioritize passages that explicitly define or name the target.\n- **Constraint Targeting**: Carefully parse the question to determine exactly what is being asked (e.g., author, material, category, color, grammatical term). Select the entity that precisely fits the constraint.\n\n## Precision Extraction Rules\n- **Exact Match Priority**: Output *only* the precise word, short phrase, or entity requested. Never add descriptions, parenthetical translations, explanatory clauses, or conversational filler.\n- **Canonical Form**: Default to the shortest, most widely recognized identifier for an entity. Preserve exact capitalization and singular/plural form as used in the gold standard or context.\n- **Direct Entity Response**: When a question asks for a person, place, object, or concept, provide only the named entity itself. Do not answer with roles, genres, or full sentences.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the expected short format.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Prioritizing exact phrase/entity extraction from context over paraphrasing.",
+    "Mapping question clues (e.g., 'translates to', 'last name of', 'this point') directly to explicit context statements.",
+    "Applying constraint filtering to extracted entities (e.g., returning only the surname when asked for 'last name').",
+    "Maintaining strict conciseness in the final answer, avoiding repetition or explanation inside answer tags."
+  ],
+  "patch": {
+    "reasoning": "Across all 8 trajectories, agents succeeded by strictly extracting exact phrases or filtered entities from the provided context, accurately mapping question clues to text, and delivering highly concise answers. Encoding these behaviors will standardize retrieval precision, prevent over-generation, and ensure format compliance for future trivia/factoid tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Retrieval & Answering Principles\n- **Exact Extraction Priority**: Always search for the exact phrase or entity in the context that satisfies the question. Paraphrasing is discouraged unless the context lacks a direct match.\n- **Clue-to-Text Mapping**: Treat specific question phrasing as direct pointers. Map clues like \"translates to\", \"last name of\", or \"this \\\"point\\\"\" to their corresponding explicit statements in the provided documents.\n- **Constraint Filtering**: If the question imposes a format constraint (e.g., asking for a \"last name\" or \"English translation\"), extract only the relevant portion of the matched entity.\n- **Concise Output Formatting**: Provide only the direct answer inside `<answer>` tags. Keep responses to a few words or a short phrase. Do not repeat the question or include explanatory text within the tags.\n\n## Step-by-Step Reasoning Workflow\n1. Identify key entities and constraints in the question.\n2. Scan the context for matching keywords or synonymous phrasing.\n3. Extract the exact text segment that fulfills the query.\n4. Apply any requested filters (e.g., surname only, translation).\n5. Place the final, concise answer inside `<answer>...</answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

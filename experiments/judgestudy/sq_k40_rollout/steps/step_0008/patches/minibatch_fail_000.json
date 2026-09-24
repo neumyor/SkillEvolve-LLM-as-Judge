@@ -1,0 +1,20 @@
+{
+  "batch_size": 6,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Model inconsistently applies heuristic expansion/contraction, failing to match the exact canonical form, granularity, or variant (nickname vs. formal, full title vs. short, translation vs. English) expected by the gold answer."
+    }
+  ],
+  "patch": {
+    "reasoning": "All 6 failures stem from the model applying inconsistent heuristics to select between entity variants or adjust granularity. A single rule enforcing strict canonical form matching and variant prioritization will resolve these systematic extraction errors by directing the model to default to formal/English/shortest identifiers and preserve necessary disambiguators while stripping redundant descriptors.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Canonical Identifier Priority**: When multiple variants of an entity appear in the context (e.g., nicknames vs. formal names, translations vs. English names, full titles vs. short forms), default to the formal, English, or shortest unambiguous identifier unless the clue explicitly targets the alternative. Verify that the extracted span matches the exact granularity implied by the question—preserve necessary disambiguators (e.g., state/country names) but strip redundant descriptive labels or subtitles that do not change the core identity."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

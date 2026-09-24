@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating Jeopardy-style and declarative clues as direct fill-in-the-blank requests rather than reasoning problems.",
+    "Rapid descriptor-to-subject mapping that ignores narrative framing or trailing metadata.",
+    "Prioritizing document titles and opening snippets for immediate keyword matches.",
+    "Using single-sentence verification traces to confirm alignment without verbose step-by-step breakdowns."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories handle Jeopardy-style or declarative trivia questions by treating them as direct entity lookups. Agents succeed by rapidly mapping descriptive clues to exact terms in titles/snippets, ignoring conversational framing, and using concise verification traces instead of extended reasoning. These patterns reinforce existing sections but add necessary specificity for high-frequency trivia formats.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and declarative statement prompts as direct fill-in-the-blank requests. Map the question's descriptive attributes directly to the exact subject term in the context, ignoring conversational framing or trailing metadata."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Cloze & Declarative Parsing**: Treat Jeopardy-style clues, declarative statements, and fragment prompts as direct fill-in-the-blank requests. Map the question's descriptive attributes directly to the exact subject term found in the context, ignoring conversational framing or trailing clue numbers."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Perform a single-sentence verification trace linking the question's core descriptor to the extracted entity. Skip extended analysis for straightforward trivia queries to maintain conciseness."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Title & Snippet Scanning**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase, allowing rapid confirmation before diving into dense paragraphs."
+      }
+    ]
+  },
+  "source_type": "success"
+}

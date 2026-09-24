@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Destination-Driven Initial Search: Prioritize checking the transformation appliance (fridge/microwave) first if it's a plausible storage location for the target, combining search and preparation.",
+    "Proactive Container Opening: Immediately open closed containers/appliances upon arrival at a search location rather than waiting for system prompts.",
+    "Strict Action Separation: Use `move` exclusively for final placement, reserving `heat/cool/clean` strictly for transformation steps.",
+    "Post-Transformation Appliance Closure: Always close appliances immediately after a successful transformation to maintain environment state."
+  ],
+  "patch": {
+    "reasoning": "Analysis of 8 successful trajectories reveals consistent optimization strategies: agents proactively open containers upon arrival, optimize initial searches by targeting transformation appliances early, strictly separate transformation (`heat/cool/clean`) from placement (`move`) actions, and close appliances post-transformation. These patterns reduce navigation overhead and prevent state-confusion loops.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Manage Appliance States: Always open closed appliances/containers before interacting. For heating or cleaning, prioritize performing the transformation while **holding the object** at the open appliance. Ensure doors are open for placement interactions.",
+        "content": "Manage Appliance States: Always open closed appliances/containers before interacting. For heating or cleaning, prioritize performing the transformation while **holding the object** at the open appliance. **Immediately close the appliance** after a successful transformation to reset the environment. Ensure doors are open for placement interactions."
+      },
+      {
+        "op": "insert_after",
+        "target": "10. **Prioritize Search by Category**: Focus initial searches on high-probability locations based on object type (e.g., food on dining tables/counters/fridges, kitchenware on countertops/sinks, electronics on desks/shelves) to minimize blind exploration.",
+        "content": "11. **Destination-Driven Search**: If the task requires transforming an object in a specific appliance (e.g., fridge for cooling, microwave for heating), prioritize checking that appliance first during initial search. It serves as both a likely storage location and the required transformation site, saving navigation steps.\n12. **Proactive Container Opening**: When navigating to any potential storage location (cabinet, drawer, fridge, microwave), immediately attempt to open it if closed. Do not wait for the system to prompt you or rely solely on admissible actions; proactive opening accelerates discovery."
+      },
+      {
+        "op": "replace",
+        "target": "11. **Avoid Loops & Redundant Cycling**: Never repeat the same action more than twice. If stuck, switch to an unvisited location. Do not cycle back through previously checked empty spots unless absolutely necessary.\n12. **Systematic Backtracking**: If the target is not found in the first logical location, do not assume it is absent. Cycle through other unvisited containers and surfaces systematically. Revisit room zones if necessary, but always prioritize unexplored locations first.",
+        "content": "13. **Avoid Loops & Redundant Cycling**: Never repeat the same action more than twice. If stuck, switch to an unvisited location. Do not cycle back through previously checked empty spots unless absolutely necessary.\n14. **Systematic Backtracking**: If the target is not found in the first logical location, do not assume it is absent. Cycle through other unvisited containers and surfaces systematically. Revisit room zones if necessary, but always prioritize unexplored locations first."
+      },
+      {
+        "op": "append",
+        "content": "15. **Placement vs. Transformation Semantics**: Use `move [object] to [receptacle]` exclusively for final placement, regardless of whether the object was previously heated, cooled, or cleaned. Reserve `heat`, `cool`, and `clean` actions strictly for the transformation step at the appliance. Confusing these leads to redundant or failed interactions."
+      }
+    ]
+  },
+  "source_type": "success"
+}

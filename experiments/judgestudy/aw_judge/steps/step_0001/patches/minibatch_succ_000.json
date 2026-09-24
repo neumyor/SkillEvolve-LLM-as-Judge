@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Strategic transformation ordering based on destination appliance side-effects (e.g., avoiding accidental cooling in a fridge)",
+    "Verifying inventory state when holding status is ambiguous",
+    "Precise parsing of admissible actions for multi-instance or surface-specific objects",
+    "Awareness of automatic appliance interactions (fridge cools, microwave heats)"
+  ],
+  "patch": {
+    "reasoning": "Trajectories reveal that agents succeed by carefully managing appliance side-effects (placing in a fridge cools, microwave heats), verifying their inventory when observations are unclear, and precisely parsing multi-object actions. These patterns prevent state corruption and navigation errors.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "4. **Transform strategically**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance. However, be aware that placing an object into a fridge cools it, and into a microwave heats it. If the destination appliance would alter the object's state undesirably, perform the transformation *after* placing the object at the destination."
+      },
+      {
+        "op": "insert_after",
+        "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "9. **Verify holding state**: If the observation is unclear about whether you are carrying the target object, use the `inventory` action to check your current load before navigating or interacting.\n10. **Parse precise actions**: When multiple instances of an object exist or objects are on specific surfaces, always use the full admissible action string (e.g., `take X from Y`) to ensure correct interaction."
+      },
+      {
+        "op": "replace",
+        "target": "- **Skipping state changes**: Do not place an object at the destination without first cleaning/heating/cooling it when required.",
+        "content": "- **Skipping state changes or ignoring appliance effects**: Do not place an object at the destination without transforming it if required. Conversely, do not place an object into an appliance (like a fridge or microwave) unless intended, as this may trigger automatic cooling/heating and ruin the desired state."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,61 @@
+_base_: default.yaml
+
+# Judge gate on SearchQA: the paper's held-out regression test is replaced by
+# an agent that reads the candidate skill, the patch that produced it, and the
+# execution evidence that justified it, and rules ACCEPT/REJECT.
+#
+# Everything else is the paper's data spec: train 400 / val 200 / test 1400,
+# edit_budget 4 (= learning_rate), minibatch 8 / merge 8, seed 42, one epoch.
+# Only the gate differs, so a run under this config is directly comparable to
+# the `fixed_k K=40` baseline (which is the original cadence: batch_size 40 ×
+# accumulation 1).
+#
+# The gate's mode is the experimental variable; override with
+#   --gate_mode rollout | judge | greedy
+# from the same config so all three conditions share these settings.
+#
+# No selection rollout per candidate: `gate_mode: judge` skips it, which is
+# the cost the judge is supposed to remove. The one-time selection baseline is
+# still taken (it anchors current/best and the reported baselines).
+
+model:
+  reasoning_effort: medium
+
+train:
+  train_size: 400
+  batch_size: 40          # = the original cadence (one update per 40 tasks)
+  accumulation: 1
+
+evolution:
+  mode: fixed             # the original schedule; the gate is what varies
+
+gradient:
+  minibatch_size: 8
+  merge_batch_size: 8
+
+optimizer:
+  learning_rate: 4
+  lr_scheduler: constant  # identical edit budget across gate conditions
+
+evaluation:
+  gate_mode: judge
+  sel_env_num: 0
+  test_env_num: 0
+
+judge:
+  max_completion_tokens: 4096
+  retries: 2
+  max_evidence_cards: 24
+  evidence_card_chars: 1200
+
+env:
+  name: searchqa
+  skill_init: skillopt/envs/searchqa/skills/initial.md
+  split_mode: split_dir
+  split_dir: data/searchqa_split
+  data_path: ""
+  split_output_dir: ""
+  max_turns: 1
+  max_completion_tokens: 16384
+  workers: 64
+  limit: 0

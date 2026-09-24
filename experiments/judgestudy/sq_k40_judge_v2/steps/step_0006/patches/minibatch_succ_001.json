@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Shared Attribute Inference: When presented with a list of entities without an explicit question, deduce the common attribute, location, or relationship connecting them.",
+    "Foreign Term & Synonym Resolution: Actively map non-English words, historical aliases, or descriptive synonyms to the standard entity or category requested.",
+    "Category Abstraction: For prompts describing sub-types or varieties (e.g., \"these birds\", \"this material\"), extract the overarching category rather than listing specific instances."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate three key behaviors: inferring shared attributes for entity-pair prompts, resolving foreign terms/synonyms to standard answers, and abstracting sub-types to their core categories. These patterns address gaps in the current skill regarding implicit relational queries and lexical mapping.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "\n- **Shared Attribute Inference**: When prompted with a list of entities or names without an explicit question (e.g., \"Name A, Name B\"), deduce the common attribute, location, profession, or relationship that connects them. Anchor your search to the intersecting facts in the context."
+      },
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and cloze blanks as direct requests for a missing keyword or category. Resolve foreign terms, historical aliases, or descriptive synonyms to the standard entity requested. For prompts describing sub-types or varieties (e.g., \"these birds\", \"this material\"), extract the overarching category rather than listing specific instances."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Perform a direct semantic mapping trace: link the question's descriptors or foreign terms to the exact context match, verify shared attributes if applicable, and confirm the answer fits the requested entity type concisely."
+      }
+    ]
+  },
+  "source_type": "success"
+}

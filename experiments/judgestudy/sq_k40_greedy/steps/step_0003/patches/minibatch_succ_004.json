@@ -1,0 +1,23 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Synthesizing shared categories or attributes across multiple referenced entities",
+    "Prioritizing requested common nouns (e.g., species/type) over forced proper-noun extraction"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectory demonstrates the agent correctly identifying a shared category ('Bears') from multiple specific examples linked in the question. The current skill over-emphasizes extracting single proper nouns and aggressively strips descriptors, which previously caused failures when gold answers required retained titles or common nouns. Encoding how to handle shared attributes and relaxing the stripping rule will improve robustness.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Handling Statement or Fragment Questions",
+        "content": "\n- **Identifying Shared Categories & Attributes**: When a question links multiple entities (e.g., via '&') and asks for a common trait, species, or type, do not default to a single proper noun. Instead, cross-reference the mentioned items to extract the unifying category or descriptor that satisfies the query."
+      },
+      {
+        "op": "replace",
+        "target": "Answers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.",
+        "content": "Answers must be stripped to their core identifier, but preserve essential descriptors when they constitute the canonical answer or requested category.\n- Omit filler words, redundant adjectives, and non-essential titles.\n- If the question asks for a type, species, role, or shared attribute, output that common noun directly rather than forcing a proper noun extraction.\n- Retain surnames or nicknames only if they are the standard reference; otherwise, use the most recognizable form."
+      }
+    ]
+  },
+  "source_type": "success"
+}

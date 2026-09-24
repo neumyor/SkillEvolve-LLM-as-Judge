@@ -1,0 +1,22 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct keyword and phrase matching against context snippets to locate trivia answers",
+    "Strict adherence to <answer> tags with minimal, precise output",
+    "Filtering noisy multi-document contexts to prioritize exact-match passages"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories successfully answered trivia-style questions by extracting exact entities/phrases from the provided context. Agents consistently ignored irrelevant documents and focused on passages containing direct keyword matches. Answers were strictly formatted within <answer> tags without extra explanation. Encoding these extraction and formatting habits will improve reliability for similar factual/trivia tasks.",
+    "edits": [
+      {
+        "op": "delete",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)"
+      },
+      {
+        "op": "append",
+        "content": "\n## Core Principles\n- **Direct Extraction**: Prioritize finding exact matches or strong semantic overlaps between question keywords and context snippets.\n- **Concise Formatting**: Provide only the core answer inside `<answer>...</answer>` tags. Avoid repeating the question or adding unnecessary explanation.\n- **Context Filtering**: Multi-document contexts often contain noise. Scan titles and snippets for direct keyword hits before reading deeply.\n\n## Step-by-Step Reasoning\n1. Identify key entities, dates, or descriptive phrases in the question.\n2. Search the context for exact matches or closely related terms.\n3. Verify the match aligns with all constraints in the question.\n4. Extract the precise answer and wrap it in `<answer>...</answer>`.\n\n## Handling Trivia & Clue-Based Questions\n- Treat descriptive clues (e.g., \"Southern pie with an insect name\") as search queries.\n- If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n- Do not overthink; if a passage explicitly states the answer, extract it verbatim or normalize capitalization."
+      }
+    ]
+  },
+  "source_type": "success"
+}

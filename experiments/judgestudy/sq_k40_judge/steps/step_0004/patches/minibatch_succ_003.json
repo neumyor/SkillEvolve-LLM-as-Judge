@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Semantic Category Enforcement",
+    "Grammatical Number Alignment",
+    "Title/Fragment Prompt Inference"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently enforce semantic category matching (e.g., 'this position' → Center), maintain strict singular/plural agreement with the clue, and correctly resolve title-only or fragment prompts by inferring the expected attribute from context. These patterns address recurring failure modes in Steps 2 and 3 and generalize across trivia/retrieval tasks.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+        "content": "\n- **Semantic Category Enforcement**: When a clue specifies a semantic category via demonstratives or descriptors (e.g., \"this position\", \"this plant\", \"this film\"), strictly filter candidate extractions to match that category before verifying other constraints. Discard entities that satisfy factual details but belong to the wrong class."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+        "content": "\n- **Grammatical Number Alignment**: Explicitly match the singular or plural form requested by the clue. If the prompt implies a singular entity (\"this man\", \"this novel\"), output the singular term unless the canonical answer is inherently plural. Avoid defaulting to plural forms when singular is specified."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Declarative Clue Parsing**: Treat declarative statements, descriptive fragments, and incomplete prompts identically to interrogative questions. Identify the grammatical slot or subject being described and treat it as a direct request for the missing entity.",
+        "content": "\n- **Title/Fragment Prompt Inference**: For prompts consisting solely of a title, name, or isolated fragment without an explicit question word, infer the likely query target (e.g., creator, director, subject matter) from surrounding context or metadata, and extract the corresponding entity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

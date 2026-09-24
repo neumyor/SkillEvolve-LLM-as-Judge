@@ -1,0 +1,50 @@
+Here is the target agent's episode execution log (raw text). The task description is included in the "## Task" section:
+
+<agent_log>
+{agent_log}
+</agent_log>
+
+Please conduct the error analysis in your working directory: `{working_dir}`.
+
+You can find all relevant files there, including:
+- `agent_work/` — the target agent's working directory, containing:
+    - `input.json` — the task statement and the initial observation the agent saw
+    - `output.json` — the action sequence the agent executed
+    - `gold.txt` — the path to the game file the episode was played in
+
+Write your `output_fixed.json` into the `agent_work/` subdirectory, in the same
+format as `output.json`:
+
+    {{"gamefile": "<path from gold.txt>", "actions": ["...", "..."]}}
+
+## How to use the evaluation tool
+
+{evaluate_usage}
+
+The report shows:
+- Overall PASS or FAIL with a summary line.
+- Counts of actions proposed, executed, inadmissible, and no-op.
+- The first inadmissible action, together with the commands that *were* admissible at that step.
+- The first no-op action (one that parsed but changed nothing).
+- A step-by-step trace of actions and environment feedback.
+
+The tool replays your sequence in the live game, so you can also use it to
+explore: replay a prefix, read what the feedback reveals, then extend.
+
+STRICTLY follow the system prompt required workflow!
+1. **Understand the task and failure surface**
+    - Understand the target task from `input.json`.
+    - Identify exactly *where* the episode went wrong: an unparseable action, an inadmissible action, a no-op, or a sequence that never approached the goal.
+    - Use the `evaluate_output` tool and small inspection scripts where useful.
+
+2. **Trace the failure to agent behavior**
+   - Read the agent log and locate the decision or reasoning step that produced the wrong action.
+   - Identify the concrete failure mechanism (e.g., wrong object/receptacle name, acting on an object it was not holding, never searching the receptacle that held the target, looping on a no-op, skipping a required precondition).
+
+3. **Validate the root cause with a minimal fix**
+   - Construct the smallest corrected action sequence that reaches the goal.
+   - Write it as `output_fixed.json` in `agent_work/`.
+
+4. **Re-evaluate**
+   - Replay `output_fixed.json` using the `evaluate_output` tool.
+   - If it still fails, **return to steps 1–3** and revise your diagnosis.

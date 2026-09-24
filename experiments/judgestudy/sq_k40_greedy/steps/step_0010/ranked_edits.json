@@ -1,0 +1,42 @@
+{
+  "reasoning": "Prioritized failure-driven corrections for entity stripping, constraint verification, and demonstrative resolution. Integrated success-driven enhancements for structured trivia formats, metadata locking, and search pipeline optimization. Resolved minor overlap on compound term extraction by retaining the failure-driven rule for prefix preservation while keeping the success-driven rule for multi-word canonical names as a complementary guideline. All edits carry forward their original support counts and source types. [optimizer-ranked: selected 4/15 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords.",
+      "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. **Explicitly reject candidates that rely on frequency or general prominence.** If a candidate matches keywords but fails any single constraint (e.g., wrong birth year, wrong location), discard it immediately. Always cross-reference the requested entity type and categorical properties against the candidate pool.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Answer Precision and Conciseness",
+      "content": "\n- **No Appended Categories or Descriptors**: Never append contextual categories, roles, or descriptors (e.g., \"market\", \"city\", \"group\", \"Scouts\") to the answer unless they are strictly part of the recognized canonical name. If the question asks for a specific entity or term, output only that term. Avoid descriptive phrases like \"capital cities\" or \"city in Germany\"; resolve directly to the proper noun or specific attribute requested.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "Execute a strict three-step search: (1) Scan `[TLE]` and `[PAR]` metadata for exact/near-exact matches; (2) Apply logical AND filters across all stated constraints to narrow candidates; (3) Extract the exact term only if it satisfies every constraint simultaneously. Do not read deeply until shallow scans fail.",
+      "content": "Execute a strict three-step pipeline: (1) **Lock Source via Metadata**: Cross-reference question constraints (dates, numbers, entities) against `[TLE]`/`[PAR]` to instantly isolate the definitive document; (2) **Verify & Extract**: Confirm the target term satisfies all constraints within that locked passage; (3) **Format Output**: Return the exact canonical term without semantic over-analysis. Skip deep paragraph reading if metadata alignment is confirmed.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "- **Preserve Multi-Word Canonical Names**: When the target is a recognized proper name, title, organization, or phrase (e.g., \"Smithsonian Institution\", \"Raindrops Keep Fallin' On My Head\"), retain the full canonical phrasing. Do not apply aggressive head-noun stripping to compound terms that function as a single conceptual unit or official title.",
+      "support_count": 7,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [4] tackles a pervasive reasoning failure where models prioritize famous entities over explicit constraints, drastically reducing accuracy. Edit [1] introduces a clear, general rule to eliminate a common output error (appending generic descriptors/categories), ensuring strict answer precision. Edit [14] streamlines the core search workflow into a metadata-first pipeline, preventing wasted computation and reducing hallucination risks. Edit [12] complements existing stripping guidelines by explicitly protecting official multi-word names from over-truncation, preserving entity integrity. These four edits collectively address the most critical failure modes (constraint violation, output noise, inefficient search, and over-stripping) with high actionability and zero redundancy.",
+    "selected_indices": [
+      4,
+      1,
+      14,
+      12
+    ]
+  }
+}

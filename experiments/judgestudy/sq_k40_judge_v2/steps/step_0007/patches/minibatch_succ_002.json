@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Jeopardy/Cloze Subject Mapping: Treat fragmentary clues as direct fill-in-the-blank requests, isolating the core subject entity rather than its attributes or tangential details.",
+    "Acronym & Short Form Alignment: When the context or question implies a shorter identifier (e.g., acronyms like SCTV, LPGA), prioritize extracting the exact short form over the full expanded name."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate precise mapping of Jeopardy-style fragments to core subject entities, avoiding attribute confusion. They also correctly favor acronyms/short forms (SCTV, LPGA) when contextually implied, aligning with the exact lexical slot requested. These patterns address recurring verbosity and over-specification failures seen in earlier steps.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Jeopardy & Cloze Mapping**: Treat fragmentary, Jeopardy-style, or declarative clues as direct fill-in-the-blank requests. Isolate the core subject entity being described, strictly ignoring tangential attributes, genres, or secondary examples. Map the clue's descriptive phrasing directly to the exact terminology in the `[DOC]` passages."
+      },
+      {
+        "op": "replace",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "- **Exact Term & Acronym Alignment**: Prioritize the exact lexical form found in the context. When the context or question implies a shorter identifier (e.g., acronyms like SCTV, LPGA), extract the exact short form or acronym over the full expanded name. Preserve exact casing and punctuation."
+      }
+    ]
+  },
+  "source_type": "success"
+}

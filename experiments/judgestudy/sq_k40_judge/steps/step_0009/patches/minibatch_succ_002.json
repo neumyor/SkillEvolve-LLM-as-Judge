@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating declarative statements and fragmented phrases as direct fill-in-the-blank queries to isolate the missing variable.",
+    "Strictly isolating the final answer in tags with zero conversational or reasoning leakage.",
+    "Prioritizing exact canonical entity forms over grammatical agreement with the prompt's syntax."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories handled declarative trivia clues by mentally converting them into fill-in-the-blank slots, extracting the exact canonical entity, and ensuring absolutely no reasoning or conversational text leaked into the answer tags. These patterns directly counter the historical failure modes of over-specification, syntactic mirroring, and answer leakage observed in previous steps.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+        "content": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Immediately identify the missing variable (subject, object, or complement) that completes the logical proposition. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer. Ensure zero-leakage by stripping any leading labels, reasoning fragments, trailing punctuation, or prompt artifacts before closing the tag.",
+        "content": "\n- **Zero-Leakage Enforcement**: Never include reasoning steps, conversational framing, or transitional phrases inside `<answer>` tags. The tag content must contain ONLY the isolated entity or phrase. Place all derivation logic strictly outside the tags."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Article Omission Tolerance**: For F1-based evaluation, safely omit leading indefinite or definite articles (e.g., \"a\", \"the\") unless the clue's syntax strictly requires them for grammatical completion. Prioritize the core lexical item and canonical spelling over strict article preservation.",
+        "content": "\n- **Declarative-to-Slot Conversion**: When faced with a complete declarative statement or headline-style clue, bypass natural language parsing and directly map it to a 'Fill-in-the-blank: [Statement] ___' structure. Extract only the term that logically completes the blank, ignoring surrounding narrative context."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Clue Artifact & Punctuation Stripping: Successfully ignore non-semantic tokens like clue numbers `(15)`, colons, or structural markers in trivia questions to isolate the core query.",
+    "Grounded One-Liner Justification: Frame the reasoning trace as a single declarative sentence that directly links the question's clue to the extracted entity, ensuring tight context alignment before output."
+  ],
+  "patch": {
+    "reasoning": "Across all 8 successful trajectories, agents consistently stripped non-semantic question artifacts (e.g., clue numbers, colons) to focus on semantic matching, and used concise, single-sentence justifications that directly tied the clue to the extracted entity. These patterns reduce noise sensitivity and prevent verbose reasoning while maintaining high accuracy.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Clue Artifact & Punctuation Stripping**: Ignore non-semantic tokens such as trailing clue numbers `(15)`, colons, parentheses, or structural markers. Focus exclusively on the semantic core of the question when matching against context."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a single-sentence grounded justification that directly links the question's clue to the extracted entity, confirming context alignment before finalizing the answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

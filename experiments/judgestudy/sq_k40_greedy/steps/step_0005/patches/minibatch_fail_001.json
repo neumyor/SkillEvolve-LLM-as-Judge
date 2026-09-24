@@ -1,0 +1,21 @@
+{
+  "batch_size": 2,
+  "failure_summary": [
+    {
+      "failure_type": "rule_missing",
+      "count": 2,
+      "description": "Skill lacks guidance on handling partial names/blanks and avoiding unnecessary generic descriptors, causing over-stripping or over-expansion of the target entity."
+    }
+  ],
+  "patch": {
+    "reasoning": "Both failures stem from the agent misinterpreting how to format answers when the question contains a blank/partial name or a placeholder. Trajectory 2 shows the agent stripping the known part of a compound name ('Funk' instead of 'Funk & Wagnalls'). Trajectory 1 shows the agent appending a generic descriptor ('power') when the gold expects a shorter canonical term ('hydroelectric'). Adding a targeted rule under Answer Precision will enforce returning the full canonical name for partial prompts while discouraging unnecessary descriptive additions.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier.",
+        "content": "\n- **Partial Names & Blanks**: When a question contains a partial name, blank, or underscore (e.g., '___ & Wagnalls'), always output the **full canonical entity name**, not just the missing fragment. Conversely, do not append generic descriptors (e.g., 'power', 'company', 'station') unless they are strictly required by the standard name; prioritize the exact shortest canonical form present in the context."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

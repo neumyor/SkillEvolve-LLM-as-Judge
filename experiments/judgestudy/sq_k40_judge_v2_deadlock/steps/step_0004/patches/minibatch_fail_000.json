@@ -1,0 +1,31 @@
+{
+  "batch_size": 6,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Agent outputs full descriptive sentences or explanations instead of the exact short entity requested."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 3,
+      "description": "Agent adds unrequested middle initials, suffixes, or generic descriptors to names/entities, failing to match canonical forms."
+    },
+    {
+      "failure_type": "other",
+      "count": 2,
+      "description": "Agent selects a prominent but incorrect entity from the context due to insufficient constraint-to-entity mapping."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch shows consistent failures in output conciseness, name/entity normalization, and precise constraint grounding. Previous attempts were overly verbose and did not enforce strict canonical matching. These edits consolidate three critical rules: exact short-phrase priority, automatic stripping of non-essential name components/descriptors, and constraint-driven entity selection, directly addressing the observed mismatches.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Precision Extraction Rules\n- **Exact Short Phrase Priority**: For trivia, Jeopardy-style, or definition prompts, output *only* the target entity or short phrase. Never output descriptive sentences, full explanations, or conversational filler.\n- **Name & Title Normalization**: Strictly match the canonical form of names. Automatically strip middle initials/letters (e.g., \"B.\"), suffixes (e.g., \"Jr.\", \"Sr.\"), and generic location descriptors (e.g., \"Desert\", \"Base\", \"Plant\") unless the question explicitly asks for them. Preserve exact capitalization.\n- **Constraint-Grounded Selection**: Carefully map each clue in the question to the specific entity in the context. Avoid defaulting to the most prominent or frequently mentioned entity; prioritize the one that precisely fits the unique constraint or implied reference.\n- **Formatting Discipline**: Always wrap the final answer in `<answer>...</answer>`. Limit content to a few words. Provide exactly one sentence of reasoning outside the tags."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

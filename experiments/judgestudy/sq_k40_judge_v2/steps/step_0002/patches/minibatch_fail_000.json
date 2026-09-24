@@ -1,0 +1,21 @@
+{
+  "batch_size": 3,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Agents consistently over-specify answers by returning plurals, full names, or specific examples instead of the precise, minimal term or category requested."
+    }
+  ],
+  "patch": {
+    "reasoning": "The three failures share a common pattern of over-specification: agents return pluralized terms ('insulators'), full names with middle initials ('Chester A. Arthur'), or concrete examples ('Witch hazel') when the question strictly asks for a singular term, surname, or functional category ('an insulator', 'Arthur', 'Anti-perspirant'). The existing rules lack explicit constraints on grammatical fidelity and concept-vs-example prioritization for clue-style questions. These edits directly enforce matching the question's structural demands and prioritizing the target concept over incidental examples.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Grammatical & Structural Fidelity**: Strictly match the grammatical form implied by the question. Provide only the surname if asked for a name, avoid plurals if a singular term is requested, and omit articles unless integral to the term. Never add middle initials or expand names beyond what the question demands.\n- **Concept Over Example**: For clue-like, Jeopardy-style, or definition-seeking questions, identify the overarching category, function, or concept. Do not default to a specific instance or example from the text unless the question explicitly asks for one."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

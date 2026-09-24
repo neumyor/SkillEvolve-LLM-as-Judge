@@ -1,0 +1,18 @@
+{
+  "batch_size": 5,
+  "success_patterns": [
+    "Placeholder Category Resolution",
+    "Cloze-Style Parsing"
+  ],
+  "patch": {
+    "reasoning": "All five successful trajectories feature Jeopardy-style or trivia questions that use generic category pointers (e.g., 'this film', 'this country', 'this Cunard liner') or descriptive phrases ('A hasty dessert'). The agents consistently resolved these placeholders by mapping the category hint directly to the specific entity in the context, treating the prompt as a fill-in-the-blank statement. This pattern is not explicitly detailed in the current skill beyond general 'clue anchoring' and could benefit from targeted reinforcement to prevent agents from overcomplicating simple entity lookups.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match.",
+        "content": "\n- **Placeholder Category Resolution**: When questions use generic pointers (e.g., \"this film\", \"this country\", \"a [adjective] dessert\"), treat them as direct references to the target entity. Map the category hint to the specific subject named in the relevant `[DOC]` passages.\n- **Cloze-Style Parsing**: Treat trivia and Jeopardy-style prompts as fill-in-the-blank statements. Isolate the grammatical slot requiring an entity and extract only that missing noun phrase directly."
+      }
+    ]
+  },
+  "source_type": "success"
+}

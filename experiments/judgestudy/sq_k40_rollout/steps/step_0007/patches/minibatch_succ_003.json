@@ -1,0 +1,34 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Narrative Wrapper & Filler Stripping: Successfully isolates core constraints by discarding conversational lead-ins, meta-commentary, or idiomatic phrasing in trivia clues.",
+    "Acronym & Initialism Expansion: Correctly decodes abbreviated forms or expands acronyms when the clue asks for their full meaning or references them indirectly.",
+    "Cross-Document Co-occurrence Verification: Relies on multiple passages to confirm the target entity by verifying consistent co-occurrence with the clue's key terms across documents.",
+    "Temporal & Quantitative Anchoring: Uses specific years, durations, counts, and measurements as high-precision filters to disambiguate candidate entities."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate four key behaviors: stripping conversational/meta-filler from Jeopardy-style clues to isolate constraints, expanding acronyms/initialisms, verifying answers via cross-document keyword co-occurrence, and using temporal/quantitative data as precise disambiguation anchors. These patterns are highly generalizable across trivia/QA tasks and address gaps in the current skill regarding framing rejection, acronym handling, and numerical filtering.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+        "content": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements wrapped in conversational framing or meta-commentary. Strip narrative wrappers and filler phrases to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions."
+      },
+      {
+        "op": "replace",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "- **Multi-Passage Corroboration & Co-occurrence**: When the context contains multiple documents, cross-reference them to confirm the answer. Prioritize entities that consistently **co-occur** with the clue's key terms across different passages. Convergence across independent documents significantly increases confidence and reduces false positives from isolated keyword matches."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Passage Corroboration & Co-occurrence**: When the context contains multiple documents, cross-reference them to confirm the answer. Prioritize entities that consistently **co-occur** with the clue's key terms across different passages. Convergence across independent documents significantly increases confidence and reduces false positives from isolated keyword matches.",
+        "content": "\n- **Acronym & Initialism Expansion**: Clues frequently reference abbreviations, acronyms, or initialisms, or explicitly ask what they stand for. Search the context for the full spelled-out form or explicit definition linked to the abbreviation. Map the acronym directly to its expanded canonical name."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Temporal & Quantitative Anchoring**: Questions often embed specific years, durations, counts, distances, or measurements (e.g., '101 days', 'early 1500s', 'between 2 more famous pictures'). Use these numerical and temporal markers as high-precision filters to eliminate near-matches and pinpoint the exact target entity or event."
+      }
+    ]
+  },
+  "source_type": "success"
+}

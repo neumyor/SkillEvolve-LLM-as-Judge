@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct entity extraction for trivia/Jeopardy-style questions using contextual descriptors",
+    "Strict adherence to provided context without external knowledge injection",
+    "Concise answer formatting within <answer> tags, separating reasoning from final output"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories successfully answered trivia-style questions by scanning multiple documents, identifying keyword matches, extracting exact entity names/phrases, and formatting them concisely within answer tags. Encoding these patterns will reinforce efficient context scanning, strict grounding, and proper formatting.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n## Core Principles\n- **Context-First Reasoning**: Rely exclusively on the provided passages. Do not use external knowledge or assumptions.\n- **Keyword-Driven Scanning**: Quickly scan document titles and opening sentences to locate the passage containing keywords or synonyms from the question.\n- **Exact Span Extraction**: For trivia and Jeopardy-style questions, treat descriptive phrases (e.g., \"this country\", \"late drummer\") as direct pointers. Extract the precise entity or phrase that matches the description.\n\n## Answer Formatting\n- Think step-by-step to locate evidence, but keep reasoning concise.\n- Always place the final answer inside `<answer>...</answer>` tags.\n- Keep the answer strictly concise (a few words or a short phrase). Do not include explanations, greetings, or unnecessary text inside the tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

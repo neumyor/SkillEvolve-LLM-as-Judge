@@ -1,0 +1,21 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Model extracts literal context spans with non-standard spacing (e.g., 'Show Boat') instead of normalizing to the canonical single-word or standard form expected by the dataset."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent correctly identified the target entity but failed to normalize its spelling/spacing to the canonical form ('Showboat' vs 'Show Boat') present in the context. Adding explicit guidance for canonical tokenization and spacing normalization prevents literal extraction of stylistically spaced titles from overriding dataset expectations.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+        "content": "- **Granularity-First Extraction & Canonical Normalization**: Prioritize the exact phrase length and structure implied by the clue. For proper nouns, titles, and brands, normalize spacing and tokenization to the standard canonical form (e.g., merge split words like 'Show Boat' → 'Showboat', remove non-standard hyphens). Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category. Normalize articles and plurality to match the question's syntax. Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

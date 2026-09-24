@@ -1,0 +1,21 @@
+{
+  "batch_size": 3,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Agents consistently select longer, expanded, or alternative phrasings (e.g., full names, compound alternatives, or related distractors) instead of the exact canonical short answer expected by the gold standard."
+    }
+  ],
+  "patch": {
+    "reasoning": "All three failures stem from the agent extracting semantically valid but non-canonical strings from the context (expanding acronyms, including alternatives like 'or', or picking related distractors). Adding explicit directives for acronym priority and alternative/distractor exclusion will force the agent to isolate the precise, minimal canonical term.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Avoid converting declarative clues into Yes/No answers.**",
+        "content": "\n- **Acronym & Abbreviation Priority**: When the context provides both a full name and its acronym/abbreviation (e.g., \"Ladies Professional Golf Association (LPGA)\"), default to the acronym/abbreviation unless the clue explicitly requests the full name.\n- **Alternative & Compound Exclusion**: Strictly avoid outputting combined alternatives (e.g., \"Sheep or goat\"), broader categories, or semantically related distractors. Isolate the single most specific, canonical term that directly satisfies the clue."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

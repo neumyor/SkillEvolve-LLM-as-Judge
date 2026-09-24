@@ -1,0 +1,41 @@
+{
+  "reasoning": "Prioritized failure-driven patches for critical corrective actions (loop prevention, type exhaustion, appliance verification, done() fallback). Integrated success-driven patches for comprehensive syntax standardization (Task Types table), semantic search guidance, and routine grounding checks where they complemented rather than conflicted with failure priorities. Merged overlapping targets (Principle 2, Table) by synthesizing failure's structural rigor with success's contextual guidance, preserving higher-support insights. Maintained distinct edits for independent sections to capture all unique patterns. All edits respect protected sections and maintain structural integrity. [optimizer-ranked: selected 4/11 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "2. **Systematic exploration**: Maintain a strict mental log of every container and surface you have already inspected. Once a container is opened and confirmed empty, or a surface is checked and found lacking the target, **do not revisit it** until all other unexplored locations have been exhausted. Prioritize moving to new, unvisited areas over returning to previously checked ones.",
+      "content": "2. **Semantic & Systematic Exploration**: Begin searches at **semantically likely locations** (e.g., cutlery in drawers, produce on countertops, bedding on beds, electronics on desks/dressers). Maintain a strict mental log of every container and surface inspected. Once a specific *type* of furniture (e.g., all drawers, all cabinets) is checked and consistently yields no results, mark that entire category as **exhausted**. Immediately pivot to a different furniture category or room zone. Never revisit an empty container or type while other unexplored options remain, **except** when cycling through an appliance's operational sequence. Prioritize moving to new, unvisited areas over returning to previously checked surfaces.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "9. **Appliance & Receptacle Workflow**: Enclosed appliances and containers require a strict sequence: `open` -> `move object in` -> `close` -> `interact` -> `open` -> `take object`. Always verify receptacles are open before placing items. After interacting with an appliance, close it (`close <appliance>`) before navigating away.",
+      "content": "9. **Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Always close appliances** immediately after interaction and retrieval to maintain environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "9. **Appliance & Receptacle Workflow**: Enclosed appliances and containers require a strict sequence: `open` -> `move object in` -> `close` -> `interact` -> `open` -> `take object`. Always verify receptacles are open before placing items. After interacting with an appliance, close it (`close <appliance>`) before navigating away.",
+      "content": "10. **Appliance Interaction & State Verification**: For heating/cooling tasks, use the explicit admissible command (e.g., `heat <object> with <appliance>` or `cool <object> with <appliance>`). Immediately after any appliance interaction, execute `inventory` to verify you are holding the transformed object and confirm its state before navigating to the destination. Do not assume automatic transfer or skip state checks.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n## Task Completion Protocol\n- **Verify Before Stopping**: When `done()` is available, call it only after explicitly verifying that the object is in the correct receptacle/surface AND meets all task conditions. Perform a final `look` or `inventory` check if unsure.\n- **Handle Blocked Actions**: If placement actions are missing from the admissible list, inspect the receptacle's state or re-evaluate the object's properties. Adjust your approach rather than looping or guessing.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [1] targets the most pervasive failure mode (inefficient searching) by adding semantic priors and category-level exhaustion, dramatically improving early-game efficiency. Edit [3] corrects the appliance workflow with precise command syntax and a key heuristic (direct commands), fixing a major source of mid-task errors. Edit [4] addresses a critical gap in post-appliance state verification, preventing silent failures where agents proceed with untransformed objects. Edit [10] provides a robust completion protocol, solving premature termination and blocked-action loops at the end of episodes. Together, these four edits cover the full task lifecycle (search → interact → verify → complete) with high actionability, zero redundancy, and maximum systematic impact.",
+    "selected_indices": [
+      1,
+      3,
+      4,
+      10
+    ]
+  }
+}

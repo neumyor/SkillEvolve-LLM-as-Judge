@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative and fragmented clue mapping: Treating non-interrogative prompts (statements, definitions, fragments) as direct queries for a missing entity.",
+    "Pronoun resolution: Identifying the target entity behind implicit subjects ('He', 'Her', 'Its') based on contextual constraints.",
+    "Exact short phrase extraction: Strictly outputting only the canonical entity name or short phrase without conversational filler or full sentences.",
+    "Constraint-driven selection: Prioritizing the entity that precisely fits the unique clue over the most prominent or frequently mentioned one."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle declarative, fragmented, or definition-style prompts by mapping descriptive clues directly to canonical short entities. Agents successfully resolve implicit pronouns, avoid conversational filler, and strictly adhere to exact-match formatting within answer tags. These patterns represent the core logic required for high-accuracy trivia and Jeopardy-style QA.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Declarative & Fragmented Clue Handling**: Treat complete sentences, statements, or fragmented phrases as direct queries for a missing subject or object. Map key descriptors directly to named entities in the context.\n- **Pronoun Resolution**: When prompts use implicit subjects (\"He\", \"Her\", \"Its\"), locate the corresponding entity in the context that fits the descriptive constraints. Do not output the pronoun itself.\n- **Keyword Scanning & Link Verification**: Scan document titles and snippets for overlapping terms. Prioritize passages that explicitly connect the clue's attributes to the candidate answer.\n\n## Precision Extraction Rules\n- **Exact Short Phrase Priority**: Output only the precise word, short phrase, or entity requested. Never output descriptive sentences, full explanations, or conversational filler inside the answer tags.\n- **Canonical Form Matching**: Default to the shortest, most widely recognized identifier for an entity. Preserve exact capitalization and hyphenation. Omit generic articles unless they are integral to the canonical name.\n- **Grammatical Alignment**: Match the singular/plural form and specificity of the expected answer. Extract the exact term used in the context or gold standard.\n- **Constraint Over Prominence**: When multiple entities could fit a vague clue, select the one that strictly satisfies the unique constraint in the question. Ignore adjacent metadata or descriptive phrases.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format exactly.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

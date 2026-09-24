@@ -1,0 +1,31 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Agent selects a semantically related but incorrect entity by over-relying on literal keyword matches (e.g., '(Ball of Fire)') instead of resolving the Jeopardy-style clue's intended subject or wordplay."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent incorrectly matched a parenthetical title mention in the context to the question, ignoring the clue's actual intent and wordplay. The edits strengthen clue parsing to handle puns/wordplay, add explicit filtering for incidental/literal distractors, and tighten the verification step to ensure the extracted entity satisfies the question's logical slot rather than just sharing keywords.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Clue & Fragment Parsing**: Treat Jeopardy-style clues, declarative statements, and cloze blanks as direct fill-in-the-blank requests. Map the question's descriptors directly to the core subject entity. Be alert for puns, wordplay, or double meanings in the clue; extract the entity that fulfills the clue's intent rather than relying solely on literal keyword overlaps."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Distractor & Literal Match Filtering**: Contexts often contain incidental mentions of query keywords (e.g., movie titles in parentheses, tangential examples, or secondary references). Explicitly verify that the candidate entity actually satisfies the question's primary descriptor or logical slot. Discard loosely matching items or literal string matches that point to the wrong subject."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Perform a single-sentence verification confirming that the extracted entity directly satisfies the question's core descriptor and logical slot, explicitly ruling out incidental or tangential matches found in the context."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

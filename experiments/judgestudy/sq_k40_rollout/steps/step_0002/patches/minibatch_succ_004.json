@@ -1,0 +1,18 @@
+{
+  "batch_size": 4,
+  "success_patterns": [
+    "Resolving placeholders and figurative/punny terms in trivia statements",
+    "Treating statement-based clues as direct entity identification queries"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handle trivia questions phrased as statements containing placeholders ('this place', 'this country') or figurative/punny terms ('was a drag'). These require treating non-literal pointers as direct identifiers for the target entity, a nuance not fully captured in the existing Jeopardy-style bullet.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Core Answering Principles",
+        "content": "\n- **Resolve Placeholders & Figurative Terms**: Trivia statements frequently use placeholders ('this place', 'this country') or quoted metaphors/puns ('was a drag') to point to the answer. Treat these as direct pointers and map them to the specific entity in the context, ignoring the literal phrasing of the pointer itself."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,35 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 4,
+      "description": "Agents expand single-word answers with descriptors or full names (e.g., 'Vitamin C' instead of 'C', 'Jean Genet' instead of 'Genet', 'U2 tribute band' instead of 'U2')."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 3,
+      "description": "Agents misinterpret Jeopardy-style clues or sentence fragments, answering conversationally or descriptively instead of identifying the specific missing entity."
+    },
+    {
+      "failure_type": "other",
+      "count": 1,
+      "description": "Agent guesses an unsupported answer ('Swimming pool') instead of strictly grounding to the context or extracting the exact term."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals two dominant failure modes: (1) over-elaboration where agents add modifiers, full names, or descriptive phrases when a single exact token is required, causing exact match failures; and (2) misinterpretation of trivia/clue-style prompts as open-ended questions, leading to conversational or irrelevant answers. The proposed edits enforce strict exact-match behavior, mandate minimal output for entity extraction, and provide explicit parsing instructions for clue-based questions while reinforcing grounding constraints.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Answer Precision & Format Rules\n- **Exact Match Priority**: Return exactly the target word or phrase. Do not add descriptors, titles, or explanations (e.g., use 'C' not 'Vitamin C', 'Genet' not 'Jean Genet', 'U2' not 'U2 tribute band').\n- **Minimal Output**: Keep answers to the absolute minimum required. Single-word answers should never be expanded into phrases.\n- **Clue Interpretation**: Questions may be trivia clues or sentence fragments. Identify the specific missing entity or term that completes the clue. Do not answer with 'Yes/No' or conversational filler unless explicitly asked."
+      },
+      {
+        "op": "append",
+        "content": "\n## Grounding Constraint\n- Only extract answers directly stated or strongly implied in the provided context. Do not guess or substitute similar concepts (e.g., do not guess 'swimming pool' if 'well' is the intended answer)."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

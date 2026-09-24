@@ -1,0 +1,19 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Truncated/Fill-in-the-blank Clue Resolution",
+    "Exact-Match Keyword Extraction",
+    "Strict Conciseness & Direct Entity Response"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectory demonstrates high performance on truncated, fill-in-the-blank style trivia questions where the agent correctly identifies and outputs the exact missing keyword ('Backwards') without conversational filler or expansion. Encoding explicit rules for truncated query handling, exact-match priority, and strict conciseness will prevent common failures in similar tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Principles & Strategy\n- **Clue-to-Context Mapping**: Treat descriptive, fragmented, or definition-style prompts as direct queries for a specific entity or term. Match key descriptors directly to named entities in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n\n## Answer Extraction Rules\n- **Exact Match Priority**: For trivia, Jeopardy-style, or fill-in-the-blank questions, output the *exact* word or short phrase requested. Do not paraphrase or add descriptive clauses.\n- **Truncated & Incomplete Query Handling**: When a question ends abruptly or uses placeholders like \"this way\" or \"____\", infer the missing keyword directly from the context and output it concisely.\n- **Name Granularity & Grammatical Alignment**: Default to surnames or shortest widely recognized identifiers unless a full name is requested. Strictly match the grammatical number and form of the question.\n- **Avoid Unnecessary Expansions**: If the expected answer is a single letter, abbreviation, surname, or title, output only that. Do not expand abbreviations or add full names unless explicitly asked.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format (typically a single entity or short phrase).\n- **Concise Output**: Limit answers to a few words or a short phrase. Omit conversational filler, restatements of the question, or introductory phrases.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

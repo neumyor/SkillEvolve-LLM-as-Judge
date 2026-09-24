@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Stripping narrative wrappers and conversational framing from trivia clues to isolate the core entity slot.",
+    "Treating non-sentence formats (fragments, dates, colons) as direct search anchors rather than grammatical constructs.",
+    "Mapping pop-culture, slogan, and metaphorical pointers directly to canonical entity names in the context.",
+    "Outputting bare canonical entities without appending clue adjectives, titles, or contextual modifiers."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate a robust strategy for handling Jeopardy-style trivia: stripping narrative framing, parsing non-sentence formats as direct identifiers, mapping colloquial/pop-culture references to canonical names, and strictly avoiding the addition of descriptive modifiers to the final answer. These patterns address the recurring failure modes of overly descriptive outputs and heuristic simplification seen in previous steps.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+        "content": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences, historical statements, or pop-culture references. Strip away narrative wrappers and conversational framing to isolate the **missing entity slot**. Treat the question strictly as a fill-in-the-blank identification task. Never interpret statement-based clues as True/False. Scan the context to find the canonical entity that satisfies all constraints."
+      },
+      {
+        "op": "replace",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "- **Parse Non-Sentence Formats**: Questions frequently use standalone dates, colons, cut-off syntax, or bare noun phrases (e.g., '1968:Starring...'). Do not attempt to force grammatical completeness. Instead, treat these fragments as direct search anchors and map them immediately to the corresponding entity in the context."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Resolve Nicknames & Slogans**: When questions contain colloquial phrases, brand names, or slogans, search across multiple documents for explicit mappings or parenthetical clarifications that link the phrase to a concrete entity.",
+        "content": "\n- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name."
+      },
+      {
+        "op": "replace",
+        "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+        "content": "- **Output Canonical Entities Only**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names, single letters/abbreviations if implied, and bare entities without descriptive labels. Never append clue adjectives, titles, or contextual modifiers to the final answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

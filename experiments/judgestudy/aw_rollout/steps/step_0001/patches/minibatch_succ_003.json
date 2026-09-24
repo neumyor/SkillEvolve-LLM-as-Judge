@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Sequential placement for multi-object tasks to free inventory",
+    "Inventory verification as a grounding step when uncertain",
+    "Explicit appliance state management (open/close cycles)",
+    "Lamp activation protocol for examination tasks"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals consistent behaviors not fully covered in the current skill: agents frequently place the first item of a multi-object task immediately to free inventory, check inventory when navigation becomes disjointed, strictly manage appliance open/close states during transformations, and follow a specific sequence for activating lamps before examination. Encoding these patterns will improve reliability across similar tasks.",
+    "edits": [
+      {
+        "op": "append",
+        "target": "General Principles",
+        "content": "\n9. **Multi-object sequencing**: For tasks requiring multiple instances of an object, place the first acquired item at the target receptacle immediately upon arrival. This frees your inventory to continue searching for the remaining items efficiently.\n10. **Inventory verification**: If navigation feels disjointed or you are unsure of your current state, execute `inventory` to confirm what you are holding before taking further actions.\n11. **Appliance state management**: Strictly manage container states during transformations. Follow the sequence: `open` -> place/interact -> `close` -> `open` -> retrieve. Verify the appliance state in observations before attempting interactions.\n12. **Lamp activation protocol**: For examination tasks, locate the light source after picking up the object. Upon reaching the lamp, verify you are holding the object, then execute `use <lamp>` to activate it prior to examination."
+      }
+    ]
+  },
+  "source_type": "success"
+}

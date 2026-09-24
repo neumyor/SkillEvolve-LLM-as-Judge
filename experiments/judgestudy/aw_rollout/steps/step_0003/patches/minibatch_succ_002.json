@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Heuristic location prioritization during search",
+    "Proactive appliance/receptacle state verification",
+    "Direct transit between task phases"
+  ],
+  "patch": {
+    "reasoning": "Across the batch, successful agents consistently prioritize high-probability search locations based on object categories (e.g., food in fridge, kitchenware in cabinets), verify and open appliances/receptacles before interaction, and maintain direct navigation paths between acquisition, transformation, and delivery phases. Encoding these patterns reduces unnecessary steps and prevents interaction failures.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Heuristic & systematic exploration**: Prioritize high-probability locations first based on object type (e.g., food in fridge, kitchenware in cabinets/drawers, small items on desks/sidtables). Search each surface and container exactly once before revisiting. Open closed containers before judging them empty."
+      },
+      {
+        "op": "insert_after",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "\n**Appliance state verification**: Before using any appliance (microwave, sink, fridge, desklamp) or placing an item into a receptacle, always check its state. If closed, open it first. Do not attempt transformations or placements on closed appliances."
+      },
+      {
+        "op": "replace",
+        "target": "5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.",
+        "content": "5. **Direct transit**: Once you have acquired the target object (or completed a transformation), navigate directly to the next required location (appliance or final receptacle) without intermediate stops or detours."
+      }
+    ]
+  },
+  "source_type": "success"
+}

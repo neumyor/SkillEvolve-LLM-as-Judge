@@ -1,0 +1,29 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Convergent Entity Identification from Search-Result Clusters",
+    "Retention of Official Titles, Ranks & Standard Articles",
+    "Direct Definition & Glossary Mapping"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently treat the context as a unified search-result cluster, requiring the agent to identify the canonical entity that unifies multiple fragmented snippets. Agents also successfully balance conciseness with accuracy by retaining necessary articles and suffixes for official titles/ranks (e.g., 'Eagle Scout', 'The Flintstones'), and accurately map direct definitional clues to headwords. Encoding these patterns prevents over-stripping of proper nouns and improves handling of SERP-style inputs and glossary-style questions.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "- **Convergent Entity Identification**: Treat the context as a unified search-result cluster. Prioritize entities that appear consistently across multiple `[DOC]` blocks and `[TLE]` markers. When snippets are fragmented or noisy, the correct answer is almost always the canonical term that unifies the majority of the results."
+      },
+      {
+        "op": "replace",
+        "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+        "content": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\"). **Exception**: Retain standard articles, suffixes, and rank/designation terms when they are integral to an official title, show name, or branded entity (e.g., \"The Flintstones\", \"Eagle Scout\", \"What's Happening!!\")."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+        "content": "\n- **Definition & Glossary Mapping**: Questions often function as direct dictionary definitions, etymological breakdowns, or functional descriptions (e.g., 'A house with floors that differ by about half a story', 'means servant of Allah'). Scan for explicit equivalence structures ('X is Y', 'Y stands for X') or glossary-style entries. Map the clue's descriptive phrase directly to the canonical headword or term defined in the text."
+      }
+    ]
+  },
+  "source_type": "success"
+}

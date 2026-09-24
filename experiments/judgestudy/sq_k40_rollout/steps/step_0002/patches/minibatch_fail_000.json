@@ -1,0 +1,39 @@
+{
+  "batch_size": 4,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Model appends clue adjectives or unnecessary name parts to the answer (e.g., 'Hasty pudding', 'Chester A. Arthur')"
+    },
+    {
+      "failure_type": "rule_wrong",
+      "count": 1,
+      "description": "Rigid 'prefer last names' rule causes omission of required formal titles/full names (e.g., 'Drake' vs 'Sir Francis Drake')"
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "No guidance to strip quoted/pun words from clues or prioritize functional categories over specific examples (e.g., 'Witch hazel' vs 'Anti-perspirant')"
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals systematic failures in parsing Jeopardy-style clues: the model either over-includes clue modifiers/puns, under-includes required formal names due to a rigid last-name rule, or picks specific instances instead of the functional category requested. These edits replace the brittle naming heuristic with adaptive formatting rules, add explicit instructions to strip quoted/playful words, and enforce prioritization of functional/categorical terms over concrete examples.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+        "content": "- **Strict Name & Entity Formatting**: Match the exact expected trivia term. Use full formal names (including titles/ranks) when the clue implies historical or formal identification. Otherwise, default to last names or bare entities. Never append descriptive labels, adjectives, or qualifiers to the answer. Provide only the direct answer without repeating the question or including reasoning inside the tags."
+      },
+      {
+        "op": "append",
+        "content": "- **Exclude Clue Modifiers & Puns**: Words enclosed in quotes, capitalized unusually, or used playfully in the question are clue devices, not part of the answer. Strip them out before extracting the final term."
+      },
+      {
+        "op": "append",
+        "content": "- **Prioritize Functional Terms Over Instances**: When a question describes a category, property, or function (e.g., \"An astringent...\", \"A dessert...\"), answer with the functional or categorical term itself, not a specific example mentioned in the context."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

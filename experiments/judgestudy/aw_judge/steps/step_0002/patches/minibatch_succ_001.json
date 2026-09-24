@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Explicit transformation command syntax (`<action> <object> with <appliance>`)",
+    "Verifying admissible actions for appliance interactions to prevent search loops"
+  ],
+  "patch": {
+    "reasoning": "Trajectories consistently use explicit transformation syntax (e.g., `heat <object> with <microwave>`, `clean <object> with <sink>`). The original skill's simplified placeholders (e.g., `heat X`) caused agents to guess incorrectly and enter inefficient loops (as seen in Trajectory 2). Updating the task table to show exact syntax and adding a verification principle will align agent behavior with the environment's actual action space.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "| Clean & Place | Clean object X and put in/on Y | Find X -> take X -> go to sink -> clean X -> go to Y -> put X |\n| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> open -> move X in -> close -> heat X -> open -> take X -> go to Y -> put X |\n| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> open -> move X in -> close -> cool X -> open -> take X -> go to Y -> put X |",
+        "content": "| Clean & Place | Clean object X and put in/on Y | Find X -> take X -> go to sink -> `clean <X> with <sink>` -> go to Y -> put X |\n| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> open -> move X in -> close -> `heat <X> with <microwave>` -> open -> take X -> go to Y -> put X |\n| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> open -> move X in -> close -> `cool <X> with <fridge>` -> open -> take X -> go to Y -> put X |"
+      },
+      {
+        "op": "insert_after",
+        "target": "## General Principles",
+        "content": "\n- **Verify transformation syntax**: Appliance commands often require explicit object-appliance pairing (e.g., `heat <object> with <microwave>`). If the expected command is missing from the admissible list, check for variations like `<action> <object> with <appliance>` rather than guessing or looping."
+      }
+    ]
+  },
+  "source_type": "success"
+}

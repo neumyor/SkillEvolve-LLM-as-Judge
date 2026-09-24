@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treat fragmented or Jeopardy-style prompts as direct queries for a specific entity, mapping descriptive clues to named entities in the context.",
+    "Extract only the precise word, short phrase, or entity requested, strictly matching grammatical number, capitalization, and specificity without paraphrasing or adding filler.",
+    "Scan document titles and snippets for keyword overlaps, prioritizing passages that explicitly link the clue to the candidate answer.",
+    "Wrap final answers strictly in <answer>...</answer> tags with minimal external reasoning, ensuring conciseness and direct entity response."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle fragmented, Jeopardy-style, and direct trivia questions by mapping descriptive clues to exact named entities in the context. They avoid paraphrasing, maintain strict grammatical alignment, and output concise, properly tagged answers. These patterns form the core of effective QA behavior and should be explicitly codified to guide future attempts.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat fragmented, incomplete, or Jeopardy-style prompts as direct definitions. Identify the missing subject or key descriptor and map it directly to named entities in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages to find exact matches or strong semantic connections.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n\n## Precision Extraction Rules\n- **Exact Entity Output**: Extract only the precise word, short phrase, or entity requested. Do not paraphrase, add descriptive clauses, or output full sentences.\n- **Grammatical & Specificity Alignment**: Strictly match the number (singular/plural), capitalization, and specificity of the target. Default to surnames or shortest widely recognized identifiers unless a full name is requested.\n- **Avoid Unnecessary Expansions**: Omit articles (a, an, the), plural suffixes, or conversational filler. If the expected answer is a single letter, abbreviation, or title, output only that.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format (typically a single entity or short phrase).\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

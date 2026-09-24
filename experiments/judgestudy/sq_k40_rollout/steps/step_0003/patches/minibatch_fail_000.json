@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 7,
+      "description": "Model applies heuristic simplification/expansion (stripping modifiers, altering plurality, swapping names/roles, adding hierarchies) instead of extracting the exact context span."
+    },
+    {
+      "failure_type": "other",
+      "count": 1,
+      "description": "Model misidentifies entity type due to malformed/truncated question input."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch fails primarily because the skill's conciseness heuristics ('prefer last names', 'bare entities') conflict with gold answers that require exact modifiers, nicknames, roles, or pluralities. Replacing these heuristics with strict verbatim span-matching directives and explicitly forbidding automatic simplification will resolve the systematic mismatches.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+        "content": "- **Exact Span Matching**: Extract the answer exactly as it appears in the context. Preserve necessary modifiers, titles, nicknames, and grammatical number (singular/plural). Do not strip descriptive labels, infer shorter aliases, or add hierarchical/location details unless the context explicitly uses them as standalone identifiers. Prioritize the exact phrase that satisfies the question constraints over stylistic simplification."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Avoid Heuristic Simplification**: Do not automatically convert full names to last names, singular to plural, or specific terms to generic categories. Trust the context's explicit phrasing. If the context uses a specific title, role, or compound term as the answer anchor, retain it verbatim."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

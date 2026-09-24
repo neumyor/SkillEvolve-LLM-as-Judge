@@ -1,0 +1,22 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Handling explicit multiple-choice options in questions",
+    "Strict extraction priority over paraphrasing or generation"
+  ],
+  "patch": {
+    "reasoning": "Across all successful trajectories, agents consistently treat questions as direct lookup tasks, extracting exact terms from the context rather than paraphrasing or generating alternatives. One trajectory explicitly handles a multiple-choice format ('Of 2, 5 or 10...'), requiring selection from provided options rather than free-form generation. Encoding these patterns prevents common failure modes like over-paraphrasing or ignoring explicit options.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n- **Option-List & Multiple-Choice Handling**: When a question explicitly provides candidate options (e.g., \"Of X, Y, or Z...\"), select the exact option that aligns with the context. Do not generate a new answer or modify the wording of the chosen option."
+      },
+      {
+        "op": "replace",
+        "target": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.",
+        "content": "## Answer Precision and Conciseness\n- **Extraction Priority**: Always prefer extracting the exact term or phrase from the context over generating or paraphrasing it. Trivia evaluation relies on exact string matches, so retain the context's original phrasing unless it contains unnecessary filler.\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms."
+      }
+    ]
+  },
+  "source_type": "success"
+}

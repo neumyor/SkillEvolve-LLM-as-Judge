@@ -1,0 +1,22 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Heading & Snippet Prioritization: Quickly scan document titles ([TLE]) and opening snippets for exact phrase matches or direct paraphrases of trivia/Jeopardy clues before reading full paragraphs.",
+    "Adaptive Reasoning Depth: Skip lengthy step-by-step deduction when the answer is explicitly stated or strongly implied in the context; reserve reasoning only for ambiguous or multi-hop queries."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently leverage document titles and snippets for rapid answer extraction on trivia and Jeopardy-style questions. They also adapt their reasoning depth based on answer clarity, avoiding unnecessary deduction when the context provides a direct match. Encoding these patterns will improve retrieval speed, reduce token waste, and prevent over-complication of straightforward extraction tasks.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Heading & Snippet Prioritization**: For trivia and Jeopardy-style queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase. Use them to anchor your search before diving into full paragraphs."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a concise reasoning trace only if the answer requires synthesis or disambiguation. If the answer is explicitly stated in the context, proceed directly to extraction."
+      }
+    ]
+  },
+  "source_type": "success"
+}

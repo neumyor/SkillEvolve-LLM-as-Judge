@@ -1,0 +1,40 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 6,
+      "description": "Agents repeatedly revisit empty containers/surfaces without tracking visited locations or switching strategies."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Agent fails to grab the second object immediately after placing the first in multi-object tasks."
+    },
+    {
+      "failure_type": "appliance_error",
+      "count": 2,
+      "description": "Agent gets stuck in heating/cooling loops or fails to retrieve items from appliances after transformation."
+    },
+    {
+      "failure_type": "missed_object",
+      "count": 1,
+      "description": "Agent rejects valid substitute objects (e.g., pot vs pan) due to strict naming, causing endless search."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch exhibits four core failure modes: blind location looping, forgetting to scan locally for multi-item tasks, failing to retrieve items from appliances after processing, and rejecting functional synonyms. These edits inject explicit exhaustion rules, post-placement local scans, appliance retrieval steps, and synonym acceptance to break loops and align agent behavior with task requirements.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Placement & Receptacle States**: If the `put` action is unavailable, examine the receptacle to check if it is closed or requires a specific interaction. Do not attempt to place objects into closed or incompatible receptacles. Verify object states once, then proceed directly to the next step without unnecessary returns.",
+        "content": "- **Placement & Receptacle States**: If the `put` action is unavailable, examine the receptacle to check if it is closed or requires a specific interaction. Do not attempt to place objects into closed or incompatible receptacles. Verify object states once, then proceed directly to the next step without unnecessary returns.\n\n- **Location Exhaustion Rule**: If you visit a container or surface twice and find it empty, mark it as permanently searched. Immediately navigate to a completely different, unvisited location or room. Never repeat the same search pattern more than once."
+      },
+      {
+        "op": "append",
+        "content": "\n## Advanced Handling Rules\n\n- **Multi-Object Local Scan**: For tasks requiring multiple items (e.g., `pick_two_obj_and_place`), after successfully placing the first item, immediately scan your current location for the remaining target(s). Only leave the area if the second item is not visible or reachable here.\n- **Appliance Retrieval Protocol**: When heating, cooling, or cleaning, always follow the sequence: interact with appliance -> close/appliance cycle -> open appliance -> **take/retrieve item** -> proceed to destination. Do not assume the item stays in your inventory automatically after appliance interactions.\n- **State Verification Trust**: After a successful `heat`, `cool`, or `clean` action, proceed directly to the next step. Do not repeatedly `examine` the object to verify its state, as observations may lag or report generic names. Trust the action success and advance.\n- **Object Synonymy**: If the exact goal object is missing after thorough searching, accept functionally equivalent items commonly used in the environment (e.g., treat `pot` as `pan`, `cup` as `mug`, `bowl` as `plate`) to prevent infinite search loops."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

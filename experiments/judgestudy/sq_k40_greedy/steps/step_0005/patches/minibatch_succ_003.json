@@ -1,0 +1,33 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Verbatim Title/Snippet Matching as Primary Retrieval Signal",
+    "Declarative Subject Extraction for Non-Interrogative Prompts",
+    "Block-Level Co-Occurrence Over Cross-Document Reasoning"
+  ],
+  "patch": {
+    "reasoning": "The batch shows agents succeeding by prioritizing exact string overlaps in titles/snippets, treating declarative statements as direct definitions requiring subject extraction, and confining answer selection to the same document block. These patterns directly mitigate prior failures involving over-stripping, semantic over-analysis, and distractor selection via frequency heuristics.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Direct Keyword Matching & Scanning:",
+        "content": "\n- **Literal String Overlap Priority**: When the question contains phrases that exactly match document titles, snippets, or flashcard entries, treat this overlap as the primary retrieval signal. Extract the candidate answer from the same line or immediate metadata block before applying semantic reasoning or keyword stripping."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Declarative Subject Extraction**: Non-interrogative prompts (e.g., \"It's the Spanish name for...\", \"This 1994 miniseries...\") function as direct definitions. Identify the grammatical subject or noun phrase that the rest of the sentence predicates upon, and output that exact term."
+      },
+      {
+        "op": "replace",
+        "target": "Snippet/Title Density Heuristic: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+        "content": "**Block-Level Co-Occurrence**: Trivia clues are frequently lifted directly from document titles, headers, or flashcard cards. When a match is found, assume the answer resides in the same `[DOC]` block or adjacent metadata. Prioritize terms appearing in the title or first sentence of that block, ignoring cross-document associations unless explicitly required."
+      },
+      {
+        "op": "replace",
+        "target": "When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+        "content": "When in doubt, default to the entity that shares the highest lexical overlap with the question's anchor phrases within the same document block, rather than relying on frequency counts or prominence heuristics."
+      }
+    ]
+  },
+  "source_type": "success"
+}

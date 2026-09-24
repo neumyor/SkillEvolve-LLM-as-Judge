@@ -1,0 +1,48 @@
+{
+  "batch_size": 6,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 4,
+      "description": "Agents repeatedly revisit inspected surfaces and containers without tracking visited states, causing infinite search cycles."
+    },
+    {
+      "failure_type": "missed_object",
+      "count": 2,
+      "description": "Agents fail to accept functionally equivalent objects (e.g., pot for pan) when the exact target is unavailable, leading to dead-end searches."
+    },
+    {
+      "failure_type": "appliance_error",
+      "count": 1,
+      "description": "Agent mismanages appliance interactions, attempting manual open/close/move steps instead of using atomic heat/clean/cool actions."
+    },
+    {
+      "failure_type": "action_loop",
+      "count": 1,
+      "description": "Agent cycles between locations and inventory checks due to state confusion and missing admissible actions."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch exhibits three core systemic failures: (1) agents lose track of visited locations and loop endlessly; (2) agents rigidly match object names and reject valid substitutes; (3) agents misunderstand atomic appliance actions and get stuck in manual manipulation loops. The proposed edits enforce strict visited-tracking, allow functional object substitution, clarify atomic appliance usage, and mandate state verification before placement.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration**: Maintain an explicit mental list of visited surfaces and containers. Never revisit a location you have already inspected. Open closed containers before judging them empty. If you find yourself returning to a checked location, immediately pivot to an unexplored area."
+      },
+      {
+        "op": "append",
+        "content": "9. **Accept functional substitutes**: If the exact target object is not found after exhaustive searching, consider accepting functionally equivalent items (e.g., 'pot' for 'pan', 'bowl' for 'plate') that satisfy the task constraints. Do not halt progress solely due to a naming mismatch if a suitable alternative is available."
+      },
+      {
+        "op": "append",
+        "content": "10. **Use atomic appliance actions**: For heating, cooling, or cleaning tasks, rely directly on the provided interaction commands (e.g., `heat X with Y`, `cool X with Y`, `clean X with Y`). These actions are typically atomic and handle internal placement/retrieval automatically. Do not manually open/close appliances or move objects in/out unless the admissible actions explicitly require it."
+      },
+      {
+        "op": "append",
+        "content": "11. **Verify state before placing**: If the expected `put` or `place` action is missing from the admissible list at the destination, immediately check your inventory. Confirm you are holding the correct item. If holding, examine the receptacle or reconsider if the item requires further transformation. Avoid cycling between locations without verifying your current state."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

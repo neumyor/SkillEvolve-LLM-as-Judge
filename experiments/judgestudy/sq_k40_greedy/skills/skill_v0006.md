@@ -1,0 +1,37 @@
+# Question Answering Skill
+
+## Core Principles
+- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Immediately parse the question for explicit or implicit target categories (e.g., \"this nation\", \"this group\") to constrain the candidate pool. Note that many clues are partial quotes, contain ellipses (...), or rely on synonyms/roles rather than the exact target term; treat these fragments as direct anchors to locate the canonical entity in the context.
+- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.
+- **Noise & Redundancy Filtering**: Contexts often contain overlapping sources or metadata. Rapidly isolate the single passage that explicitly defines or links to the clue, disregarding tangential details.
+- **Strict Formatting**: Always wrap the final answer in `<answer>...</answer>` tags. Keep the content inside strictly to the answer itself (typically a few words or a short phrase), omitting introductory phrases or reasoning.
+- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., "acid" vs "base") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords.
+
+## Handling Statement or Fragment Questions
+
+- **"this [Category]" Placeholders**: Jeopardy-style questions routinely replace the target entity with demonstrative placeholders like "this nation," "this state," or "this group." Treat these as direct blanks to be filled by the specific entity described, rather than resolving them as complex relational pointers.
+- **Verbatim Context Lifting**: Trivia questions are often copied verbatim or near-verbatim from context sentences, titles, or flashcards. Prioritize scanning for exact or near-exact string matches in document titles and snippets before attempting semantic reasoning or keyword stripping.
+- **Reverse Clues & Minimalist Prompts**: When the question is a single proper noun, extremely short phrase, or famous quote/excerpt lacking an explicit interrogative, treat it as a reverse Jeopardy clue. For quotes, poems, or songs, the target is almost always the author, composer, or creator. For other fragments, infer the implicit dimension (location, category, or defining attribute) and answer that directly.
+- **Paraphrase & Synonym Mapping**: Clues rarely quote the answer verbatim. Instead, they describe attributes, roles, or associations. Match descriptive phrases to their canonical terms using contextual anchors and domain knowledge.
+
+- **Partial Quote & Ellipsis Matching**: When a question contains a truncated sentence or partial quote, scan the context for the exact phrase or its immediate continuation. The missing word or phrase completing the thought is almost always the target entity.
+- **Resolving Implicit References**: Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.
+Many questions are phrased as statements or incomplete phrases (common in trivia/Jeopardy). Treat these as requests to identify the specific subject or entity being described. Do not respond with "True"/"False", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.
+
+## Answer Precision and Conciseness
+- **Extraction Priority**: Always extract the exact term or phrase from the context. Trivia evaluation relies on exact string matching; never normalize capitalization, remove leading articles ("the", "a"), or alter pluralization. Preserve the context's original casing and formatting exactly as presented.
+Answers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.
+- Retain necessary descriptors, species names, or qualifiers if they are part of the standard name or required to distinguish the entity (e.g., output "Brown pelican", "American football", or "Il Postino" rather than stripping to "Pelican", "Football", or "The Postman").
+- Match plurality exactly as presented in the context or gold standard (e.g., "Pineapples" not "Pineapple").
+- When multiple titles exist (e.g., original vs. translated), prefer the original or canonical title unless the question explicitly asks for the localized version.
+- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier.
+
+## Distractor Management
+Contexts often contain multiple names or related terms. Focus strictly on the entity that directly satisfies the question's query. Ignore tangential mentions, secondary figures, or unrelated topics that appear in other paragraphs. Never default to frequency or prominence if it conflicts with explicit question constraints. Always prioritize the entity that satisfies the maximum intersection of stated filters, even if it appears less frequently in the context.
+
+- **Handling Clue Comparisons & Analogies**: Questions frequently use a known entity as a comparative anchor (e.g., "like [Name]", "similar to [Entity]"). Never output the comparison term itself. Instead, extract the target category, role, or relationship being described, and resolve the pointer to the actual subject of the query.
+
+- **Typo & Variant Tolerance**: Queries may contain minor misspellings, OCR errors, or phonetic variants (e.g., "steaing" for "stealing"). Apply fuzzy matching or semantic equivalence when scanning for anchor phrases, prioritizing conceptual matches over strict string equality.
+- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.
+
+- **Multi-Clause Description Mapping**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously.

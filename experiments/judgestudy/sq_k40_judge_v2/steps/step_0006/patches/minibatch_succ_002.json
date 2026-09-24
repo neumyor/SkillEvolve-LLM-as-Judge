@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating Jeopardy-style fragments, cloze blanks, and declarative clues as direct definition/fill-in-the-blank requests rather than conversational questions.",
+    "Isolating the primary subject entity that directly satisfies the query's descriptor while filtering out tangential examples or secondary mentions."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle trivia and cloze-style prompts by mapping descriptive attributes directly to the exact subject entity, ignoring conversational framing. They also demonstrate precise subject isolation when contexts contain multiple related entities. Encoding these patterns will reinforce accurate, concise extraction for fragment-based queries.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment & Cloze Handling**: Treat incomplete sentences, Jeopardy-style clues, and open clauses (e.g., \"& this one\", \"Its area equals...\") as direct fill-in-the-blank or definition requests. Map descriptive attributes directly to the exact subject entity in the context, ignoring conversational framing or trailing punctuation."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match.",
+        "content": "\n- **Primary Subject Isolation**: When contexts mention multiple related entities, isolate the one that directly satisfies the question's descriptor. Ignore tangential examples, historical anecdotes, or secondary mentions to prevent over-specification."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied failure-driven patch for 'Answer Precision and Conciseness' as it resolves critical stripping errors and directly conflicts with a lower-priority success patch covering the same section; per guidelines, the failure version is retained. All other success-driven patches target distinct sections or introduce new, non-conflicting guidance, so they are preserved. Support counts and source types are carried forward as specified. [optimizer-ranked: selected 4/8 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Direct Keyword Matching & Scanning**: Prioritize scanning document titles, snippets, and paragraphs for exact or near-exact keyword matches. Quickly locate supporting sentences using unique identifiers (dates, numbers, quotes, proper nouns) before reading deeply.",
+      "content": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \\\"&\\\", \\\"who\\\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Constraint Verification**: Cross-check the extracted entity against specific constraints in the question (e.g., years, roles, locations) using the context to ensure accuracy.",
+      "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity. When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Handling Statement or Fragment Questions",
+      "content": "\n\n- **Partial Quote & Ellipsis Matching**: When a question contains a truncated sentence or partial quote, scan the context for the exact phrase or its immediate continuation. The missing word or phrase completing the thought is almost always the target entity.\n- **Resolving Implicit References**: Trivia questions frequently use demonstratives or relational pointers (e.g., \\\"this city's Sabres,\\\" \\\"in this play,\\\" \\\"like Goneril\\\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Map descriptive phrases directly to the target entity (person, place, term, work).",
+      "content": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Immediately parse the question for explicit or implicit target categories (e.g., \\\"this nation\\\", \\\"this group\\\") to constrain the candidate pool. Note that many clues are partial quotes, contain ellipses (...), or rely on synonyms/roles rather than the exact target term; treat these fragments as direct anchors to locate the canonical entity in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [1] ranks highest as it fundamentally improves the scanning pipeline by instructing precise query preprocessing (stripping punctuation/filler/ellipses), directly addressing a widespread failure mode where exact-match searches fail due to formatting artifacts. Edit [3] follows closely by upgrading constraint verification to handle overlapping keywords through intersection logic, tackling a primary source of ambiguity in multi-constraint trivia. Edit [4] is highly complementary, filling a critical gap in the fragment-handling section by explicitly detailing how to resolve partial quotes and implicit references, which are ubiquitous in Jeopardy-style clues but previously vague. Edit [0] rounds out the selection by enhancing clue recognition with explicit category parsing and synonym/role awareness, preventing semantic mismatch errors. Together, these four edits systematically strengthen retrieval, constraint resolution, and format interpretation with clear, actionable guidance.",
+    "selected_indices": [
+      1,
+      3,
+      4,
+      0
+    ]
+  }
+}

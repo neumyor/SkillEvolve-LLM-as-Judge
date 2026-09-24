@@ -1,0 +1,21 @@
+{
+  "batch_size": 2,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Agents misalign extracted answers by appending surnames to nicknames or truncating compound names to fill blanks."
+    }
+  ],
+  "patch": {
+    "reasoning": "Both failures stem from agents misinterpreting how to extract specific identifiers (nicknames/monikers) and compound names when presented with blanks or partial cues. The first adds a surname to a nickname, while the second truncates a compound company name to fit a blank. New rules will enforce precise extraction of aliases and mandate returning full canonical entities for partial/cloze prompts.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Alias & Nickname Precision**: When questions request a nickname, moniker, or alias, extract exactly that term. Do not append the subject's actual name or surname unless it is intrinsically part of the alias itself.\n- **Full Entity Priority for Blanks**: For questions containing blanks or partial names (e.g., \"___ & Wagnalls\"), return the complete canonical entity name found in the context, rather than just filling the blank, unless the question explicitly limits the response to a single word or fragment."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

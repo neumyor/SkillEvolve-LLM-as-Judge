@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Exact-match extraction for trivia and clue-based questions, avoiding paraphrasing or unnecessary expansions.",
+    "Direct mapping of question descriptors to named entities in the context using keyword scanning and explicit link verification.",
+    "Strict conciseness in output formatting, limiting answers to precise entity names or short phrases within <answer> tags."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories involved trivia or Jeopardy-style questions requiring exact entity extraction. Agents succeeded by treating questions as direct clues, scanning contexts for exact keyword matches, and outputting concise, unparaphrased entity names. Encoding these patterns addresses the previously identified failure mode (missing exact-match rules) and reinforces the efficient reading strategy observed across the batch.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Answer Extraction Rules\n- **Exact Match Priority**: For trivia, Jeopardy-style, or clue-based questions, output the *exact* word or short phrase requested. Do not paraphrase, expand abbreviations, or add descriptive clauses.\n- **Direct Entity Response**: Provide only the target entity name (person, place, title, etc.). Avoid full sentences, conversational filler, or \"Yes/No\" responses.\n\n## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat the question as a set of constraints. Scan document titles and snippets for overlapping keywords or exact phrase matches.\n- **Explicit Link Verification**: Prioritize passages that directly connect the clue's subject to the candidate answer. Select the entity that best satisfies all specific constraints (dates, locations, attributes).\n- **Concise Formatting**: Keep answers strictly within `<answer>...</answer>` tags. Limit to a few words or a short phrase. Provide minimal reasoning only if necessary to justify the selection."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Jeopardy/Cloze Subject Mapping: Successfully identifying the core subject entity described by a predicate or attribute in fragmentary questions.",
+    "Definitive Keyword Bridging: Using highly specific proper nouns, dates, or unique phrases in the question to instantly filter and locate the exact matching context passage.",
+    "Strict Head-Noun Extraction: Outputting only the precise entity or short phrase requested, completely omitting descriptive clauses, titles, or contextual framing."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories handle Jeopardy-style or cloze-format questions by rapidly bridging specific keywords (names, dates, locations) to the exact subject entity in the context. They consistently ignore descriptive predicates and output only the core noun. Reinforcing these patterns will standardize high-precision extraction for trivia and fragment queries while maintaining execution speed.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Jeopardy & Cloze Subject Mapping**: Treat declarative fragments, \"This [noun]...\" prompts, and definition-seeking clues as direct requests for the primary subject entity. Map descriptive predicates or attributes directly to the head noun in the context, strictly avoiding answers that are merely properties, genres, or secondary examples."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Definitive Filter Bridging**: When the question contains highly specific proper nouns, dates, or unique phrases (e.g., \"1993's Mr. Jones\", \"UNESCO building in Paris\"), treat them as exact filters. Immediately isolate the document or passage containing these markers to pinpoint the target entity, bypassing tangential or loosely matching texts."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Perform a rapid verification: confirm that the extracted term exactly satisfies the question's grammatical slot and matches the definitive markers found in the context. Keep traces concise to maintain speed and prevent verbosity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

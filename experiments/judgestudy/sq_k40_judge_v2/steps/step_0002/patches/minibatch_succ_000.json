@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Jeopardy-style clue parsing ('this [descriptor]', partial titles) treated as direct entity pointers",
+    "Distractor rejection in noisy trivia contexts (filtering incorrect guesses/anecdotes)",
+    "Flexible reasoning traces (skipped when answer is immediately verifiable)"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently parse Jeopardy-style fill-in-the-blank clues as direct entity requests, navigate noisy multi-source contexts by filtering out incorrect guesses or tangential anecdotes, and adapt their reasoning depth based on answer clarity. Encoding these patterns will improve robustness on trivia benchmarks where contexts often contain mixed snippets, quiz pairs, or distractor information.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Jeopardy/Clue Syntax Parsing**: Recognize structures like \"this [descriptor]\", \"known as the [role]\", or partial titles. Treat them as direct pointers to a single proper noun or entity, bypassing complex relational mapping."
+      },
+      {
+        "op": "insert_after",
+        "target": "Prefer the most direct or consistently stated match.",
+        "content": "\n- **Distractor Filtering in Trivia Contexts**: When context contains quiz pairs, forums, or mixed snippets, explicitly ignore incorrect guesses, anecdotes, or tangential details. Anchor strictly to definitive factual statements or authoritative sources (e.g., flashcards, encyclopedias)."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a brief reasoning trace only if needed to justify selection; skip entirely if the answer is directly verifiable from a single clear passage."
+      }
+    ]
+  },
+  "source_type": "success"
+}

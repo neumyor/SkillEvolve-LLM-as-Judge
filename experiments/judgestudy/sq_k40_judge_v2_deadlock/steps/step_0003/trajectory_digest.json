@@ -1,0 +1,30 @@
+{
+  "step": 3,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 7,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agent outputs descriptive phrases, parenthetical translations, or True/False instead of the exact short entity requested.",
+      "count": 7,
+      "task_ids": [
+        "2be20bbbb7fb4e8d8cf61d3863457b3b",
+        "1ea2851b642c4b15af816e0af9d8aa7e",
+        "1400ca67c580458d91e3cb319ce25a74",
+        "167752253c1c4cff907a6314c5754d12",
+        "1e2d47768a16419688fcffb970f20c45",
+        "7ebc5c81713a4197ac303dec72719c0f",
+        "82b3d01ea72847959730b3ef349b2d76"
+      ]
+    }
+  ],
+  "score_before": 0.715,
+  "score_after": 0.715,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat descriptive, fragmented, or definition-style prompts as direct queries for a specific named entity. Match key descriptors directly to candidates in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n- **Abstract vs. Concrete Targeting**: When a question describes a function, category, property, or role, extract the abstract category or functional term. Do not answer with a list of concrete instances unless explicitly asked.\n\n## Precision Extraction Rules\n- **Exact Match Priority**: Output only the precise word, short phrase, or entity requested. Never add descriptions, parenthetical translations, explanatory clauses, or \"Yes/No\" verdicts unless explicitly asked.\n- **Grammatical & Specificity Alignment**: Strictly match the exact number (singular/plural), capitalization, and specificity of the target. If the context or expected answer uses a specific term (e.g., \"Brown pelican\", \"Pineapples\"), output that exact string. Do not generalize or simplify. Default to surnames or shortest widely recognized identifiers unless a full name is requested. Preserve exact capitalization and hyphenation.\n- **Constraint Targeting**: Carefully parse the question's grammatical subject and object to determine exactly what is being asked (e.g., location, time period, institution vs. territory). Extract only the entity that satisfies the specific constraint, ignoring closely related but incorrect entities.\n- **Avoid Unnecessary Expansions**: If the expected answer is a single letter, abbreviation, surname, or title, output only that. Omit articles (a, an, the), plural suffixes, or conversational filler.\n- **Fragmented Query Resolution**: For truncated, typo-ridden, or incomplete prompts, isolate the key descriptive clues and map them directly to the most salient factual answer in the context. Prioritize direct entity matches over inferred relationships. Infer missing keywords directly from the context and output concisely.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format (typically a single entity or short phrase).\n- **Concise Output**: Limit answers to a few words or a short phrase. Omit restatements of the question or introductory phrases.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags.",
+      "target": "(No learned rules yet. Rules will be added through the reflection process.)"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Explicit Contextual Grounding: Agents consistently quote the exact validating sentence from the context during reasoning to prevent hallucination and ensure alignment.",
+    "Definition & Slogan Mapping: Questions frequently use definitions, famous slogans, or descriptive phrases instead of direct interrogatives. Agents successfully map these strings to the canonical entity name.",
+    "Immediate Snippet Reference Resolution: Demonstratives ('this', 'he', 'seen here') are resolved by anchoring to the subject of the immediate paragraph, avoiding unnecessary cross-document searches.",
+    "Casing & Formatting Preservation: Agents mirror the exact capitalization, punctuation, and spacing of the source text to guarantee strict matching."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories demonstrate a consistent reliance on explicit textual grounding, mapping of non-interrogative clues (definitions/slogans) to entities, rapid resolution of local demonstratives, and strict preservation of source formatting. These patterns address common failure modes (hallucination, misaligned entity types, verbose reasoning) and are not fully covered by the current skill's generic instructions.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a concise verification trace that explicitly quotes the exact sentence or phrase from the context confirming the answer. Directly link the question's core descriptor to this textual evidence before extracting the final term."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Definition & Slogan Mapping**: Treat definitional prompts, famous slogans, and descriptive phrases as direct requests for the canonical entity. Map the descriptive string to the proper noun or term named in the context, rather than returning the description itself."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "\n- **Immediate Snippet Resolution**: Resolve demonstratives ('this', 'he', 'seen here') and possessives by anchoring them to the subject of the immediate `[PAR]` paragraph. Use the local sentence context to disambiguate before cross-referencing other documents."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Casing & Formatting Preservation**: Mirror the exact capitalization, punctuation, and spacing of the source text when extracting the answer. Preserve original formatting to ensure strict matching and avoid case-sensitivity penalties."
+      }
+    ]
+  },
+  "source_type": "success"
+}

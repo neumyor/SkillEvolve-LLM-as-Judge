@@ -1,0 +1,41 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Over-specification of generic suffixes/modifiers (e.g., \"Island\", \"Satellite Radio\", full middle names) when the gold answer requires the core identifier."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Failure to preserve exact morphological forms (e.g., gerunds, plurals), leading to lemmatization errors."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 1,
+      "description": "Misinterpreting fragment/clue questions by outputting a description or definition instead of the target entity."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 1,
+      "description": "Failing to verify the explicit entity type requested in the question, resulting in selecting a related component."
+    },
+    {
+      "failure_type": "other",
+      "count": 1,
+      "description": "Incorrect synonym/substitution for direct context matches due to vague extraction guidance."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals a consistent conflict in the skill between 'stripping to core identifiers' and 'preserving essential modifiers', causing agents to over-specify answers with generic suffixes (Island, Satellite Radio, middle initials). Additionally, agents frequently lemmatize or alter word forms (plurals, gerunds) despite existing instructions. The patch replaces the ambiguous 'Answer Precision and Conciseness' section with explicit, actionable rules that mandate exact morphological preservation, define which suffixes to strip, and clarify when to retain qualifiers.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Extraction Priority**: Always extract the exact term or phrase from the context. Trivia evaluation relies on exact string matching; never normalize capitalization, remove leading articles (\"the\", \"a\"), or alter pluralization. Preserve the context's original casing and formatting exactly as presented.\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.\n- Retain necessary descriptors, species names, or qualifiers if they are part of the standard name or required to distinguish the entity (e.g., output \"Brown pelican\", \"American football\", or \"Il Postino\" rather than stripping to \"Pelican\", \"Football\", or \"The Postman\").\n- Match plurality exactly as presented in the context or gold standard (e.g., \"Pineapples\" not \"Pineapple\").\n- When multiple titles exist (e.g., original vs. translated), prefer the original or canonical title unless the question explicitly asks for the localized version.\n- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier.",
+        "content": "- **Exact Form & Morphology Preservation**: Never lemmatize, conjugate, or alter the grammatical form of the answer. If the context or gold standard uses a plural, gerund, or specific inflection, output it exactly as-is (e.g., \"strawberries\" not \"strawberry\", \"Meandering\" not \"meander\").\n- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. Prioritize the shortest canonical identifier that satisfies all constraints (e.g., \"Roanoke\" not \"Roanoke Island\", \"Sirius\" not \"Sirius Satellite Radio\", \"George Bush\" not \"George H. W. Bush\").\n- **Preserve Essential Qualifiers**: Retain descriptors only if they are part of the standard proper name or necessary to distinguish the entity (e.g., \"Brown pelican\", \"American football\").\n- **Title & Variant Preference**: When multiple titles exist, prefer the original or canonical title unless the question explicitly asks for the localized version. Prefer surnames or nicknames only if they are the primary identifier in the context."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

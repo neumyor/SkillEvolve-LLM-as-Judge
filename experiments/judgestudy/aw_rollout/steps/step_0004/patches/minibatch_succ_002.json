@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Prioritized search based on object category (e.g., food to fridge/countertop, small items to drawers/shelves)",
+    "Intentional revisiting of known locations to retrieve items rather than blind searching",
+    "Explicitly opening closed appliances and receptacles before placing or heating inside them"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals three key efficiency patterns not fully captured: (1) agents prioritize search locations based on object type, reducing wasted navigation; (2) agents intelligently revisit known surfaces to retrieve items instead of searching blindly, as seen in Trajectory 2; and (3) agents consistently open closed appliances/containers before attempting to place or transform objects inside them, preventing interaction failures. These patterns streamline execution and improve success rates.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration**: Prioritize high-probability locations based on object type (e.g., food -> fridge/countertop; small items -> drawers/shelves). Open closed containers and appliances before judging them empty or attempting to interact."
+      },
+      {
+        "op": "replace",
+        "target": "7. **Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+        "content": "7. **Avoid loops**: Never repeat the same action more than twice in a row. However, intentionally revisiting a previously observed location to retrieve a known item is efficient and encouraged."
+      },
+      {
+        "op": "replace",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination. Ensure the appliance is open and ready before initiating the transformation."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Action loops**: Repeatedly toggling or examining the same object wastes steps. Move on to new locations instead.",
+        "content": "- **Attempting to place/heat in closed appliances**: Always open fridges, microwaves, or cabinets before moving or heating objects inside them."
+      }
+    ]
+  },
+  "source_type": "success"
+}

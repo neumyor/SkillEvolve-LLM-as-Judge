@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Rapid Descriptor-to-Entity Mapping: Agents consistently map descriptive phrases, possessives, and cloze-style blanks directly to the core subject entity, ignoring tangential attributes or secondary examples.",
+    "Snippet & Title Leverage: Successful extraction relies heavily on scanning document titles ([TLE]) and opening paragraphs first, where direct definitions or exact matches are frequently located.",
+    "Minimal Verification Traces: Agents limit their reasoning to a single, grounded sentence linking the question's clue to the extracted term, avoiding verbose multi-step breakdowns."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories demonstrate a highly efficient pattern of rapidly mapping descriptive/cloze clues to core entities by prioritizing titles and snippets, followed by minimal verification. Encoding these strategies will streamline extraction and prevent verbosity without introducing redundant rules.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Snippet & Title Prioritization**: For factual and trivia queries, scan document titles (`[TLE]`) and opening paragraphs first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full passages."
+      },
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Cloze & Descriptor Mapping**: For fragmentary, Jeopardy-style, or declarative clues, map the descriptive phrase directly to the core subject entity. Ignore tangential attributes, genres, or secondary examples; isolate the primary noun or proper name that satisfies the clue."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a concise, single-sentence verification trace linking the question's core descriptor to the extracted entity, confirming exact textual alignment. Skip extended analysis for straightforward matches to maintain speed."
+      }
+    ]
+  },
+  "source_type": "success"
+}

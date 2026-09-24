@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Opening destination receptacles/appliances upon arrival if closed",
+    "Closing appliances after transformation to finalize state",
+    "Using inventory checks to verify state during extended searches",
+    "Prioritizing high-probability locations while maintaining systematic cycling through all containers"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals consistent behaviors around destination preparation, appliance state management, state verification via inventory, and adaptive systematic search. These patterns address common failure modes (stuck at closed destinations, incomplete transformations, losing track during long searches) and improve efficiency.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.",
+        "content": "5. **Prepare destination**: Upon arriving at the target receptacle or appliance, check if it is closed. Open it immediately before attempting to place or transform the object."
+      },
+      {
+        "op": "append",
+        "content": "9. **Manage appliance states**: After completing a transformation (heating, cooling, cleaning), close the appliance door (e.g., microwave, fridge) to finalize the action and maintain a clean state for subsequent steps."
+      },
+      {
+        "op": "insert_after",
+        "target": "6. **Track progress**:",
+        "content": "- **Verify state**: If the task stalls or you lose track of your inventory during long searches, use the `inventory` command to confirm what you are carrying or if you are empty-handed."
+      },
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration**: Prioritize high-probability locations based on object type (e.g., cabinets for cutlery, fridge for food). If the initial search fails, cycle through all remaining containers and surfaces methodically. Open closed containers before judging them empty."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,75 @@
+{
+  "reasoning": "Applied failure-driven patches as primary overrides per priority rules. Replaced 'Exact Term Preference' with the failure-driven 'Exact Term & Grammatical Fidelity' rule. Preserved both failure ('Slot & Role Alignment') and success ('Immediate Snippet Resolution') inserts after 'Reference Resolution'. Updated 'Trivia/Fragment Handling' using the success patch, then appended the failure-driven 'Famous Phrase & Slogan Mapping' and 'Primary Match Selection' rules afterward. Applied success-driven updates to 'Keyword & Clue Anchoring', workflow steps 2 & 3, and added 'Snippet & Title Leverage' and 'Direct Extraction Priority' after the updated term preference rule. All edits retain original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+      "content": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Map descriptive phrases and semantic paraphrases directly to the exact terminology in the `[DOC]` passages before extraction.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "\n- **Slot & Role Alignment**: Identify the exact semantic role requested by the question (e.g., person, location, concept). Do not default to adjacent nouns or descriptive phrases mentioned in the clue. If the question asks for 'he' or 'this site', extract the subject/entity itself, not associated objects or attributes.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "\n- **Immediate Snippet Resolution**: Resolve demonstratives ('this', 'he', 'seen here') and possessives by anchoring them to the subject of the immediate `[PAR]` paragraph. Use the local sentence context to disambiguate before cross-referencing other documents.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "- **Jeopardy, Cloze & Definition Mapping**: Treat fragmentary, Jeopardy-style, declarative clues, definitions, slogans, and trailing blanks as direct fill-in-the-blank requests. Isolate the core subject entity being described, strictly ignoring tangential attributes, genres, or secondary examples. Map the clue's descriptive phrasing directly to the exact terminology in the `[DOC]` passages.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Jeopardy, Cloze & Definition Mapping**: Treat fragmentary, Jeopardy-style, declarative clues, definitions, slogans, and trailing blanks as direct fill-in-the-blank requests. Isolate the core subject entity being described, strictly ignoring tangential attributes, genres, or secondary examples. Map the clue's descriptive phrasing directly to the exact terminology in the `[DOC]` passages.",
+      "content": "\n- **Famous Phrase & Slogan Mapping**: If the question is a standalone quote, slogan, title, or lyric, resolve it to the primary subject, creator, or historical figure it references. Explicitly avoid answering with the category, genre, or format (e.g., return the person's name, not 'slogan' or 'song').\n- **Primary Match Selection**: When multiple candidates satisfy a query, select the single most direct or prominent match indicated by the clue. Avoid outputting exhaustive lists or tangential examples. Default to the core entity that uniquely satisfies the primary descriptor.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "- **Exact Term & Grammatical Fidelity**: Extract the exact term matching the question's grammatical slot. Strictly preserve singular/plural forms, parts of speech, and capitalization. Drop generic geographic or descriptive suffixes (e.g., 'Island', 'River') unless they are integral to the official name or explicitly required. Match the expected entity's precise morphological form.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Exact Term & Grammatical Fidelity**: Extract the exact term matching the question's grammatical slot. Strictly preserve singular/plural forms, parts of speech, and capitalization. Drop generic geographic or descriptive suffixes (e.g., 'Island', 'River') unless they are integral to the official name or explicitly required. Match the expected entity's precise morphological form.",
+      "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Snippet & Title Leverage**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full paragraphs.",
+      "content": "\n- **Direct Extraction Priority**: Favor verbatim extraction of the matching phrase from the context over paraphrasing or synonym substitution. If the context provides the exact answer string, output it unchanged.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "2. Search the context for those identifiers or their immediate synonyms. Ignore irrelevant tangential documents.",
+      "content": "2. Prioritize scanning document titles (`[TLE]`) and opening snippets for direct matches or paraphrases. Then search the body for identifiers or synonyms, ignoring tangential details.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Provide a concise verification trace that explicitly quotes the exact sentence or phrase from the context confirming the answer. Directly link the question's core descriptor to this textual evidence before extracting the final term.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "reasoning": "Applied failure-driven priority to overwrite overlapping success principles (Direct Extraction, Conciseness, Clue Resolution) with stricter failure rules (Exact Match Priority, Minimal Output, Clue Interpretation) per guideline 1 & 2. Preserved the success-driven Execution Strategy (Parse, Scan & Match, Extract & Verify, Format Output) as it provides concrete procedural guidance not covered by the failure patches. Combined into a single replacement for the placeholder, followed by the failure-driven Grounding Constraint append. Deduplication ensured no redundant phrasing while maintaining all unique insights.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+      "content": "# Answer Precision & Format Rules\n- **Exact Match Priority**: Return exactly the target word or phrase. Do not add descriptors, titles, or explanations (e.g., use 'C' not 'Vitamin C', 'Genet' not 'Jean Genet', 'U2' not 'U2 tribute band').\n- **Minimal Output**: Keep answers to the absolute minimum required. Single-word answers should never be expanded into phrases.\n- **Clue Interpretation**: Questions may be trivia clues or sentence fragments. Identify the specific missing entity or term that completes the clue. Do not answer with 'Yes/No' or conversational filler unless explicitly asked.\n\n## Execution Strategy\n1. **Parse Clues**: Isolate key identifiers (names, roles, locations, quoted strings) in the question.\n2. **Scan & Match**: Locate these identifiers in the `[DOC]`/`[PAR]` blocks. Prioritize passages where the clue appears verbatim or with minimal paraphrasing. Cross-check details across overlapping snippets to confirm the correct entity.\n3. **Extract & Verify**: Pull the precise answer span. Validate against all provided snippets to avoid hallucination or mismatched entities. Use internal knowledge only as secondary validation.\n4. **Format Output**: Provide a brief step-by-step rationale if helpful, but strictly enclose the final concise answer within `<answer>...</answer>` tags. Do not repeat the question or add filler.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n## Grounding Constraint\n- Only extract answers directly stated or strongly implied in the provided context. Do not guess or substitute similar concepts (e.g., do not guess 'swimming pool' if 'well' is the intended answer).",
+      "support_count": 7,
+      "source_type": "failure"
+    }
+  ]
+}

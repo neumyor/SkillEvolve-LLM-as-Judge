@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Resolving generic/collective pointers ('these birds', 'this material', 'lively dance') to explicit category or hypernym terms in the context.",
+    "Mapping definitional, compositional, or stylistic clues directly to the subject entity, treating descriptive clauses as primary search anchors."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle questions that point to categories/classes (e.g., 'these birds' → Owls, 'this material' → rubber) or define entities via properties/origins (e.g., 'lively dance', 'Rococo style', 'synthetic type of'). The current skill lacks explicit guidance for resolving generic pointers to hypernyms and mapping definitional clauses to subject terms, which are highly frequent in Jeopardy-style trivia contexts.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "\n- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer."
+      },
+      {
+        "op": "replace",
+        "target": "- **Resolve Placeholders & Figurative Terms**: Questions frequently use placeholders ('this [entity]', '& this [entity]'), quoted metaphors/puns, or standalone noun phrases to point to the answer. Treat these as direct identifiers and map them to the specific named entity in the context, ignoring the literal phrasing of the pointer itself.",
+        "content": "- **Definitional & Property Mapping**: Clues often define an entity through its origin, composition, style, or function (e.g., 'originated among peasants...', 'synthetic type of...', 'example of the Rococo style'). Map these definitional constraints directly to the subject term in the context, ignoring the descriptive wrapper and outputting only the canonical name or category."
+      }
+    ]
+  },
+  "source_type": "success"
+}

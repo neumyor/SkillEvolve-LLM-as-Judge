@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Proactive Receptacle Opening: Agents successfully navigate to destination containers/appliances and immediately open them before attempting placement or transformation, avoiding failed interaction attempts and reducing step count.",
+    "Surface-First Search Strategy: Agents prioritize checking open surfaces (countertops, tables) over closed containers (drawers, cabinets) during initial searches to accelerate object acquisition and minimize unnecessary opening/closing cycles.",
+    "Inventory Swap & Multi-Item Discipline: Agents promptly drop non-target items on nearby surfaces to free inventory, and strictly adhere to sequential acquire-deliver-return workflows for multi-object tasks without attempting to hold multiple items simultaneously."
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals three critical efficiency patterns: (1) Proactively opening closed destinations upon arrival rather than reacting to failed `put` actions, which saves steps and prevents interaction loops. (2) Prioritizing surface searches over deep container searches, as seen in Trajectory 2's inefficient backtracking, to accelerate object acquisition. (3) Strict inventory hygiene and sequential multi-item handling, demonstrated in Trajectories 5 and 8, preventing inventory blockage and enabling smooth task progression. These patterns are currently implied but lack explicit, actionable directives in the skill.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "4. **Manage Appliance States**: Always open closed appliances/containers before interacting. For heating or cleaning, prioritize performing the transformation while **holding the object** at the open appliance. Ensure doors are open for placement interactions.",
+        "content": "4. **Proactive Receptacle Opening**: Upon arriving at a target receptacle or appliance, immediately check its state. If closed, open it before attempting any `put`, `heat`, `cool`, or `clean` action. Do not wait for a failed interaction to trigger an open command. For transformations, prioritize performing the action while **holding the object** at the open appliance."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Verify Before Shuttling**: Check your inventory and object states (e.g., temperature, cleanliness) with a single `examine` or `inventory` call. Only travel between appliances and destinations when the current sub-goal is fully satisfied. Avoid oscillating between locations without advancing the task.",
+        "content": "- **Surface-First Search Strategy**: During initial object searches, prioritize inspecting open surfaces (countertops, tables, shelves) before delving into closed containers (drawers, cabinets, fridges). Surfaces typically yield faster results and reduce unnecessary opening/closing overhead. Only check deep containers if surface searches fail or the task context strongly implies storage."
+      },
+      {
+        "op": "append",
+        "content": "- **Inventory Swap & Multi-Item Discipline**: If you accidentally acquire a non-target object, immediately place it on the nearest available surface to clear your inventory. Never hold irrelevant items while continuing the search. For multi-object tasks, strictly follow the 'acquire-deliver-return' cycle without attempting to carry multiple items simultaneously, as this blocks inventory and wastes steps."
+      }
+    ]
+  },
+  "source_type": "success"
+}

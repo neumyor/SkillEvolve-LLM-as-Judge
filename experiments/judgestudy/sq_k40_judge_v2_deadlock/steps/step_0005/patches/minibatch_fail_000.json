@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Agent outputs descriptive phrases, full names, or roles instead of the exact short canonical entity."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 4,
+      "description": "Skill lacks explicit rules for handling Jeopardy-style fragmented clues and compound name integrity."
+    },
+    {
+      "failure_type": "other",
+      "count": 2,
+      "description": "Agent misinterprets referents in incomplete questions, selecting adjacent concepts instead of the target."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch consistently fails on trivia and Jeopardy-style questions where the agent extracts overly verbose descriptions, full names, or roles instead of the precise, minimal canonical entity. Previous attempts used generic phrasing; these edits directly enforce canonical shortening, preserve compound names, isolate target concepts from fragmented clues, and prevent role/description leakage.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Precision Extraction Rules for Trivia & Clues\n- **Canonical Shortest Form**: Default to the shortest, most widely recognized identifier for an entity. Omit titles, honorifics, full middle names, and descriptive clauses (e.g., output \"Boss\" not \"Boss Tweed\"; \"Napoleon\" not \"Napoleon Bonaparte\").\n- **Compound Name Integrity**: Do not truncate compound or multi-word proper nouns. Preserve essential connectors and modifiers (e.g., output \"Funk & Wagnalls\", not \"Funk\"; \"Forbes magazine\", not \"Forbes\").\n- **Target Concept Isolation**: For fragmented, definition-style, or Jeopardy prompts, isolate the single target concept being queried. Ignore adjacent metadata, dates, or descriptive phrases in the context.\n- **Avoid Role/Description Outputs**: Never output a person's title, role, or a film/book's genre/director summary. Extract only the named entity itself (e.g., output \"Brunei\" for a sultan query; output \"Romeo and Juliet\" for a West Side Story reference).\n- **Exact Granularity Matching**: Match the precise scope requested. If the clue specifies a sub-category or specific variant, output that exact term rather than the broader class or a general descriptor."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

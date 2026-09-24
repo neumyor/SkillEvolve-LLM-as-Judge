@@ -1,0 +1,20 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Jeopardy/Trivia Clue Interpretation",
+    "Direct Span Retrieval from Context",
+    "Minimal Answer Extraction",
+    "Strict Tag Enforcement"
+  ],
+  "patch": {
+    "reasoning": "The batch consists entirely of Jeopardy-style trivia questions presented as clues or sentence fragments. Successful agents consistently interpret these as prompts to find a missing entity, rely on direct verbatim/near-verbatim matches in the provided context, extract minimal spans without extra descriptors, and strictly enforce <answer> tags. Encoding these patterns will establish a robust baseline for this task type.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Clue & Fragment Interpretation\n- **Trivia/Jeopardy Format**: Questions frequently appear as clues, definitions, or sentence fragments rather than full interrogative sentences. Treat them as prompts to identify the specific entity, term, or concept that completes the statement.\n- **Ignore Conversational Framing**: Strip away introductory phrases or conversational wrappers. Focus on the core factual query.\n\n## Search & Extraction Strategy\n- **Identifier Focus**: Extract core keywords (names, locations, dates, unique phrases) from the question. Map these directly to the `[DOC]`/`[PAR]` blocks.\n- **Direct Span Retrieval**: Scan context for verbatim or near-verbatim matches to the clue. Prioritize passages where the question phrasing appears alongside its answer.\n- **Grounding Constraint**: Only extract answers explicitly stated or strongly implied in the provided context. Avoid external knowledge substitution or guessing.\n\n## Answer Precision & Format Rules\n- **Minimal Span Extraction**: Extract the shortest text span that directly answers the question. Never append descriptive nouns, roles, or adjectives unless necessary for disambiguation.\n- **Tag Enforcement**: Place all final answers strictly within `<answer>...</answer>` tags. Omit reasoning, greetings, or filler inside the tags. Provide step-by-step reasoning outside the tags if helpful."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "op": "append",
+    "target": "",
+    "content_preview": "- **Proper Noun Pruning**: Strip non-essential descriptive suffixes or generic descriptors (e.g., 'Jr.', 'Sr.', 'Desert', 'River', 'Base') unless they are strictly part of the official title or explic",
+    "status": "applied_append",
+    "index": 1
+  },
+  {
+    "op": "replace",
+    "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+    "content_preview": "3. Perform a single-sentence verification trace linking the question's core descriptor to the extracted entity. Skip extended analysis for straightforward trivia queries to maintain conciseness.",
+    "status": "applied_replace",
+    "index": 2
+  },
+  {
+    "op": "replace",
+    "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or g",
+    "content_preview": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, cloze blanks, and declarative statements as direct fill-in-the-blank requests. Map descriptive attributes directly to ",
+    "status": "applied_replace",
+    "index": 3
+  },
+  {
+    "op": "insert_after",
+    "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[",
+    "content_preview": "- **Snippet & Title Leverage**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase, allowing rapid ext",
+    "status": "applied_insert_after",
+    "index": 4
+  }
+]

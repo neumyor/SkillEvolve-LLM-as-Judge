@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Sequential multi-object delivery to prevent inventory blockage",
+    "Proactive opening of closed containers during search",
+    "Immediate destination navigation after first acquisition"
+  ],
+  "patch": {
+    "reasoning": "Analysis of 8 successful trajectories reveals three consistent efficiency patterns: (1) Agents strictly follow a sequential workflow for multi-object tasks, placing the first item at the destination before searching for the second to avoid inventory blockage. (2) During search phases, agents proactively open closed containers (drawers, cabinets) upon encounter rather than skipping them, significantly reducing missed targets. (3) Agents immediately navigate to the destination receptacle after acquiring the first item, minimizing backtracking and keeping progress linear. These patterns are not fully captured in the current skill and should be encoded to improve multi-step reliability.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Multi-Object Local Scan**: For tasks requiring multiple items (e.g., `pick_two_obj_and_place`), after successfully placing the first item, immediately scan your current location for the remaining target(s). Only leave the area if the second item is not visible or reachable here.",
+        "content": "- **Sequential Multi-Object Workflow**: For tasks requiring multiple items, always transport the first acquired item directly to the destination receptacle and place it before searching for the second. Never attempt to hold multiple objects or search for the second item while carrying the first, as this blocks inventory and wastes steps. After placing the first item, scan your immediate surroundings for the remainder before departing."
+      },
+      {
+        "op": "insert_after",
+        "target": "Location Exhaustion Rule",
+        "content": "\n\n- **Proactive Container Inspection**: When searching for an object, immediately open any closed containers (drawers, cabinets, fridges) you encounter. Do not bypass them; targets are frequently stored inside. Fully inspect contents before marking the location as exhausted."
+      },
+      {
+        "op": "insert_after",
+        "target": "Object Synonymy",
+        "content": "\n\n- **Inventory Awareness**: Constantly track what is in your hands. If a `take` action fails or returns \"Nothing happens\", it usually means your inventory is full. Immediately navigate to the destination to place the held item, freeing your hands for the next acquisition."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Exact entity extraction for trivia and Jeopardy-style questions",
+    "Decoding puns, wordplay, and colloquial clues to map to factual context",
+    "Treating fragmented or elliptical queries as direct keyword clues",
+    "Strict concise formatting with minimal reasoning outside answer tags"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories involve trivia, Jeopardy-style, or fill-in-the-blank questions requiring precise entity extraction. Agents succeeded by treating questions as descriptive clues, decoding puns/wordplay (e.g., 'peachy state', 'drag'), handling fragmented syntax, and strictly limiting outputs to short phrases within <answer> tags. Encoding these patterns will standardize exact-match behavior and improve clue-mapping strategies across similar tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Trivia & Exact Match Rules\n- **Exact Entity Priority**: For trivia, Jeopardy-style, or fill-in-the-blank questions, output only the precise entity, name, or short phrase requested. Avoid paraphrasing, full sentences, or conversational filler.\n- **Pun & Wordplay Decoding**: Questions may use puns, double meanings, or colloquialisms (e.g., \"peachy state\", \"drag\"). Map these figurative clues to their literal factual counterparts in the context.\n- **Fragmented Query Handling**: Treat incomplete sentences, trailing ellipses, or lyric fragments as direct clues. Infer the missing keyword or title from contextual overlaps rather than overthinking syntax.\n- **No Unnecessary Expansions**: If the answer is a surname, abbreviation, or single word, output exactly that. Do not add titles, full names, or explanatory clauses unless explicitly asked."
+      },
+      {
+        "op": "append",
+        "content": "\n## Core QA Strategy & Formatting\n- **Clue-to-Context Mapping**: Read the question as a set of constraints or descriptors. Scan document titles and snippets for overlapping keywords, then verify against full passages.\n- **Explicit Link Verification**: Prioritize passages that directly connect the clue's subject to the candidate answer. Resolve ambiguities using specific constraints (dates, locations, attributes).\n- **Minimal Reasoning**: Briefly state how the context supports the choice in one sentence before the final answer. Keep all reasoning outside `<answer>` tags.\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format (typically a single entity or short phrase)."
+      }
+    ]
+  },
+  "source_type": "success"
+}

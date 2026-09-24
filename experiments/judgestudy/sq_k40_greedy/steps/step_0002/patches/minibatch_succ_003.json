@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Partial Quote & Ellipsis Anchoring: Questions frequently use truncated sentences or partial quotes with ellipses. Successful agents treat these fragments as direct textual anchors to locate the target entity in the context.",
+    "Exact Phrase Completion: The target answer is consistently the specific word or short phrase that completes the quoted fragment or descriptive clue, rather than a paraphrased summary."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories involve Jeopardy-style questions containing partial quotes, ellipses, or descriptive fragments. Agents succeed by treating these fragments as direct anchors to find the exact missing entity in the context, avoiding inference or paraphrasing. Encoding this anchoring strategy will improve robustness for similar trivia formats.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Map descriptive phrases directly to the target entity (person, place, term, work).",
+        "content": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Note that many clues are partial quotes or contain ellipses (...); treat these fragments as direct anchors to locate the target entity in the context."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Handling Statement or Fragment Questions",
+        "content": "\n- **Partial Quote & Ellipsis Matching**: When a question contains a truncated sentence or partial quote, scan the context for the exact phrase or its immediate continuation. The missing word or phrase completing the thought is almost always the target entity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

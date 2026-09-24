@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating declarative trivia clues as direct entity identification prompts",
+    "Resolving implicit placeholders (e.g., 'this film', 'this place') to exact canonical terms",
+    "Strictly extracting core entities without added descriptors or filler"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories feature Jeopardy-style or fill-in-the-blank trivia clues phrased as statements rather than questions. Agents succeeded by treating these as direct identification prompts, mapping descriptive phrases to exact entity names in the context, and outputting only the core term. Encoding this ensures consistent handling of statement-based queries and implicit targets.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "# Question Answering Skill\n\n(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Core Principles\n- **Statement-to-Entity Mapping**: Treat declarative clues, fill-in-the-blanks, and trivia prompts as direct requests for a specific target entity. Ignore the lack of question marks.\n- **Exact Extraction**: Prioritize pulling the precise name or term from the context. Do not add articles, categories, or explanatory clauses unless explicitly requested.\n- **Implicit Target Resolution**: Identify implicit placeholders like \"this film,\" \"this place,\" or \"one of these...\" and resolve them to the exact canonical entity mentioned in the context.\n\n## Execution Workflow\n1. **Parse the Clue**: Strip away narrative framing. Identify the core descriptor and the implicit target slot.\n2. **Scan Context**: Locate matching keywords or semantic equivalents in the provided passages.\n3. **Extract & Verify**: Pull the exact entity. Ensure it matches the granularity implied by the clue (e.g., full name vs. surname).\n4. **Format Output**: Provide brief reasoning outside tags. Place the final, concise answer strictly inside `<answer>...</answer>`."
+      }
+    ]
+  },
+  "source_type": "success"
+}

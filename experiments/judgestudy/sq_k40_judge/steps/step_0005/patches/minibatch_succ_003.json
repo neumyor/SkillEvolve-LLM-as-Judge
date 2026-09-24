@@ -1,0 +1,18 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Explicit category marker filtering (e.g., 'this actor', 'in this state')",
+    "Implicit slot inference for standalone entity prompts"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle Jeopardy-style clues by using explicit category markers ('this detective', 'this state') as strict filters, and correctly infer the intended query slot when given standalone entity names. These patterns warrant explicit encoding to prevent category mismatches and improve robustness on fragmentary prompts.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Category, Syntactic & Morphological Alignment**: Verify that the candidate entity matches the exact grammatical role, categorical type, and number agreement implied by the clue (e.g., person vs. place, singular vs. plural, city vs. state). Discard candidates that satisfy factual constraints but fail the syntactic, categorical, or morphological filter.",
+        "content": "\n- **Explicit Category Marker Filtering**: When a clue contains explicit category markers (e.g., \"this actor\", \"in this state\", \"this talk show host\"), treat them as strict categorical filters. Discard any candidate that satisfies the factual description but fails the specified category constraint.\n- **Standalone Entity Inference**: For prompts consisting solely of a proper noun or title (e.g., \"Sultan Haji Hassanal Bolkiah\"), infer the implicit trivia slot (typically origin, affiliation, or primary attribute) and extract the corresponding canonical entity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

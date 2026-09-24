@@ -1,0 +1,89 @@
+{
+  "reasoning": "All four failure-driven patches take priority and directly replace corresponding skill sections, addressing critical gaps in surname handling, reverse clues, constraint verification, and article/title preservation. Eight success-driven patches are preserved as they introduce distinct, non-conflicting strategies: overriding frequency heuristics, preventing generic suffix appending, resolving wordplay/riddles, enhancing lateral/multi-clue resolution, mapping noun-phrase fragments, enforcing literal/structural matching, leveraging proper noun anchoring, and preserving conjunctions as logical constraints. No deduplication was required as success edits complement rather than duplicate failure edits. Support counts and source types are carried forward.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier.",
+      "content": "- **Core Identifier & Surname Preference**: In Jeopardy-style and trivia contexts, the answer is almost always the exact core noun, surname, or single-word identifier filling the blank. Aggressively strip non-essential titles, full given names (default to surnames), and descriptive categories (e.g., output 'Fragonard' not 'Jean-Honoré Fragonard', 'Giblets' not 'Giblet Gravy'). Only retain multi-word compounds if they constitute a fixed proper name or are explicitly demanded by the clue.",
+      "support_count": 5,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Reverse Clues & Minimalist Prompts**: When the question is a single proper noun or extremely short phrase lacking an explicit interrogative, treat it as a reverse Jeopardy clue. Infer the implicit question dimension (typically location, category, or defining attribute) from the context's dominant associations, and answer that attribute instead of repeating the prompt.",
+      "content": "- **Reverse Clues & Minimalist Prompts**: When the question is a single proper noun, extremely short phrase, or famous quote/excerpt lacking an explicit interrogative, treat it as a reverse Jeopardy clue. For quotes, poems, or songs, the target is almost always the author, composer, or creator. For other fragments, infer the implicit dimension (location, category, or defining attribute) and answer that directly.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a logical AND filter across all stated constraints; prioritize candidates that satisfy the maximum intersection of these anchors. Explicitly check the *requested entity type* in the question (e.g., \"this territory\", \"this sport\") against candidate matches to avoid answering with a related but incorrect entity (e.g., answering a university name when asked for a state/territory). When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+      "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "- **Preserve Articles, Honorifics, and Granularity**: Never strip necessary titles (e.g., 'Sir', 'Dr.'), articles ('the', 'a'), or generic descriptors. Avoid over-specifying; if the clue or context implies a general category or common name, output that rather than a narrow scientific or proper noun variant. Match the exact granularity and formal naming convention of the gold standard.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+      "content": "Never default to frequency or prominence if it conflicts with explicit question constraints. Always prioritize the entity that satisfies the maximum intersection of stated filters, even if it appears less frequently in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "\n- **Suffix & Title Stripping**: Avoid appending generic contextual suffixes (e.g., \"University\", \"Kingdom\", \"Conference\", \"City\") unless they are integral to the canonical name or explicitly requested. Output the core entity identifier exactly as presented in the gold standard or context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Resolving Implicit References**:",
+      "content": "\n- **Wordplay & Riddles**: Jeopardy-style clues occasionally rely on puns, double meanings, or lateral thinking (e.g., \"doubly one of these\"). Parse the clue literally first, but be prepared to resolve semantic tricks or wordplay to identify the intended target category or role.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Multi-Clause Description Mapping**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously.",
+      "content": "- **Multi-Clause & Lateral Clue Resolution**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. For compound clues (e.g., \"A or B\", comma-separated phrases), identify the shared term, polysemous anchor, or lateral connection that bridges the disparate parts. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures. The correct answer must satisfy every constraint simultaneously.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Resolving Implicit References**:",
+      "content": "- **Noun-Phrase & Declarative Fragments**: Standalone noun phrases or declarative statements lacking interrogative markers should be treated as direct definitions or role descriptors. Map the phrase immediately to the exact canonical term in the context that fulfills that role or category.\n- **Supercategory & Group Resolution**: When a fragment enumerates specific examples, subtypes, or variants (e.g., \"X and Y varieties\"), resolve the implicit pointer to the broader parent category or collective group rather than listing the individual items.",
+      "support_count": 3,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "content": "- **Direct Keyword Matching & Scanning**: Extract core anchor phrases by removing only non-informative punctuation and filler words. **Preserve conjunctions like \"&\" and \"and\"** as logical connectors that delineate separate mandatory constraints rather than stripping them. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Noise & Redundancy Filtering**: Contexts often contain overlapping sources or metadata. Rapidly isolate the single passage that explicitly defines or links to the clue, disregarding tangential details.",
+      "content": "\n- **Literal & Structural Matching**: For non-narrative clues such as mathematical formulas, etymologies, dictionary definitions, or precise technical descriptions, prioritize exact string or structural matches in the context over semantic paraphrasing. The target entity is almost always the subject of the matched formula or definition.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+      "content": "- **Proper Noun & Brand Anchoring**: Treat specific proper nouns, geographic locations, brand names, and established terms (e.g., \"Chipotle\", \"Ciudad Juarez\", \"Brahma\") as immovable anchors. Use them to instantly isolate the relevant context passage, then apply remaining constraints to pinpoint the target. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Exact phrase/entity extraction from context snippets for factual and trivia questions",
+    "Strict adherence to concise, tag-wrapped answer formatting without conversational filler",
+    "Mapping descriptive clues (e.g., Jeopardy-style prompts) directly to document titles or paragraph text",
+    "Brief logical bridging between question descriptors and context evidence before final output"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories successfully answered trivia and factual questions by precisely matching question descriptors to context snippets. Agents consistently produced concise, exact-match answers within <answer> tags, adhering strictly to the prompt's formatting constraints. Encoding these extraction and formatting behaviors will establish a robust baseline for similar QA tasks.",
+    "edits": [
+      {
+        "op": "delete",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)\n\n"
+      },
+      {
+        "op": "insert_after",
+        "target": "# Question Answering Skill",
+        "content": "\n## Core Principles\n- **Extractive Precision**: Prioritize exact phrases or entities directly stated in the context. Avoid paraphrasing unless necessary.\n- **Concise Formatting**: Keep answers strictly within `<answer>` tags. Limit to a few words or a short phrase. Do not repeat the question or include conversational filler.\n- **Clue-to-Context Mapping**: For trivia or Jeopardy-style questions, treat the question as a set of descriptors. Scan document titles (`[TLE]`) and paragraphs (`[PAR]`) to find the exact match for these descriptors.\n- **Minimal Reasoning**: Provide a brief, logical bridge between the question clues and the selected context snippet before outputting the final answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

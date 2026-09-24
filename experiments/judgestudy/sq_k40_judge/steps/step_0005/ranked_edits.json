@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied strict failure-priority rule: all three failure-driven replacements (Declarative Clue Parsing, Constraint-Driven Verification, Canonical Phrasing & Modifier Stripping) were retained verbatim. Where success-driven patches targeted the same bullets (Canonical Phrasing, Declarative Clue Parsing), the failure versions were kept per deduplication guidelines, and overlapping success insights (e.g., Grammatical Incompleteness Tolerance) were omitted as they are subsumed by the more comprehensive failure edits. All eight success-driven edits targeting distinct or newly-inserted positions were preserved to reinforce extraction robustness and formatting precision. Support counts and source types were carried forward exactly. [optimizer-ranked: selected 4/9 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+      "content": "- **Canonical Phrasing & Granularity Alignment**: Strictly match the canonical trivia answer's length and form. Do not arbitrarily expand names (e.g., output \"Boss\" not \"Boss Tweed\", \"Napoleon\" not \"Napoleon Bonaparte\") or contract them unless the clue dictates otherwise. Distinguish between descriptive modifiers and integral parts of a proper noun or compound name; retain established multi-word entity names exactly as they appear in the context (e.g., \"Forbes magazine\"), but strip purely descriptive terms when the core concept suffices. For fill-in-the-blank clues presenting partial names, extract the full canonical entity name, not just the missing word.",
+      "support_count": 10,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Declarative Clue Parsing**: Treat declarative statements, descriptive fragments, and incomplete prompts identically to interrogative questions. Identify the grammatical slot or subject being described and treat it as a direct request for the missing entity.",
+      "content": "- **Declarative Clue Parsing & Implicit Query Resolution**: Treat declarative statements, descriptive fragments, and Jeopardy-style prompts as direct requests for the *implied* answer, not the stated entity. If the prompt names an entity (e.g., a film, book, or series), determine what is actually being queried about it (e.g., its source material, subject matter, or creator) and extract that target. Never mirror the prompt's explicit noun phrase unless it directly completes the semantic gap.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Constraint-Driven Verification**: Prioritize exact matches for numerical, temporal, or proper-noun constraints embedded in the clue. Discard candidates that satisfy the general topic but fail specific quantitative or categorical filters.",
+      "content": "- **Constraint-Driven Verification & Entity Disambiguation**: Prioritize exact matches for numerical, temporal, or proper-noun constraints. When clues use relative labels like \"current,\" \"modern,\" or \"former,\" cross-reference them with specific historical anchors (dates, events, locations) in the context. Discard candidates that match the label but fail unique factual identifiers, and avoid relying on external knowledge or ambiguous status tags.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Ignore trailing metadata (e.g., question numbers) and focus solely on the semantic gap.",
+      "content": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edits [2], [0], [1], and [3] systematically upgrade the four critical stages of the QA pipeline: answer granularity, query target resolution, constraint disambiguation, and prompt noise filtering. They address the most pervasive failure modes in trivia/retrieval tasks (incorrect name expansion/contraction, mirroring the prompt instead of answering the implied question, failing on relative temporal labels, and unstripped metadata) while providing clear, generalizable, and actionable rules. Other edits either duplicate existing principles or target narrower edge cases.",
+    "selected_indices": [
+      2,
+      0,
+      1,
+      3
+    ]
+  }
+}

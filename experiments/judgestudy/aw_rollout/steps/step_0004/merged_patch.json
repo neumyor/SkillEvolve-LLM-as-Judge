@@ -1,0 +1,56 @@
+{
+  "reasoning": "Prioritized failure-driven patches per guidelines. Replaced Principle 7 with the failure version to enforce post-placement transformation safety and prevent redundant loops. Retained the success replacement for Principle 4 to add crucial appliance state management (open/close) details. Preserved all five failure append sections as they address critical systemic failures (exploration traps, multi-object handling, mandatory appliance retrieval, termination verification, and stuck-state recovery). Omitted success replacements for Principles 2 and 7 due to direct conflict/duplication with higher-priority failure edits. Excluded the success append for Principles 9-13 as its points (inventory checks, capacity limits, state verification) are already comprehensively covered by the failure edits, adhering to the deduplication rule. Included the success insertion for 'Common Mistakes' to reinforce appliance state awareness, which complements rather than duplicates the failure patches.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+      "content": "4. **Transform before placing**: Perform required state changes (clean/heat/cool) at the appropriate appliance before delivering. Ensure the appliance is open and ready before initiating the transformation, and close it afterward.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "\n## Systematic Exploration Guidelines\n- **Break Number-Cycling Traps**: Do not blindly iterate through numbered items (e.g., drawer 1, 2, 3...) if they yield nothing. Once a category is exhausted, pivot to entirely different furniture types (countertops, shelves, tables, dressers) or adjacent rooms.\n- **Mark & Move**: Mentally mark every opened container or examined surface as 'checked'. If you find yourself returning to a previously verified empty location, immediately abort that path and explore a new unvisited zone.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n## Multi-Object & Inventory Protocols\n- **Consecutive Pickup**: When searching for multiple identical objects, if you spot additional targets on the same surface where you just picked one up, grab them immediately in sequence. Do not navigate away to search elsewhere while targets remain visible.\n- **Destination First-Load**: If your inventory fills up before collecting all targets, navigate directly to the destination receptacle, place the held item(s), then return to finish collection.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n## Appliance & State Verification Rules\n- **Mandatory Retrieval Step**: After using a microwave, fridge, or sink for transformation, the object typically remains inside. You must explicitly `open <appliance>` and `take <object> from <appliance>` before moving to the final destination. Skipping this step causes immediate failure.\n- **Object Identity & State Check**: Verify the exact name and state of your carried object (`examine <object>` or `inventory`) before attempting placement. Mismatched names or untransformed states will block admissible actions.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n## Task Completion & Termination\n1. **Verify State**: After placing the transformed object, check your inventory (`inventory`) and the target receptacle observation. If you are holding nothing and the object is visible on/at the target, the task is complete.\n2. **Terminate Immediately**: Once verified, output `<action>done</action>` to end the episode. Do not perform extra `look` or `take` actions unless the state clearly indicates failure.\n3. **Handle Synonyms**: In household tasks, objects like 'pot' and 'pan', or 'mug' and 'cup', are often used interchangeably in goals. If the exact goal word isn't found, use the closest functional equivalent already acquired or visible.\n4. **Break Doubt Loops**: If you have performed the required transformation and placement, trust the observation. Repeating the process will not change the outcome and wastes steps.",
+      "support_count": 2,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n## Stuck-State Recovery\n- **Admissible Action Audit**: If `put`, `take`, or `open` actions are missing from your admissible list, pause and diagnose: check inventory, verify receptacle state, or confirm object compatibility. Do not guess or repeat failed moves.\n- **Forced Strategy Shift**: If three consecutive steps yield no progress or loop back to previous locations, execute `inventory` to reset context, then deliberately choose a location you have not visited in the last 5 steps.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "7. **Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+      "content": "**Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location. **Crucially**, do not re-perform transformations (clean/heat/cool) after placing the object unless explicitly instructed to do so again.",
+      "support_count": 2,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Action loops**: Repeatedly toggling or examining the same object wastes steps. Move on to new locations instead.",
+      "content": "- **Ignoring appliance states**: Always open appliances before interacting. Neglecting to check inventory after transformations can lead to stuck states or misplaced items.\n- **Attempting to place/heat in closed appliances**: Always open fridges, microwaves, or cabinets before moving or heating objects inside them.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

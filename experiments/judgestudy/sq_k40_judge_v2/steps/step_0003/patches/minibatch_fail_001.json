@@ -1,0 +1,20 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Agents misinterpret truncated keyword-style questions by extracting related named entities instead of inferring the implied temporal query."
+    }
+  ],
+  "patch": {
+    "reasoning": "The failure stems from a lack of guidance on how to handle truncated questions that imply a temporal or categorical query. The new rule directs the agent to infer the missing question component and prioritize contextual markers (like dates/centuries) over associated entities when interrogatives are absent.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Implicit Query Inference**: For truncated or fragmentary questions lacking explicit interrogatives (e.g., '[Entity] [Event]'), infer the missing component (typically time, place, or category). Prioritize extracting corresponding contextual markers (dates, centuries, locations) from the text rather than defaulting to associated named entities."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

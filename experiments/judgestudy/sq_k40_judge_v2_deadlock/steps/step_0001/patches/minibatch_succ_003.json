@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Clue-to-entity mapping for Jeopardy-style questions",
+    "Concise entity extraction with minimal framing",
+    "Brief contextual justification preceding the final answer"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories successfully handle Jeopardy-style clue questions by mapping descriptive phrases to specific named entities in the context. Agents consistently use a brief reasoning step to link the clue to the evidence, followed by a highly concise answer in tags. Encoding these patterns will establish a robust baseline for clue-based QA.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Clue-to-Entity Mapping**: Treat descriptive or incomplete-sentence questions as clues. Match key descriptors directly to named entities in the context.\n- **Concise Output**: Return only the precise entity name or short phrase inside `<answer>` tags. Omit full sentences, greetings, or restating the question.\n- **Justified Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer.\n\n## Reading Strategy\n- **Keyword Scanning**: Quickly scan document titles and first lines for terms overlapping with the question's clue.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer.\n- **Cross-Document Confirmation**: If multiple documents mention the entity, use the one that most directly addresses the specific details in the question."
+      }
+    ]
+  },
+  "source_type": "success"
+}

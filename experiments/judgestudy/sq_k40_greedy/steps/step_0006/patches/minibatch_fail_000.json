@@ -1,0 +1,40 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "rule_ignored",
+      "count": 5,
+      "description": "Agents consistently over-specify answers, stripping necessary articles/honorifics or substituting specific terms for generic categories."
+    },
+    {
+      "failure_type": "rule_wrong",
+      "count": 2,
+      "description": "Agents fail strict categorical constraint filtering, selecting candidates that contradict explicit clue properties (e.g., picking a base for an 'acid' clue)."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Agents misinterpret reverse clues containing famous quotes/poems by answering with the title/subject instead of the author/creator."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals three systematic failures: (1) over-specification and loss of articles/honorifics when the gold expects a general or formally titled term, (2) ignoring categorical constraints (e.g., 'acid' vs 'base') in favor of partial keyword matches, and (3) misinterpreting reverse clues (quotes/poems) by returning the subject/title instead of the creator. These edits enforce strict preservation of granularity/articles, mandate categorical consistency checks, and clarify reverse-clue resolution for literary/artistic references.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Reverse Clues & Minimalist Prompts**: When the question is a single proper noun or extremely short phrase lacking an explicit interrogative, treat it as a reverse Jeopardy clue. Infer the implicit question dimension (typically location, category, or defining attribute) from the context's dominant associations, and answer that attribute instead of repeating the prompt.",
+        "content": "- **Reverse Clues & Minimalist Prompts**: When the question is a single proper noun, extremely short phrase, or famous quote/excerpt lacking an explicit interrogative, treat it as a reverse Jeopardy clue. For quotes, poems, or songs, the target is almost always the author, composer, or creator. For other fragments, infer the implicit dimension (location, category, or defining attribute) and answer that directly."
+      },
+      {
+        "op": "replace",
+        "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a logical AND filter across all stated constraints; prioritize candidates that satisfy the maximum intersection of these anchors. Explicitly check the *requested entity type* in the question (e.g., \"this territory\", \"this sport\") against candidate matches to avoid answering with a related but incorrect entity (e.g., answering a university name when asked for a state/territory). When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+        "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords."
+      },
+      {
+        "op": "append",
+        "content": "- **Preserve Articles, Honorifics, and Granularity**: Never strip necessary titles (e.g., 'Sir', 'Dr.'), articles ('the', 'a'), or generic descriptors. Avoid over-specifying; if the clue or context implies a general category or common name, output that rather than a narrow scientific or proper noun variant. Match the exact granularity and formal naming convention of the gold standard."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

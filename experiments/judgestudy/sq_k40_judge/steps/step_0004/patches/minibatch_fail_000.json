@@ -1,0 +1,31 @@
+{
+  "batch_size": 4,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Over-stripping of necessary definite articles and official prefixes (e.g., 'the', 'People's Republic of')."
+    },
+    {
+      "failure_type": "other",
+      "count": 2,
+      "description": "Superficial keyword matching leads to selecting semantically unrelated distractors that share prompt terms."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch exhibits two core failures: agents aggressively strip necessary articles and official names due to vague stripping rules, and they fall for keyword-distractor traps by matching surface terms without verifying semantic relationships. These edits enforce canonical preservation for standard trivia forms and mandate predicate-entity alignment to prevent distractor selection.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+        "content": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles, official titles, country designations, and standard trivia forms exactly as they appear in canonical references (e.g., \"the Sahara\", \"People's Republic of China\"). Strip only non-essential adjectives, redundant descriptors, or conversational filler."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+        "content": "\n- **Predicate-Entity Alignment**: Before extracting, verify that the candidate entity actually performs, possesses, or is located at the specific attribute/action described in the clue. Do not select an entity simply because it shares keywords with the prompt; confirm the semantic relationship holds in the context."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

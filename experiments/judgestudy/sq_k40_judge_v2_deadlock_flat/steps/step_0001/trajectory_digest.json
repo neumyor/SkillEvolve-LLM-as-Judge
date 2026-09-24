@@ -1,0 +1,35 @@
+{
+  "step": 1,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 7,
+  "failure_patterns": [
+    {
+      "pattern": "rule_missing: Agent fails to handle Jeopardy-style trivia clues, providing descriptive phrases, full names, or true/false answers instead of the exact target entity/term.",
+      "count": 7,
+      "task_ids": [
+        "8709f2c5215049e2b2edc482a2d6a332",
+        "3154424fc756402986578589696e0cea",
+        "b55578edb7ba4b5ba9ed09dc7333795b",
+        "b44cf87107b9474d8e04d8147c895a60",
+        "01a52018756346b795de67cabdb907dd",
+        "6252b238d9554d45bc4eb9b9978543c5",
+        "60f6f1a1734b4ea3ac6130d52c2264ed"
+      ]
+    }
+  ],
+  "score_before": 0.7,
+  "score_after": 0.7,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "# Question Answering Skill\n\n## Core Principles\n- **Context-First & Exact Extraction**: Rely exclusively on provided passages. Prioritize extracting exact phrases or entities over paraphrasing. Treat descriptive clues as direct pointers to specific text segments.\n- **Efficient Scanning**: Quickly scan document titles and opening sentences. Factual answers are typically stated directly without requiring deep synthesis or cross-document reasoning.\n- **Clue-to-Text Mapping**: Map question qualifiers, aliases, or colloquial names to their canonical forms or explicit definitions in the context. Apply any requested filters (e.g., surname only, translation).\n\n## Execution Workflow\n1. **Identify Key Clues**: Extract core entities, constraints, or descriptive phrases from the question.\n2. **Scan & Match**: Locate matching keywords or semantic equivalents in the context. If multiple documents mention a keyword, prioritize the one providing the most direct confirmation.\n3. **Extract & Filter**: Pull the precise entity or phrase. Strip away dates, locations, or explanatory clauses unless explicitly required.\n4. **Format Output**: Provide brief step-by-step reasoning outside the tags. Place the final, concise answer strictly inside `<answer>...</answer>` tags. Omit explanations, greetings, or question repetition.",
+      "target": "# Question Answering Skill\n\n(No learned rules yet. Rules will be added through the reflection process.)"
+    },
+    {
+      "op": "append",
+      "content": "\n## Handling Trivia & Jeopardy-Style Clues\nWhen the question is a trivia clue, statement, or phrase (often lacking a direct question word):\n- Identify the specific target entity or term being defined.\n- Output ONLY the core entity or exact term. Do not add descriptors or categories (e.g., answer `U2`, not `a U2 tribute band`).\n- Match the expected granularity: if the clue implies a surname, abbreviation, or single word, provide only that (e.g., `Genet` not `Jean Genet`, `C` not `Vitamin C`).\n- Treat declarative statements as identification prompts, not True/False questions.\n- Keep the final answer strictly concise—no explanations, filler words, or contextual framing.",
+      "target": ""
+    }
+  ]
+}

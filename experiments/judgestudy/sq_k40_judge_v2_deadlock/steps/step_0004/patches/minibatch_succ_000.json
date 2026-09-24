@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treat truncated, quiz-style, or Jeopardy-like prompts as direct definitions requiring exact entity matches.",
+    "Map descriptive clues directly to named entities in the context without paraphrasing or adding filler.",
+    "Maintain strict grammatical alignment (singular/plural, capitalization) and avoid unnecessary expansions like full names when surnames suffice.",
+    "Wrap final answers strictly in <answer> tags with minimal external reasoning."
+  ],
+  "patch": {
+    "reasoning": "The batch consists entirely of Jeopardy-style trivia questions where success depends on treating fragmented clues as direct definitions, extracting exact entity matches, avoiding conversational filler or expansions, and strictly adhering to answer tags. Encoding these precision and formatting rules will prevent common failures like over-explaining, mismatched granularity, or incorrect formatting.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat descriptive, truncated, or Jeopardy-style prompts as direct definitions. Match key descriptors directly to named entities in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n\n## Precision Extraction Rules\n- **Exact Match Priority**: Output only the precise word, short phrase, or entity requested. Never add descriptions, parenthetical translations, explanatory clauses, or \"Yes/No\" verdicts unless explicitly asked.\n- **Avoid Unnecessary Expansions**: If the expected answer is a single letter, abbreviation, surname, or title, output only that. Omit articles (a, an, the), plural suffixes, or conversational filler.\n- **Grammatical & Specificity Alignment**: Strictly match the exact number (singular/plural), capitalization, and specificity of the target. Preserve exact capitalization and hyphenation.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format (typically a single entity or short phrase).\n- **Concise Output**: Limit answers to a few words or a short phrase. Omit restatements of the question or introductory phrases.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,40 @@
+{
+  "reasoning": "Prioritized failure-driven edits to correct systematic over-stripping, add handling for clue comparisons, and enforce entity-type verification. The overlapping success edit on 'Answer Precision' was dropped per priority rules. Success-driven edits targeting 'Handling Statement or Fragment Questions' were preserved as they introduce distinct heuristics (placeholders, verbatim lifting, reverse clues, paraphrase mapping) not covered by failures. All support counts and source types carried forward.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.",
+      "content": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.\n- Retain necessary descriptors, species names, or qualifiers if they are part of the standard name or required to distinguish the entity (e.g., output \"Brown pelican\", \"American football\", or \"Il Postino\" rather than stripping to \"Pelican\", \"Football\", or \"The Postman\").\n- Match plurality exactly as presented in the context or gold standard (e.g., \"Pineapples\" not \"Pineapple\").\n- When multiple titles exist (e.g., original vs. translated), prefer the original or canonical title unless the question explicitly asks for the localized version.\n- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+      "content": "\n- **Handling Clue Comparisons & Analogies**: Questions frequently use a known entity as a comparative anchor (e.g., \"like [Name]\", \"similar to [Entity]\"). Never output the comparison term itself. Instead, extract the target category, role, or relationship being described, and resolve the pointer to the actual subject of the query.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity. When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+      "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity. Explicitly check the *requested entity type* in the question (e.g., \"this territory\", \"this sport\") against candidate matches to avoid answering with a related but incorrect entity (e.g., answering a university name when asked for a state/territory). When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Handling Statement or Fragment Questions",
+      "content": "\n- **\"this [Category]\" Placeholders**: Jeopardy-style questions routinely replace the target entity with demonstrative placeholders like \"this nation,\" \"this state,\" or \"this group.\" Treat these as direct blanks to be filled by the specific entity described, rather than resolving them as complex relational pointers.\n- **Verbatim Context Lifting**: Trivia questions are often copied verbatim or near-verbatim from context sentences, titles, or flashcards. Prioritize scanning for exact or near-exact string matches in document titles and snippets before attempting semantic reasoning or keyword stripping.\n- **Reverse Clues & Minimalist Prompts**: When the question is a single proper noun or extremely short phrase lacking an explicit interrogative, treat it as a reverse Jeopardy clue. Infer the implicit question dimension (typically location, category, or defining attribute) from the context's dominant associations, and answer that attribute instead of repeating the prompt.\n- **Paraphrase & Synonym Mapping**: Clues rarely quote the answer verbatim. Instead, they describe attributes, roles, or associations. Match descriptive phrases to their canonical terms using contextual anchors and domain knowledge.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Many questions are phrased as statements or incomplete phrases (common in trivia/Jeopardy). Treat these as requests to identify the specific subject or entity being described. Do not respond with \"True\"/\"False\", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+      "content": "Many questions are phrased as statements, incomplete phrases, or reverse clues (common in trivia/Jeopardy). Treat these as requests to identify the specific subject, attribute, or missing term. Do not respond with \"True\"/\"False\", nor repeat the prompt itself. Instead, extract the exact proper noun, value, or attribute that satisfies the implied query.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

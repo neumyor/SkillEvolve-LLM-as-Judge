@@ -1,0 +1,30 @@
+[
+  {
+    "op": "insert_after",
+    "target": "- **Strict Conciseness**: Output only the exact entity, word, or short phrase requested. Never include full sentences, explanations, or conversational filler inside `<answer>...</answer>`.",
+    "content_preview": "- **Semantic Slot & Distractor Filtering**: Parse the question to identify the precise semantic role requested (e.g., person, location, business type). Strictly filter candidates to match that role. E",
+    "status": "applied_insert_after",
+    "index": 1
+  },
+  {
+    "op": "replace",
+    "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or g",
+    "content_preview": "- **Cloze & Jeopardy Parsing**: Treat declarative statements, Jeopardy-style clues, and trailing blanks as direct fill-in-the-blank requests. Extract the exact missing subject or entity, never a categ",
+    "status": "applied_replace",
+    "index": 2
+  },
+  {
+    "op": "replace",
+    "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+    "content_preview": "3. Perform a single-sentence verification linking the question's core descriptor directly to the extracted entity, confirming exact textual alignment and grammatical slot satisfaction. Skip extended a",
+    "status": "applied_replace",
+    "index": 3
+  },
+  {
+    "op": "insert_after",
+    "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or g",
+    "content_preview": "- **Slot & Constraint Alignment**: Parse implicit question slots and explicit constraints (e.g., 'this holiday', 'First name of...', 'of it'). Extract only the term that directly fills the requested s",
+    "status": "applied_insert_after_fallback_append",
+    "index": 4
+  }
+]

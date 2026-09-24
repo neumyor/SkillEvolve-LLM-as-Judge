@@ -1,0 +1,29 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Handling Conjoined & Parallel Constraints",
+    "Bridging Idioms/Puns to Literal Facts",
+    "Citing Explicit Contextual Assertions in Reasoning"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate three key behaviors: (1) seamlessly resolving questions with multiple conjoined constraints (e.g., '&', ',') by finding their intersection in the text; (2) translating idiomatic or pun-based clues into literal factual anchors; and (3) framing justifications around direct textual assertions ('The context explicitly identifies...') rather than abstract inference. Encoding these patterns will improve robustness on compound trivia and figurative clues.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like \"this settlement\" or \"his discovery\". Scan the context to find the specific entity that satisfies the description. Prioritize explicit matches over assumptions.",
+        "content": "\n- **Conjoined & Parallel Constraints**: Questions frequently link multiple independent clues using conjunctions ('&', 'and') or commas (e.g., 'Lemmon & this actor', 'Tina Turner on the big screen & Rosa Parks on TV'). Identify the intersection of these constraints in the context to pinpoint the target entity efficiently."
+      },
+      {
+        "op": "replace",
+        "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+        "content": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, literary metaphors, or idioms/puns (e.g., 'no flash in the Tai-Pan'). Translate these figurative or idiomatic pointers into their literal factual equivalents in the context. Discard the metaphorical phrasing and output only the exact canonical entity name."
+      },
+      {
+        "op": "replace",
+        "target": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span.",
+        "content": "- **Explicit Contextual Assertion**: Frame your reasoning around direct textual evidence. Use phrasing like 'The context explicitly identifies/states...' to anchor your justification. Clearly map each part of the question's constraint list to the corresponding phrase in the source text before extracting the final answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

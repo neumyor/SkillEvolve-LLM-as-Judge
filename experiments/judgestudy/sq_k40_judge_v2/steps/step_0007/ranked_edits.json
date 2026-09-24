@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied failure-driven patches as primary overrides per priority rules. Replaced 'Exact Term Preference' with the failure-driven 'Exact Term & Grammatical Fidelity' rule. Preserved both failure ('Slot & Role Alignment') and success ('Immediate Snippet Resolution') inserts after 'Reference Resolution'. Updated 'Trivia/Fragment Handling' using the success patch, then appended the failure-driven 'Famous Phrase & Slogan Mapping' and 'Primary Match Selection' rules afterward. Applied success-driven updates to 'Keyword & Clue Anchoring', workflow steps 2 & 3, and added 'Snippet & Title Leverage' and 'Direct Extraction Priority' after the updated term preference rule. All edits retain original support counts and source types. [optimizer-ranked: selected 4/10 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "- **Exact Term & Grammatical Fidelity**: Extract the exact term matching the question's grammatical slot. Strictly preserve singular/plural forms, parts of speech, and capitalization. Drop generic geographic or descriptive suffixes (e.g., 'Island', 'River') unless they are integral to the official name or explicitly required. Match the expected entity's precise morphological form.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "- **Jeopardy, Cloze & Definition Mapping**: Treat fragmentary, Jeopardy-style, declarative clues, definitions, slogans, and trailing blanks as direct fill-in-the-blank requests. Isolate the core subject entity being described, strictly ignoring tangential attributes, genres, or secondary examples. Map the clue's descriptive phrasing directly to the exact terminology in the `[DOC]` passages.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "\n- **Slot & Role Alignment**: Identify the exact semantic role requested by the question (e.g., person, location, concept). Do not default to adjacent nouns or descriptive phrases mentioned in the clue. If the question asks for 'he' or 'this site', extract the subject/entity itself, not associated objects or attributes.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Provide a concise verification trace that explicitly quotes the exact sentence or phrase from the context confirming the answer. Directly link the question's core descriptor to this textual evidence before extracting the final term.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [5] addresses a pervasive failure mode (morphological mismatches, capitalization, and unnecessary suffixes) with highly actionable grammatical fidelity rules, making it the highest impact. Edit [3] fundamentally upgrades the weak 'Trivia/Fragment Handling' section into a robust framework for Jeopardy-style and cloze questions, preventing category/tangential attribute errors. Edit [1] fills a critical gap in reference resolution by introducing 'Slot & Role Alignment', ensuring the model extracts the exact semantic target rather than adjacent nouns. Edit [9] systematically improves answer reliability by mandating explicit textual grounding in the reasoning trace, reducing hallucination. Together, these four edits replace vague or outdated rules with precise, generalizable principles that address the most common QA failure patterns.",
+    "selected_indices": [
+      5,
+      3,
+      1,
+      9
+    ]
+  }
+}

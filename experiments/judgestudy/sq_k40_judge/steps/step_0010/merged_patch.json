@@ -1,0 +1,101 @@
+{
+  "reasoning": "Applied all 4 failure-driven patches first to address critical entity isolation, canonical naming, and container/attribute resolution failures. Replaced existing rules where failure patches targeted them directly. Integrated all 10 success-driven patches afterward, which introduce complementary heuristics for pronoun resolution, colon parsing, trade/generic mapping, quoted material handling, and direct lookup. No direct conflicts existed; overlapping targets were resolved by prioritizing the failure versions while allowing success patches to insert adjacent or append new rules. All edits retain their original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.",
+      "content": "- **No Syntactic Mirroring & Category Exclusion**: Never repeat the prompt's phrasing, complete sentences grammatically, or append categorical nouns/classifiers explicitly stated in the clue (e.g., output \"bear\" not \"bear market\", \"Minsk\" not \"Capital cities\"). Treat the prompt's category label as a structural pointer, not part of the answer. Output only the isolated entity requested.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Strict Canonical Truncation**: When extracting titles, organizations, or concepts, prefer the recognized short or canonical form over the full descriptive title. Do not append categorical nouns (e.g., \"Party\", \"Show\", \"Structure\", \"Book\") or prepositional phrases unless they are strictly part of the official short name (e.g., output \"Bull Moose\" not \"Bull Moose Party\", \"Studio 60\" not \"Studio 60 on the Sunset Strip\", \"Pyre\" not \"funeral pyre\").",
+      "content": "- **Preservation of Standard Prefixes**: Do not strip standard geographical, administrative, or institutional prefixes (e.g., \"Lake,\" \"Mount,\" \"St.,\" \"Republic,\" \"People's\") when they constitute the recognized canonical name. Prioritize exact lexical matching over heuristic shortening.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Container-Part Disambiguation**: When a clue references a sub-component, building, or feature located *within* a larger site or entity (e.g., 'building at this site'), always resolve the query to the *container* or *primary subject* requested by the prompt's anchor. Do not answer with the sub-component itself.",
+      "content": "- **Attribute vs. Container Resolution**: When a clue references a collective, organization, or container and queries its constituent parts or defining attributes (e.g., \"alliance of these Chinese businesses\"), isolate the specific attribute, type, or component requested. Do not default to the overarching entity name unless it directly fills the semantic gap.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Formal vs. Alias Resolution**: When both a formal/full name and a common alias or foreign variant appear in the context, prioritize the formal English name for historical/trivia queries (e.g., \"Patricia Hearst\" over \"Patty Hearst\", \"Pitti Palace\" over \"Palazzo Pitti\") unless the clue explicitly signals the alias or foreign term.",
+      "content": "- **Exact Canonical Spelling & Name Granularity**: Preserve exact internal spacing, hyphenation, or compound forms in titles and names (e.g., \"Showboat\" not \"Show Boat\"). For persons, prioritize surnames or concise canonical forms over full multi-part names unless the clue explicitly signals a longer identifier. Avoid adding middle initials or titles unless integral to the official short name.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n- **Pronoun & Possessive Resolution**: Treat possessive pronouns (\"his\", \"her\", \"their\") and standalone subject pronouns (\"it\", \"he\") in declarative clues as primary query anchors. Map them to the missing entity and use the accompanying descriptive clauses as active filtering constraints, just as with demonstratives.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.",
+      "content": "\n- **Attribute-Specific Extraction**: When a prompt explicitly requests a sub-component or attribute of the target entity (e.g., \"First name of...\", \"Year of...\", \"Full title of...\"), isolate and extract *only* that specific attribute. Do not return the full entity unless the prompt implicitly asks for it.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Demonstrative-Category Anchoring**: When clues use phrases like 'this film series', 'one of these bombs', or 'the Denver type of this', treat the demonstrative + category noun as a direct pointer to the target class. Isolate the specific instance within that class that satisfies the unique constraints provided.",
+      "content": "\n- **Colon-Separated Anchor Parsing**: Treat prompts formatted as `[Query/Clue]:[Hint/Entity]` as direct pointers. Use the post-colon entity as a high-confidence contextual anchor to verify constraints or locate the pre-colon query target within the passage. Strip the anchor from the final answer if it serves only as a reference point.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, and song lyrics as direct queries for their underlying subject or concept. Strip attribution cues (e.g., 'According to...', 'It's the cry of') and resolve the semantic gap to the specific entity or idea being described.",
+      "content": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, catchphrases, slogans, and iconic descriptive phrases as direct queries for their underlying subject or concept. Map playful or cultural phrasing to its literal factual referent using context verification. Strip all figurative, conversational, or attribution framing from the final answer.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Acronym & Abbreviation Expansion**: When clues use acronyms, initialisms, or shortened forms (e.g., PIP, uke, NASA), expand them to their full canonical terms if the context supports it. Prioritize the unabbreviated form unless the gold answer explicitly requires the short version.",
+      "content": "\n- **Trade Name & Generic Mapping**: When a clue provides a generic term (e.g., drug compound, material, chemical) and requests a specific brand, or vice versa, resolve to the exact canonical trade name or official designation. Prioritize the requested form (brand vs. generic) over the contextual mention, and verify alignment with the clue's explicit request.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "\n- **Contextual Descriptor Stripping**: Before finalizing the answer, actively remove any category nouns, adjectives, or descriptive modifiers from the clue that merely point to the entity's class (e.g., \"fruit\", \"scale\", \"city\", \"film\"). The output must contain ONLY the isolated proper noun or canonical term, never the clue's framing language.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, catchphrases, slogans, and iconic descriptive phrases as direct queries for their underlying subject or concept. Map playful or cultural phrasing to its literal factual referent using context verification. Strip all figurative, conversational, or attribution framing from the final answer.",
+      "content": "\n- **Nicknames, Epithets & Cultural Monikers**: When clues use famous nicknames, epithets, or cultural monikers (e.g., \"America's Sherlock Holmes in Sneakers\"), resolve them to the canonical name of the person, character, or work they refer to. Do not return the nickname itself unless it is the primary identifier.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.",
+      "content": "- **Quoted Material as Constraints**: When clues contain quoted titles, phrases, or song names, treat them as contextual constraints or distractors, not the answer. Resolve the semantic gap to the creator, subject, or category implied by the quote, ensuring the output does not simply repeat the quoted string.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Minimal Reasoning**: Skip verbose derivations for straightforward retrieval tasks. If step-by-step reasoning is performed, place it outside the answer tags and keep it brief.",
+      "content": "\n- **Direct Lookup Heuristic**: For straightforward trivia, factual statements, or fill-in-the-blank clues, treat the task as a direct string lookup rather than a complex reasoning problem. Locate the exact verbatim match in the context or titles, verify it satisfies the clue's constraints, and output immediately. Avoid multi-step deduction when a direct match exists.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Article Omission Tolerance**: For F1-based evaluation, safely omit leading indefinite or definite articles (e.g., \"a\", \"the\") unless the clue's syntax strictly requires them for grammatical completion. Prioritize the core lexical item and canonical spelling over strict article preservation.",
+      "content": "- **Article Omission Tolerance & Verbatim Gap Filling**: For F1-based evaluation, safely omit leading indefinite or definite articles (e.g., \"a\", \"the\") unless the clue's syntax strictly requires them for grammatical completion. Prioritize the core lexical item and canonical spelling over strict article preservation. When clues present explicit semantic gaps (lyrics, definitions, or completions), extract the exact missing phrase verbatim from the context without paraphrasing, expansion, or syntactic mirroring.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

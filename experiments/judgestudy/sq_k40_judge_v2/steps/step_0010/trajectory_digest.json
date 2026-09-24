@@ -1,0 +1,47 @@
+{
+  "step": 10,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 9,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents consistently over-specify answers, select categories/booleans instead of entities, or fail to match the exact grammatical slot and conciseness required by Jeopardy-style/cloze fragments.",
+      "count": 9,
+      "task_ids": [
+        "6b497ac583564d389f5e5f3f565e0030",
+        "df224beba4ae45a9b4ed66443174b98b",
+        "a1ffc8a731aa4fd3af552c1edd681425",
+        "13af14965cf748a8acecd7f0b9a9b03a",
+        "8c9f6c94c0784cfc81db422bec240984",
+        "6072e63558b445ad9c01394dfed313b4",
+        "d64792de04804b7198aecdc143597e9f",
+        "fcb4868f4e8847f79ef5622f2e05ddcd",
+        "278992dfba6a4d959973da300131fd4a"
+      ]
+    }
+  ],
+  "score_before": 0.73,
+  "score_after": 0.73,
+  "rejected_edits": [
+    {
+      "op": "insert_after",
+      "content": "\n- **Semantic Slot & Distractor Filtering**: Parse the question to identify the precise semantic role requested (e.g., person, location, business type). Strictly filter candidates to match that role. Explicitly verify that the candidate entity actually satisfies the question's primary descriptor, discarding loosely matching items, tangential examples, or literal string matches that point to the wrong subject.",
+      "target": "- **Strict Conciseness**: Output only the exact entity, word, or short phrase requested. Never include full sentences, explanations, or conversational filler inside `<answer>...</answer>`."
+    },
+    {
+      "op": "replace",
+      "content": "- **Cloze & Jeopardy Parsing**: Treat declarative statements, Jeopardy-style clues, and trailing blanks as direct fill-in-the-blank requests. Extract the exact missing subject or entity, never a category, boolean, or descriptive phrase. Be alert for puns, wordplay, or double meanings; map descriptors directly to the core noun or proper name that fulfills the clue's intent.",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories."
+    },
+    {
+      "op": "replace",
+      "content": "3. Perform a single-sentence verification linking the question's core descriptor directly to the extracted entity, confirming exact textual alignment and grammatical slot satisfaction. Skip extended analysis for straightforward trivia matches and explicitly rule out incidental or tangential matches.",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Slot & Constraint Alignment**: Parse implicit question slots and explicit constraints (e.g., 'this holiday', 'First name of...', 'of it'). Extract only the term that directly fills the requested slot, strictly mirroring the grammatical form, number, and length demanded. Do not expand to full names, titles, or compound phrases unless explicitly required.",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories."
+    }
+  ]
+}

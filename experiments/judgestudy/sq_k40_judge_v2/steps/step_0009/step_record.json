@@ -1,0 +1,109 @@
+{
+  "step": 9,
+  "epoch": 1,
+  "step_in_epoch": 8,
+  "timing": {
+    "rollout_s": 16.0,
+    "reflect_s": 41.5,
+    "aggregate_s": 98.1,
+    "select_s": 29.3,
+    "update_s": 0.0,
+    "evaluate_s": 30.2
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 109550,
+      "completion_tokens": 22383
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 7784,
+      "completion_tokens": 3345
+    },
+    "merge": {
+      "calls": 3,
+      "prompt_tokens": 5990,
+      "completion_tokens": 15781
+    },
+    "ranking": {
+      "calls": 1,
+      "prompt_tokens": 1581,
+      "completion_tokens": 3302
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 62434,
+      "completion_tokens": 26610
+    }
+  },
+  "rollout_hard": 0.775,
+  "rollout_soft": 0.861667,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1051,
+      "n_envs": 40,
+      "hard": 0.775,
+      "soft": 0.8616666666666667,
+      "n_failure_patches": 2,
+      "n_success_patches": 4
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 2,
+  "n_success_patches": 4,
+  "n_edits_merged": 7,
+  "n_edits_ranked": 4,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    8,
+    8,
+    8,
+    8
+  ],
+  "candidate_hash": "12501b22f5200581",
+  "candidate_skill_len": 3113,
+  "edit_apply_summary": {
+    "total": 4,
+    "applied": 4,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_prompt_variant": "v2",
+  "judge_verdict": "REJECT",
+  "judge_confidence": "high",
+  "judge_reason": "Three prior attempts (6-8) already targeted this exact mechanism and yielded no accuracy gain (0.775 -> 0.775). The candidate violates the 1.50x growth cap without tying every new rule to a specific failure, and two failures stem from fundamental clue misinterpretation rather than entity form issues, making the patch ineffective for the observed error distribution.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 835,
+  "judge_usage": {
+    "prompt_tokens": 7784,
+    "completion_tokens": 3345,
+    "total_tokens": 11129
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "judge_defect_mechanism": "Over-specification and entity form mismatch",
+  "judge_evidence_count": 6,
+  "judge_counter_evidence_count": 10,
+  "judge_expected_window_delta": "flat",
+  "judge_falsifier": "A subsequent execution window showing a complete elimination of the identified suffix/variant mismatches while maintaining or improving the overall success rate, proving the new alignment rules resolve the root cause without collateral damage.",
+  "judge_rule_override": "",
+  "judge_accepted": false,
+  "rollout_hard_after": 0.775,
+  "candidate_gate_score": 0.73,
+  "action": "reject",
+  "current_score": 0.73,
+  "best_score": 0.73,
+  "best_step": 1,
+  "current_origin": "step_0001",
+  "best_origin": "step_0001",
+  "skill_len": 1891,
+  "wall_time_s": 215.1
+}

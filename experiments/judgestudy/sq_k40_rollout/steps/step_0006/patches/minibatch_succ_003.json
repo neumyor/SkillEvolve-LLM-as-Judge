@@ -1,0 +1,18 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Treating bare proper nouns or short phrase queries as search targets to find missing attributes or connections.",
+    "Rapidly resolving multi-entity or comma-separated questions by identifying shared locations, roles, or canonical links via title scanning."
+  ],
+  "patch": {
+    "reasoning": "Multiple successful trajectories feature questions that are merely proper nouns, titles, or comma-separated entities (e.g., 'President Tran Duc Luong', 'Edward Kennedy,John Kerry'). The agents successfully treated these as keyword queries to find missing attributes or shared connections, relying heavily on title scans. Encoding this query-type handling will improve robustness for fragment-based trivia.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "\n- **Bare Entity & Keyword Query Resolution**: When questions consist solely of proper nouns, titles, or short phrases (e.g., 'President Tran Duc Luong', 'Edward Kennedy, John Kerry'), treat them as direct search queries rather than complete sentences. Identify the missing attribute, shared location, or canonical connection by scanning `[TLE]` markers for exact matches, then verify the relationship in the opening `[PAR]` lines."
+      }
+    ]
+  },
+  "source_type": "success"
+}

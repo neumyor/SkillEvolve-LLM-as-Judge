@@ -1,0 +1,25 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "rule_ignored",
+      "count": 6,
+      "description": "Agents consistently return full document titles or extended phrases instead of the core identifier requested by demonstrative clues."
+    },
+    {
+      "failure_type": "other",
+      "count": 2,
+      "description": "Minor entity variant mismatches (name forms, translation/articles) due to reliance on title strings over canonical definitions."
+    }
+  ],
+  "patch": {
+    "reasoning": "Six of eight failures involve agents copying full document titles or appending generic category words (e.g., 'Party', 'Strip', 'Flat', 'Structure') when the question uses demonstrative placeholders ('this/these [category]'). The existing 'Strip Generic Suffixes' rule is insufficiently explicit about title-vs-core distinction and demonstrative clue parsing. A targeted rule will force extraction of the precise blank-filling term and alignment with canonical phrasing.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Demonstrative Blank Filling & Title Stripping**: When questions use phrases like \"this [category]\" or \"these [category]\", treat them as direct blanks. Do not default to the full document title or metadata string. Extract only the specific noun phrase that grammatically fills the blank. Aggressively strip trailing generic descriptors (e.g., \"Party\", \"Strip\", \"Flat\", \"Structure\", \"Island\") unless they are strictly part of the canonical proper name. Prioritize the exact phrasing found in the context's descriptive sentences over the catalog title."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

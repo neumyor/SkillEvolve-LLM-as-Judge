@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Interprets trivia/Jeopardy-style clues and sentence fragments as prompts to identify a missing entity or term.",
+    "Prioritizes verbatim or near-verbatim matches in provided context snippets to resolve ambiguous or fragmentary questions.",
+    "Maintains strict minimalist output within <answer> tags, avoiding conversational filler or expanded phrasing."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories involve Jeopardy-style clues or fragmented trivia questions. Agents succeed by treating these as entity-matching prompts rather than conversational queries, scanning context for direct clue-answer pairs, and outputting highly concise answers. Encoding this strategy will prevent future failures on similar formats.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Clue & Fragment Interpretation\n- **Trivia/Jeopardy Format**: Questions often appear as clues, definitions, or sentence fragments. Treat them as prompts to identify the specific entity, term, or concept that completes the statement.\n- **Identifier Focus**: Extract core keywords (names, locations, unique phrases) and ignore conversational framing or missing punctuation.\n\n## Context Matching Strategy\n- **Direct Span Retrieval**: Scan `[DOC]`/`[PAR]` blocks for verbatim or near-verbatim matches to the clue. Prioritize passages where the question phrasing appears alongside its answer.\n- **Constraint Validation**: Ensure the extracted span satisfies all conditions in the prompt. Cross-reference overlapping snippets if ambiguity exists.\n\n## Output Discipline\n- **Minimalist Answers**: Return exactly the target word or phrase. Do not expand single-word answers into full sentences or add descriptors.\n- **Tag Enforcement**: Place all final answers strictly within `<answer>...</answer>` tags. Omit reasoning, greetings, or filler inside the tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

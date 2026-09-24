@@ -1,0 +1,32 @@
+{
+  "step": 3,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 9,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents over-extract long phrases, definitions, or full sentences instead of concise target spans.",
+      "count": 9,
+      "task_ids": [
+        "06173fc595e842c6abfbd7d904bba79a",
+        "1ea2851b642c4b15af816e0af9d8aa7e",
+        "167752253c1c4cff907a6314c5754d12",
+        "7ebc5c81713a4197ac303dec72719c0f",
+        "2be20bbbb7fb4e8d8cf61d3863457b3b",
+        "1400ca67c580458d91e3cb319ce25a74",
+        "1e2d47768a16419688fcffb970f20c45",
+        "82b3d01ea72847959730b3ef349b2d76",
+        "a6eb760a3753499881a8bbbf9e60749c"
+      ]
+    }
+  ],
+  "score_before": 0.745,
+  "score_after": 0.745,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "# Question Answering Skill\n\n## Trivia & Clue Interpretation\n- **Fragment Recognition**: Questions often appear as definitions, sentence completions, or trivia clues. Identify the exact entity, term, or concept that completes the clue.\n- **No True/False**: Never answer \"Yes\" or \"No\" to statement-style clues. Always extract the target subject or entity.\n- **Role & Title Matching**: If the clue describes a role (e.g., \"this editor\"), return the exact role/title used in the context, not a guessed external name.\n- **Strip Conversational Framing**: Ignore introductory phrases or conversational wrappers. Focus solely on the core factual query embedded in the clue.\n\n## Extraction & Precision Rules\n- **Minimal Span**: Extract the shortest text span that directly answers the question. Avoid pulling full sentences, definitions, or descriptive clauses.\n- **Exact Context Match**: Always extract the exact word or phrase used in the `[DOC]`/`[PAR]` blocks. Do not substitute synonyms or add qualifiers (e.g., use 'Football' not 'American Football', 'Soccer' not 'Association Football').\n- **Grammatical Exactness**: Match the singular/plural form and specificity of the gold answer. If the context uses \"Brown pelican\", return \"Brown pelican\", not \"Pelican\". If the clue implies a plural, return the plural.\n- **Name & Entity Granularity**: Match the name format implied by the clue. Do not substitute a specific example mentioned in the text for a general category (or vice versa) unless explicitly asked.\n- **Foreign Titles & Quotes**: Preserve original titles, quotes, or non-English terms exactly as they appear in the context or clue. Do not translate or paraphrase unless explicitly asked.\n- **Target Identification**: Carefully distinguish between the subject of the passage and the target of the question. If the question asks for a location associated with an institution, return the location, not the institution itself.\n\n## Execution Strategy\n1. **Parse & Isolate**: Strip conversational framing. Identify the core query type (entity, location, date, role).\n2. **Scan & Match**: Locate verbatim or near-verbatim matches in `[DOC]`/`[PAR]` blocks. Prioritize passages where the clue aligns with the answer.\n3. **Cross-Snippet Validation**: When multiple passages discuss the same topic or reference multiple items, scan all snippets to find the common thread or connecting entity. Cross-reference details to ensure consistency.\n4. **Verify Granularity**: Check if the extracted span matches the exact length, number, and specificity of the expected answer. Adjust if the context provides a more precise term.\n5. **Grounding Constraint**: Only extract answers explicitly stated or strongly implied in the provided context. Avoid external knowledge substitution, guessing, or substituting similar concepts.\n6. **Format Output**: Provide reasoning outside tags. Enclose only the final concise answer in `<answer>...</answer>`.",
+      "target": "(No learned rules yet. Rules will be added through the reflection process.)"
+    }
+  ]
+}

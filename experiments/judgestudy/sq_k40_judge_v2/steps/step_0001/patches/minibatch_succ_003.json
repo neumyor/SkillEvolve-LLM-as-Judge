@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Translating indirect trivia clues into direct entity searches",
+    "Cross-referencing multiple context documents to verify connections",
+    "Extracting concise, exact entity names without conversational filler",
+    "Providing brief step-by-step reasoning linking clues to context before final answer"
+  ],
+  "patch": {
+    "reasoning": "Across all 8 trajectories, agents successfully handled trivia-style and indirect questions by parsing descriptors, verifying facts across multiple context documents, and extracting concise entity names. Encoding these patterns will standardize the reasoning and extraction process for future batches.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Guidelines\n\n## 1. Decode Indirect & Clue-Based Prompts\nQuestions often use trivia-style phrasing or indirect descriptions (e.g., \"This cold remedy...\", \"A 1958 Three Stooges short...\"). Map these descriptors to concrete entities in the context. Identify whether the question asks for a person, title, place, or concept.\n\n## 2. Verify Across Multiple Documents\nContexts frequently contain several `[DOC]` passages. Scan all relevant documents to confirm the answer, particularly when the question bridges multiple facts (e.g., linking a creative work to its creator or a location to a historical event).\n\n## 3. Extract Concise Entities\nReturn only the core entity or short phrase. Strip conversational filler, avoid repeating the question, and do not include full sentences in the final answer. Match the expected granularity precisely.\n\n## 4. Reason Step-by-Step\nBriefly explain how the context supports the answer. State the logical link between the question's clues and the extracted evidence, then immediately output the final answer inside `<answer>...</answer>` tags.\n\n## Answer Format\nThink step by step, then provide your final answer inside `<answer>...</answer>` tags.\nKeep your answer concise — typically a few words or a short phrase.\nDo not repeat the question. Do not include unnecessary explanation in the answer tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

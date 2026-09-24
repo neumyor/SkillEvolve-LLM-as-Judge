@@ -1,0 +1,61 @@
+{
+  "reasoning": "Applied failure-driven patch for 'Answer Precision and Conciseness' as it resolves critical stripping errors and directly conflicts with a lower-priority success patch covering the same section; per guidelines, the failure version is retained. All other success-driven patches target distinct sections or introduce new, non-conflicting guidance, so they are preserved. Support counts and source types are carried forward as specified.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Map descriptive phrases directly to the target entity (person, place, term, work).",
+      "content": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Immediately parse the question for explicit or implicit target categories (e.g., \\\"this nation\\\", \\\"this group\\\") to constrain the candidate pool. Note that many clues are partial quotes, contain ellipses (...), or rely on synonyms/roles rather than the exact target term; treat these fragments as direct anchors to locate the canonical entity in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Direct Keyword Matching & Scanning**: Prioritize scanning document titles, snippets, and paragraphs for exact or near-exact keyword matches. Quickly locate supporting sentences using unique identifiers (dates, numbers, quotes, proper nouns) before reading deeply.",
+      "content": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \\\"&\\\", \\\"who\\\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Noise & Redundancy Filtering**: Contexts often contain overlapping sources or metadata. Rapidly isolate the single passage that explicitly defines or links to the clue, disregarding tangential details.",
+      "content": "- **Noise & Redundancy Filtering**: Contexts frequently contain verbatim repeated paragraphs across multiple documents or resemble glossaries/stat sheets. Ignore duplicated blocks entirely, skip narrative fluff, and jump straight to the first passage that explicitly defines or links to the clue. Rapidly isolate the single relevant passage, disregarding tangential details.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Constraint Verification**: Cross-check the extracted entity against specific constraints in the question (e.g., years, roles, locations) using the context to ensure accuracy.",
+      "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity. When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Handling Statement or Fragment Questions",
+      "content": "\n\n- **Partial Quote & Ellipsis Matching**: When a question contains a truncated sentence or partial quote, scan the context for the exact phrase or its immediate continuation. The missing word or phrase completing the thought is almost always the target entity.\n- **Resolving Implicit References**: Trivia questions frequently use demonstratives or relational pointers (e.g., \\\"this city's Sabres,\\\" \\\"in this play,\\\" \\\"like Goneril\\\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.",
+      "content": "## Answer Precision and Conciseness\n- **Exact String Priority**: Extract the exact phrase used in the context that directly satisfies the query. Do not modify names (add/remove titles, middle initials, or suffixes) unless the question explicitly instructs otherwise.\n- **Names & Titles**: Retain honorifics and titles (e.g., \"Sir\", \"Dr.\") if they appear in the primary supporting sentence. If the question explicitly asks for a surname or first name, provide only that component.\n- **Category vs. Example**: When a question provides a definition, function, or description, identify the core term or category being described. Avoid selecting specific examples, brands, or instances mentioned in the text unless the question explicitly asks for one.\n- Strip unnecessary articles or filler words, but preserve the core identifier exactly as it appears in the context.",
+      "support_count": 3,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "## Distractor Management\nContexts often contain multiple names or related terms. Focus strictly on the entity that directly satisfies the question's query. Ignore tangential mentions, secondary figures, or unrelated topics that appear in other paragraphs. When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+      "content": "## Distractor Management\nContexts often contain multiple names or related terms. Focus strictly on the entity that directly satisfies the question's query and inferred target category. Use document titles and metadata to disambiguate competing candidates, and ignore tangential mentions, secondary figures, or unrelated topics that appear in other paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "\n\n## Advanced Query Strategies\n- **Option-Aware Selection**: If the question provides explicit alternatives (e.g., \\\"Of A, B, or C...\\\"), treat it as a constrained selection task. Filter the listed options against the context and return only the one that directly satisfies the clue.\n- **Single-Pass Efficiency**: For clue-based and trivia queries, aim to resolve the answer in a single scan. Directly extract the matched entity without generating intermediate reasoning steps, as over-analysis often introduces noise.\n- **Punctuation Stripping**: Remove any trailing periods, commas, or spaces from the extracted answer before wrapping it in tags. The content inside `<answer>` should be purely alphanumeric/proper nouns.\n- **Navigating Metadata & List-Like Contexts**: Passages often resemble glossaries, stat sheets, word lists, or archival records. In these formats, skip narrative fluff and scan directly for exact keyword matches to the question's unique identifiers. Prioritize lines where the clue's key terms appear in close proximity to the target entity.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

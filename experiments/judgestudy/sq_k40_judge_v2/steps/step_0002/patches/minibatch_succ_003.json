@@ -1,0 +1,22 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Single-Sentence Contextual Verification",
+    "Direct Clue-to-Entity Mapping"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently bypass narrative parsing for trivia/Jeopardy clues, treating them as direct entity requests. Furthermore, agents that succeeded used a standardized, single-sentence verification trace ('Based on the provided context...') to ground their answer, effectively preventing the verbosity failures observed in previous steps.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a single-sentence verification trace starting with 'Based on the provided context...' to explicitly link the clue to the extracted entity. Keep it concise to avoid verbosity."
+      },
+      {
+        "op": "append",
+        "content": "- **Direct Clue Mapping**: For trivia, Jeopardy-style, or fragment prompts, bypass narrative parsing. Treat the input as a direct request for a missing keyword or entity. Match the core descriptor immediately to the exact term in the context."
+      }
+    ]
+  },
+  "source_type": "success"
+}

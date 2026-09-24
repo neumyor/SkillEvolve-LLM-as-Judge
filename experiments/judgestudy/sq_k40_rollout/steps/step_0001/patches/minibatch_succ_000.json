@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct entity extraction from structured context passages using keyword matching",
+    "Interpreting trivia/Jeopardy-style clues to map to factual entities in the context",
+    "Strict adherence to output format with concise answers wrapped in <answer> tags",
+    "Optional brief justification preceding the final answer to ensure alignment with context"
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates consistent success in extracting precise named entities from structured document passages, interpreting trivia-style clues, and strictly adhering to the required output format. Encoding these strategies will reinforce reliable entity retrieval and formatting compliance across diverse question types.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Core Principles\n- **Context Scanning**: Quickly scan document titles and paragraphs for keywords matching the question.\n- **Entity Extraction**: Prioritize extracting exact named entities (people, places, terms, titles) that directly answer the query.\n- **Clue Interpretation**: For trivia or Jeopardy-style questions, parse descriptive clues to map them to specific entities in the context.\n- **Format Compliance**: Always place the final, concise answer inside `<answer>...</answer>` tags. Do not repeat the question or add unnecessary explanation inside the tags.\n\n# Reasoning Strategy\n- Briefly state how the context supports the answer before providing the final tag.\n- If multiple documents mention the entity, cross-reference to confirm accuracy.\n- Keep the answer tight: typically a few words or a short phrase."
+      }
+    ]
+  },
+  "source_type": "success"
+}

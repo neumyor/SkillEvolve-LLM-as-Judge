@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative/Fill-in-the-Blank Parsing",
+    "Associative & Relational Bridging",
+    "Single-Entity Intersection Filtering",
+    "Zero-Normalization Extraction"
+  ],
+  "patch": {
+    "reasoning": "Across all 8 trajectories, agents succeeded by treating declarative statements as implicit fill-in-the-blank prompts, bridging known anchors to targets via relational cues (e.g., 'author of', 'invented by'), enforcing strict single-entity intersection for multi-clause clues, and preserving exact casing/plurals without normalization. These patterns directly address common failure modes in trivia QA and should be explicitly codified.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Core Principles",
+        "content": "- **Declarative & Fill-in-the-Blank Parsing**: Treat declarative statements and sentence fragments as implicit blanks. Identify the grammatical or conceptual slot being queried and extract the term that completes the thought, rather than answering with a generic category or explanation.\n- **Associative & Relational Bridging**: Clues often link the target to a known anchor via relationships (e.g., \"author of\", \"invented by\", \"located south of\"). Use the known anchor to locate the relevant passage, then resolve the relational pointer to the exact target entity described."
+      },
+      {
+        "op": "replace",
+        "target": "When a question contains multiple descriptors or roles joined by \"&\" or commas (e.g., \"late California governor & U.S. Chief Justice\"), treat each clause as a required filter. Locate the single entity in the context that satisfies the intersection of all clauses, ignoring tangential figures who may match only one descriptor.",
+        "content": "When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously."
+      },
+      {
+        "op": "replace",
+        "target": "Always prefer extracting the exact term or phrase from the context over generating or paraphrasing it. Trivia evaluation relies on exact string matches, so retain the context's original phrasing unless it contains unnecessary filler.",
+        "content": "Always extract the exact term or phrase from the context. Trivia evaluation relies on exact string matching; never normalize capitalization, remove leading articles (\"the\", \"a\"), or alter pluralization. Preserve the context's original casing and formatting exactly as presented."
+      },
+      {
+        "op": "replace",
+        "target": "Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.",
+        "content": "Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\", \"author of X\"). Do not treat these as missing words. Resolve the pointer to its canonical referent using contextual clues, then extract the exact entity being pointed to. If the pointer implies a role or attribute (e.g., \"inventor of\", \"located in\"), answer with the specific entity fulfilling that relationship."
+      }
+    ]
+  },
+  "source_type": "success"
+}

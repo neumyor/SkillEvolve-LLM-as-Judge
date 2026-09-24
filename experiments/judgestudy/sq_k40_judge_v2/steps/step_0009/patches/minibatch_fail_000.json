@@ -1,0 +1,31 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Agents consistently select longer, formal, or expanded entity variants (adding middle initials, full names, or generic suffixes) instead of the concise core term requested."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Agents misinterpret fragmentary/Jeopardy-style clues by repeating question text or inferring relationships instead of extracting the single target entity."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates two dominant, related failures: (1) over-specification of entity names/terms by defaulting to full forms, middle initials, or generic suffixes when the gold answer requires the shortest, most direct variant; and (2) misalignment on clue-based questions where agents repeat prompt phrasing or infer relationships instead of isolating the core target. These edits consolidate variant-selection criteria and enforce strict, minimal extraction for fragmented queries, directly resolving the observed mismatches without duplicating prior rejected attempts.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "- **Exact Term & Variant Alignment**: When multiple variants of an entity exist in the context (e.g., full vs. short names, formal vs. nicknames, expanded vs. abbreviated), strictly default to the shortest, most direct identifier that matches the question's implied length. Strip non-essential middle names, initials, and generic geographic/event suffixes (e.g., 'Mountains', 'of Venus') unless explicitly required. Prefer the most commonly used or context-primary variant over obscure alternatives."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "- **Clue & Fragment Parsing**: For Jeopardy-style clues, name pairs, or declarative statements, isolate the single core entity, location, or concept being queried. Do not infer relationships, repeat parts of the question, or output descriptive phrases. Anchor strictly to the definitive factual noun or proper name."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

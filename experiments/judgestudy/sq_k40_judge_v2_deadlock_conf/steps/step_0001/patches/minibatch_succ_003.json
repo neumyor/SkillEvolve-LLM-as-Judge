@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct extraction of explicit facts/entities from context",
+    "Strict adherence to <answer> tag formatting with concise output",
+    "Brief, context-grounded reasoning preceding the final answer"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories demonstrate high accuracy by directly extracting explicit answers from the provided context passages. The agents consistently follow the required format, providing concise answers inside <answer> tags with minimal or brief reasoning. Encoding these patterns will reinforce efficient retrieval and strict formatting compliance across similar factoid/trivia tasks.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Core Strategies\n- **Direct Extraction Priority**: For factoid and trivia questions, scan the context for exact phrases, names, or numbers that directly match the query. Avoid overcomplicating; the answer is typically explicitly stated in the provided documents.\n- **Concise Formatting**: Always place the final answer inside `<answer>...</answer>` tags. Keep the content strictly to the requested entity or phrase (typically a few words). Do not repeat the question or include conversational filler.\n- **Context-Grounded Reasoning**: If a reasoning step is generated, keep it brief and explicitly reference the provided context snippets. Use it only to bridge the question to the extracted answer before outputting the final result."
+      }
+    ]
+  },
+  "source_type": "success"
+}

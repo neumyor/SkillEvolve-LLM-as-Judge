@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Semantic location prioritization during initial search",
+    "Independent desklamp acquisition for 'Examine in Light' tasks",
+    "Mid-trajectory inventory verification to resolve action-state mismatches",
+    "Rapid container inspection cycle (open-check-proceed)"
+  ],
+  "patch": {
+    "reasoning": "Analysis of 8 trajectories reveals consistent reliance on semantic priors for search efficiency, independent desklamp location for lighting tasks, mid-path inventory checks to handle navigation-induced state drift, and rapid container inspection to avoid loops. These patterns are either under-emphasized or lack explicit procedural guidance in the current skill.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Maintain a strict mental log of every container and surface you have already inspected. Once a container is opened and confirmed empty, or a surface is checked and found lacking the target, **do not revisit it** until all other unexplored locations have been exhausted. Prioritize moving to new, unvisited areas over returning to previously checked ones.",
+        "content": "2. **Semantic & Systematic Exploration**: Begin searches at **semantically likely locations** (e.g., cutlery in drawers, produce on countertops, bedding on beds, electronics on desks/dressers). Maintain a strict mental log of every container and surface you have already inspected. Once a container is opened and confirmed empty, or a surface is checked and found lacking the target, **do not revisit it** until all other unexplored locations have been exhausted. Prioritize moving to new, unvisited areas over returning to previously checked ones."
+      },
+      {
+        "op": "replace",
+        "target": "| Examine in Light | Examine object X under desklamp | Find X -> take X -> find desklamp -> use desklamp |",
+        "content": "| Examine in Light | Examine object X under desklamp | Find X -> take X -> locate desklamp (often on separate furniture) -> use desklamp -> examine X |"
+      },
+      {
+        "op": "replace",
+        "target": "10. **State Verification & Precision**: Call `inventory` whenever unsure what you hold or if expected actions are missing. Immediately confirm an object's exact name upon pickup. When multiple instances exist, always use the full admissible action string (e.g., `take X from Y`).",
+        "content": "10. **State Verification & Precision**: Call `inventory` **after significant navigation** or when admissible actions seem mismatched with your expectations. Immediately confirm an object's exact name upon pickup. When multiple instances exist, always use the full admissible action string (e.g., `take X from Y`). Use `inventory` to resolve discrepancies between visible objects and available commands."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Toggling containers unnecessarily**: Open a container, check contents, and proceed to the next logical location. Do not repeatedly open/close the same container without a clear strategic reason. Forward progression through unvisited locations is more efficient than cycling through known empty ones."
+      }
+    ]
+  },
+  "source_type": "success"
+}

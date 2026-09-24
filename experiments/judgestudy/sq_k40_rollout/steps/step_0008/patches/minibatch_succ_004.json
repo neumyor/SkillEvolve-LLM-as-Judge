@@ -1,0 +1,18 @@
+{
+  "batch_size": 2,
+  "success_patterns": [
+    "Decoding puns, wordplay, and regional synonyms as direct semantic pointers rather than literal descriptions.",
+    "Mapping local/colloquial terms to canonical answers via explicit equivalence statements in the context."
+  ],
+  "patch": {
+    "reasoning": "Both successful trajectories relied on correctly interpreting non-literal cues (puns like 'steak' in politics, regional terms like 'lambi') as direct identifiers. The agents mapped these pointers to canonical entities by finding explicit contextual links or equivalences, ignoring literal readings. Encoding this strategy will prevent misinterpretation of wordplay and foreign/local terms in future queries.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+        "content": "\n- **Decode Puns, Wordplay & Local Synonyms**: Questions frequently use puns, double meanings, or regional/foreign terms (e.g., 'steak' in politics, 'lambi') as direct pointers. Treat these as semantic anchors rather than literal descriptions. Scan the context for explicit equivalence statements ('known as', 'locally referred to as') or contextual bridges that map the pointer to the canonical entity. Discard literal interpretations of the pun or foreign term."
+      }
+    ]
+  },
+  "source_type": "success"
+}

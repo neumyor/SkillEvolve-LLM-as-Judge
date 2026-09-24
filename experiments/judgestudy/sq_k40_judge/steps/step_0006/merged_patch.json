@@ -1,0 +1,108 @@
+{
+  "reasoning": "Prioritized failure-driven patches for canonical phrasing, quote resolution, semantic category verification, and modifier discipline. Integrated success-driven patches addressing implicit reference filtering, shared-attribute inference, fragment completion, technical gap filling, multi-snippet constraint intersection, event-location mapping, standalone entity resolution, convergent clues, granular morphological alignment, foreign terms, and comparative mapping. All edits target distinct regions or address non-overlapping aspects of the skill. Appended low-priority success patterns where failure patches did not cover them. Maintained original support counts and source types. Edits are sequenced by document flow to ensure stable target matching during application.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as the primary query anchors. Map them directly to the concrete entity described in the context, ignoring intervening descriptive clauses.",
+      "content": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as primary query anchors. Crucially, treat the accompanying descriptive clauses as *active filtering constraints*, not noise. Use them to narrow down candidates and discard entities that fail the specific attributes mentioned.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as primary query anchors. Crucially, treat the accompanying descriptive clauses as *active filtering constraints*, not noise. Use them to narrow down candidates and discard entities that fail the specific attributes mentioned.",
+      "content": "\n- **Shared-Attribute Inference for Entity Lists**: When the prompt presents a comma-separated or conjunctive list of proper nouns (e.g., \"Edward Kennedy, John Kerry\"), treat it as a request for their common attribute, category, or location. Cross-reference the context to find the shared property linking the listed entities, and output that attribute rather than repeating the names.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "- **Quote & Literary Reference Resolution**: When the clue is a famous quote, poem line, or song lyric, the implied query target is almost always the creator/author/composer, not the title or subject matter mentioned in the quote. Explicitly map literary/artistic references to their originators. Discard the quoted work's title or subject if it merely serves as the anchor for the attribution query.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "\n- **Standalone Entity Fragment Resolution**: If the prompt consists solely of a named entity (e.g., \"President X\", \"Forbes magazine\"), infer the most salient trivia attribute being queried (e.g., country, founding year, primary subject) rather than mirroring the entity. Cross-reference context to find the specific attribute requested.",
+      "support_count": 6,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.",
+      "content": "\n- **Fragment-to-Slot Completion**: Parse incomplete prompts and Jeopardy-style clues as implicit sentence completions. Identify the missing grammatical slot (subject, object, predicate) and extract only the term that logically and factually completes the thought. Do not output the prompt's subject or repeat its framing.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.\n\n- **Fragment-to-Slot Completion**: Parse incomplete prompts and Jeopardy-style clues as implicit sentence completions. Identify the missing grammatical slot (subject, object, predicate) and extract only the term that logically and factually completes the thought. Do not output the prompt's subject or repeat its framing.",
+      "content": "\n- **Technical & Definitional Gap Filling**: For prompts structured as definitions, mathematical formulas, or grammatical classifications (e.g., \"Its area equals...\", \"The adverb in...\"), isolate the defined subject as the query target. Match the exact terminology used in the context for the defined concept, ensuring technical precision over conversational phrasing.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts, cross-reference every constraint from the clue against candidate passages. Ignore duplicated entries and discard any entity that matches only some attributes or belongs to a different category.",
+      "content": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. When a clue contains multiple independent attributes, actively cross-reference across *multiple* document snippets to intersect constraints. Discard candidates that satisfy only a subset of conditions or belong to a different category.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. When a clue contains multiple independent attributes, actively cross-reference across *multiple* document snippets to intersect constraints. Discard candidates that satisfy only a subset of conditions or belong to a different category.",
+      "content": "\n- **Event-Location & Landmark Co-occurrence**: For clues tying an event, tradition, or landmark to a geographic region, extract the primary city or place explicitly named alongside the landmark in the context. Ignore broader regions or secondary locations unless uniquely specified.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Multi-Constraint Synthesis**: When a clue provides multiple independent attributes (e.g., date, role, location, party, quantity), intersect these constraints to isolate the single matching entity. Discard candidates that satisfy only a subset of conditions.",
+      "content": "\n- **Convergent Alternative Clues**: When prompts use \"or\" or \"&\" to present two distinct descriptors (e.g., \"geographical feature or song title\"), identify the single underlying concept, category, or word that satisfies both. Do not return multiple answers; select the unifying term.",
+      "support_count": 6,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Canonical Phrasing & Granularity Alignment**: Strictly match the canonical trivia answer's length and form. Do not arbitrarily expand names (e.g., output \"Boss\" not \"Boss Tweed\", \"Napoleon\" not \"Napoleon Bonaparte\") or contract them unless the clue dictates otherwise. Distinguish between descriptive modifiers and integral parts of a proper noun or compound name; retain established multi-word entity names exactly as they appear in the context (e.g., \"Forbes magazine\"), but strip purely descriptive terms when the core concept suffices. For fill-in-the-blank clues presenting partial names, extract the full canonical entity name, not just the missing word.",
+      "content": "- **Canonical Phrasing & Granularity Alignment**: Prioritize exact canonical string matching over heuristic expansion or contraction. Trivia and Jeopardy answers often require specific articles, honorifics, titles, or full names (e.g., \"Sir Isaac Newton\", \"the Amazon\", \"a eucalyptus tree\") that must be preserved exactly. Do not strip titles, articles, or generic descriptors (like \"River\" or \"Speech\") unless explicitly instructed by the clue. Conversely, do not append explanatory modifiers or default to full names if the canonical answer is a surname or short phrase. Match the exact capitalization, plurality, and phrasing of the expected answer.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "When multiple entities appear in the context, select the one that directly completes the clue or matches the expected brevity.",
+      "content": "When multiple entities appear in the context, intersect all explicit constraints (role, location, date, attribute) to isolate the single matching entity. Discard candidates that satisfy only a subset of conditions or belong to a related but distinct category.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses.",
+      "content": "Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's demonstrative or quantifier (e.g., \"these birds\" → plural \"Owls\"); never expand short answers into full sentences or add explanatory clauses.",
+      "support_count": 6,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "Avoid converting declarative clues into Yes/No answers.",
+      "content": "- **Foreign Term & Translation Resolution**: When clues introduce non-English terms, nicknames, or etymological references, resolve them to their standard English equivalent or canonical form as defined in the context. Do not output the foreign term unless it is the established proper noun.\n- **Comparative & Superlative Mapping**: Treat phrases indicating rank, magnitude, or sequence (e.g., \"greater than\", \"most famous\", \"first\", \"last\") as direct filters. Cross-reference these relational cues with explicit historical, statistical, or narrative anchors in the context to isolate the target entity.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "- **Semantic Category Constraint Verification**: Cross-check the clue's explicit categorical keywords (e.g., \"acid\", \"tree\", \"artist\", \"river\") against candidate entities. If a clue specifies a type (e.g., \"caustic acid\"), discard candidates that belong to a different category (e.g., \"caustic soda\"/base) even if they share other attributes. Ensure the selected entity strictly satisfies the semantic type requested by the prompt.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "- **Scope & Modifier Discipline**: When a clue queries a class, type, or generic entity (e.g., \"1 of these birds\", \"this region\"), extract the base noun or minimal identifier. Do not expand to full proper names, branded titles, or collective categories (e.g., output \"falcon\" not \"Maltese Falcon\", \"Sweden\" not \"Nordic countries\") unless the clue explicitly requires the specific designation. Strip geographic, proprietary, or descriptive modifiers that do not change the core factual target.",
+      "support_count": 2,
+      "source_type": "failure"
+    }
+  ]
+}

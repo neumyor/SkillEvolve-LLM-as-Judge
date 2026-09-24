@@ -1,0 +1,29 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Implicit Target Resolution: Successfully mapping demonstratives ('this', 'these') and trailing blanks to the exact subject noun in the context.",
+    "Compound Term Preservation: Keeping standard multi-word entities, titles, and phrases intact without splitting or truncating.",
+    "Contextual Shorthand Expansion: Directly mapping abbreviations or location hints (e.g., 'PHL') to the explicit entity named in the text."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handled implicit subjects, preserved multi-word standard terms, and resolved contextual shorthand without over-specifying or paraphrasing. These patterns address gaps in the current skill regarding cloze-style resolution and term integrity.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Implicit Target & Cloze Resolution**: For questions ending in \"this\", \"these\", or trailing blanks, locate the exact subject noun or phrase in the context that completes the statement. Preserve standard multi-word terms (e.g., titles, compound nouns) exactly as they appear, avoiding unnecessary splitting or truncation."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Contextual Shorthand Expansion**: When questions use abbreviations, location codes, or implicit pointers (e.g., \"PHL\", \"the city\"), map them directly to the explicit entity name provided in the context. Do not infer external knowledge; rely solely on the text's direct naming."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Zero Reasoning in Tags**: Perform all analysis and step-by-step thinking before the `<answer>` tag. The content inside the tags must be the final answer only.",
+        "content": "\n- **Direct Extraction Priority**: Favor verbatim extraction of the matching phrase from the context over paraphrasing or synonym substitution. If the context provides the exact answer string, output it unchanged."
+      }
+    ]
+  },
+  "source_type": "success"
+}

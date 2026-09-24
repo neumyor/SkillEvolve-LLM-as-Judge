@@ -1,0 +1,73 @@
+{
+  "reasoning": "Failure-driven patches were prioritized per guidelines. The 'Systematic exploration' and 'Avoid loops' principles were replaced with failure versions to enforce strict visited-location tracking, category pivoting, and forced jumps to break cycles. Two failure-driven appends ('Appliance & Inventory verification' and 'Pre-placement state check') were added to address post-transformation state loss and premature placement. Success-driven patches were preserved for semantic search guidance, direct navigation, admissible action reliance, inventory management, and common mistake warnings. Overlapping points regarding inventory/state verification were deduplicated by retaining the more explicit failure-driven edits and adjusting the success-driven 'Track progress' rule to focus solely on objective counting.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+      "content": "**Systematic exploration**: Maintain a mental checklist of visited locations. Visit each surface/container exactly once per category. If a specific furniture type (e.g., drawers, shelves) yields no results after 2 full passes, immediately pivot to a different category (e.g., countertops, tables, dressers).",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "7. **Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+      "content": "**Avoid loops**: If you return to the same location 3 times without finding the target or altering your inventory/state, force an immediate jump to a completely unvisited area or furniture type. Do not cycle through known-empty containers.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "**Appliance & Inventory verification**: After any transformation (heating, cooling, cleaning) or appliance interaction, always check your inventory (`inventory`) to confirm what you are holding. Objects often remain inside appliances; retrieve them before navigating elsewhere.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "**Pre-placement state check**: Before attempting to place an object, verify it matches the goal description (e.g., correct temperature, cleanliness, object type). If mismatched or missing, abort placement and resume searching or transforming.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+      "content": "**Appliance interaction & direct navigation**: For cleaning, heating, or cooling, interact directly with the appliance without opening it first. Once the target object is acquired or successfully transformed, navigate directly to the next required location (appliance or receptacle) without intermediate stops or detours.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.",
+      "content": "**Direct delivery**: Navigate to the target receptacle. If the receptacle is a closed storage container, open it first. Then place the object inside/on it. Never attempt to place items into closed containers.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "6. **Track progress**: Maintain an internal count of how many objects still need to be found and placed. Only stop searching when the count reaches zero.",
+      "content": "6. **Track progress**: Maintain an internal count of remaining objectives. Only stop searching when the count reaches zero, ensuring all goal conditions are verified as met.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+      "content": "8. **Rely on admissible actions**: Treat the admissible action list as the ground truth for object names, locations, and current state. Check if `take <object>` is available; if missing, you may already be holding it or your hands are full. Use this signal to adjust your strategy rather than assuming the object is elsewhere.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+      "content": "\n9. **Manage inventory constraints**: You can typically hold only one object at a time. For multi-object tasks, place the first item at the destination before retrieving the second. If a 'take' action returns 'Nothing happens', your inventory is full; place the held item first.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Common Mistakes to Avoid",
+      "content": "- **Ignoring inventory limits**: Attempting to pick up a second object while holding one will fail. Always deliver the first item to the target receptacle before acquiring the second.\n- **Misinterpreting 'Nothing happens'**: This response typically signals a full inventory. Place the held item and reassess rather than repeating the failed action.\n- **Placing in closed containers**: Never attempt to place items into closed storage containers; open them first.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "reasoning": "Successfully merged all 12 edits from both groups. Failure-driven patches were prioritized and preserved, specifically the aggressive modifier-stripping directive, partial name handling, and implicit slot filling rules. Success-driven patches were integrated to reinforce structural parsing, block-level scanning, constraint verification, and exact-string extraction protocols. No direct conflicts existed; overlapping targets were addressed sequentially without redundancy. All edits retain their original support counts and source types. [optimizer-ranked: selected 4/12 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "Always prefer extracting the exact term or phrase from the context over generating or paraphrasing it. Trivia evaluation relies on exact string matches, so retain the context's original phrasing unless it contains unnecessary filler.",
+      "content": "Always extract the exact term or phrase from the context. Trivia evaluation relies on exact string matching; never normalize capitalization, remove leading articles (\"the\", \"a\"), or alter pluralization. Preserve the context's original casing and formatting exactly as presented.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Snippet/Title Density Heuristic: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+      "content": "**Block-Level & Title Priority**: Trivia clues are frequently lifted directly from document titles, headers, or flashcard cards. **Always scan titles and first sentences/snippets first.** When a match is found, assume the answer resides in the same `[DOC]` block or adjacent metadata. Prioritize terms appearing in the title or opening line of that block, ignoring cross-document associations unless explicitly required.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "When a question contains multiple descriptors or roles joined by \"&\" or commas (e.g., \"late California governor & U.S. Chief Justice\"), treat each clause as a required filter. Locate the single entity in the context that satisfies the intersection of all clauses, ignoring tangential figures who may match only one descriptor.",
+      "content": "When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat clusters of proper nouns or facts in the clue as a logical AND filter; prioritize candidates that satisfy the maximum number of these anchors.",
+      "content": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a logical AND filter across all stated constraints; prioritize candidates that satisfy the maximum intersection of these anchors.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [9] addresses a pervasive failure mode in trivia QA where models incorrectly normalize casing, drop articles, or alter plurals, directly impacting exact-match scoring. Edit [5] upgrades a weak retrieval heuristic to a strong, actionable positional rule ('always scan titles/first sentences first'), which systematically improves candidate selection. Edit [11] refines constraint parsing to explicitly prevent the common error of splitting descriptors across multiple entities, ensuring strict convergence. Edit [6] enhances constraint verification by elevating numerical and temporal markers to high-priority anchors, addressing a frequent gap in factual disambiguation. Together, they cover extraction, retrieval, parsing, and verification stages with high complementarity, generality, and actionability.",
+    "selected_indices": [
+      9,
+      5,
+      11,
+      6
+    ]
+  }
+}

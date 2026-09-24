@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Map descriptive clues in the question (e.g., \"This cold remedy...\", \"The sexiest murderesses...\") directly to the target entity in the context.",
+    "Use explicit keywords from the question (names, dates, unique phrases) to rapidly locate the answer span in the provided documents.",
+    "Output only the precise term or short phrase requested, avoiding full sentences or unnecessary explanations."
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories feature Jeopardy-style or trivia questions phrased as descriptive clues. Success relies on quickly mapping these clues to specific entities in the context using keyword spotting, and returning a concise, exact-match answer. Encoding this pattern will improve retrieval-focused reading comprehension tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Map Clues to Entities**: Questions often act as descriptive clues (e.g., \"This cold remedy...\", \"The sexiest murderesses...\"). Directly match these phrases to the target term in the context.\n- **Keyword Spotting**: Scan the context for exact keywords from the question (names, dates, unique proper nouns) to locate the answer span efficiently.\n- **Concise Output**: Provide only the exact term or short phrase requested. Do not include full sentences, reasoning, or filler text inside `<answer>` tags.\n\n## Strategy\n1. Read the question carefully to identify the core clue or missing term.\n2. Search the context for matching keywords or synonymous descriptions.\n3. Extract the precise entity that satisfies the clue.\n4. Format the final answer concisely within `<answer>...</answer> tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Parsing Jeopardy-style clues into a target entity slot and descriptive constraints",
+    "Mapping contextual descriptors (e.g., 'this warlike city-state', 'this peachy state') directly to candidate entities",
+    "Consistently providing a single-sentence justification linking clue constraints to the found entity before the answer tag"
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates a highly consistent strategy for trivia/Jeopardy questions: isolating the missing entity slot, extracting descriptive constraints from the clue, and mapping those constraints to context entities. Reinforcing this structured parsing approach will generalize across trivia tasks and reduce ambiguity.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions may appear as incomplete sentences or factual statements rather than direct interrogatives. Treat these as fill-in-the-blank or identification queries. Never interpret statement-based clues as True/False questions; always identify the missing entity or term. When context contains multiple related terms, select the one that precisely completes the clue or matches the specific trivia fact, avoiding broad generalizations.",
+        "content": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "- **Resolve Clue Descriptors & Appositives**: Trivia clues frequently embed the answer's identity within descriptive phrases or appositives (e.g., 'this South American capital', 'this 1970 film'). Use these phrases as primary search anchors to locate candidate entities in the context, then verify convergence across passages."
+      }
+    ]
+  },
+  "source_type": "success"
+}

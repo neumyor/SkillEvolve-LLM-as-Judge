@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Shared-Attribute Inference for Entity Lists",
+    "Technical & Definitional Gap Filling"
+  ],
+  "patch": {
+    "reasoning": "Multiple successful trajectories handle prompts that either list multiple entities (requiring identification of a shared attribute like location or affiliation) or present technical/definitional statements (formulas, grammar rules, categorical descriptions). These require specific parsing strategies beyond standard declarative clue processing to correctly isolate the implied query target and avoid mirroring the prompt's explicit terms.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Implicit Reference Resolution",
+        "content": "\n- **Shared-Attribute Inference for Entity Lists**: When the prompt presents a comma-separated or conjunctive list of proper nouns (e.g., \"Edward Kennedy, John Kerry\"), treat it as a request for their common attribute, category, or location. Cross-reference the context to find the shared property linking the listed entities, and output that attribute rather than repeating the names."
+      },
+      {
+        "op": "insert_after",
+        "target": "Slot-Filling Strategy",
+        "content": "\n- **Technical & Definitional Gap Filling**: For prompts structured as definitions, mathematical formulas, or grammatical classifications (e.g., \"Its area equals...\", \"The adverb in...\"), isolate the defined subject as the query target. Match the exact terminology used in the context for the defined concept, ensuring technical precision over conversational phrasing."
+      }
+    ]
+  },
+  "source_type": "success"
+}

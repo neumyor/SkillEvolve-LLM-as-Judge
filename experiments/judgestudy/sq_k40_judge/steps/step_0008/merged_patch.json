@@ -1,0 +1,53 @@
+{
+  "reasoning": "Prioritized the high-priority failure-driven edit to enforce strict canonical truncation and formal name resolution immediately after the existing Canonical Phrasing rule. Integrated six success-driven edits to enhance clue processing, slot-filling strategies, declarative fact decomposition, answer formatting, and reasoning priorities. No direct conflicts were found; failure edits take precedence where applicable, while success edits reinforce retrieval heuristics and formatting precision. All edits preserve the original structure and carry their respective support counts and source types.",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Canonical Phrasing & Granularity Alignment**: Prioritize exact canonical string matching over heuristic expansion or contraction. Trivia and Jeopardy answers often require specific articles, honorifics, titles, or full names (e.g., \"Sir Isaac Newton\", \"the Amazon\", \"a eucalyptus tree\") that must be preserved exactly. Do not strip titles, articles, or generic descriptors (like \"River\" or \"Speech\") unless explicitly instructed by the clue. Conversely, do not append explanatory modifiers or default to full names if the canonical answer is a surname or short phrase. Match the exact capitalization, plurality, and phrasing of the expected answer.",
+      "content": "- **Strict Canonical Truncation**: When extracting titles, organizations, or concepts, prefer the recognized short or canonical form over the full descriptive title. Do not append categorical nouns (e.g., \"Party\", \"Show\", \"Structure\", \"Book\") or prepositional phrases unless they are strictly part of the official short name (e.g., output \"Bull Moose\" not \"Bull Moose Party\", \"Studio 60\" not \"Studio 60 on the Sunset Strip\", \"Pyre\" not \"funeral pyre\").\n- **Formal vs. Alias Resolution**: When both a formal/full name and a common alias or foreign variant appear in the context, prioritize the formal English name for historical/trivia queries (e.g., \"Patricia Hearst\" over \"Patty Hearst\", \"Pitti Palace\" over \"Palazzo Pitti\") unless the clue explicitly signals the alias or foreign term.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements, scene descriptions, date/location fragments, and proverbs into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any attribution markers, parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "Focus solely on the semantic gap.",
+      "content": "\n- **Declarative Fact Decomposition**: Parse declarative statements and historical facts by isolating the *missing variable* (subject, object, or location) that completes the logical proposition. Map each independent attribute (date, role, ownership, action) to a filtering constraint before searching.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.",
+      "content": "\n- **List-to-Container Inference**: When a prompt presents a comma-separated list or enumeration of related entities (e.g., characters, locations, works), treat it as a request for the overarching container, series, or category. Infer the parent entity rather than returning the list or individual items.\n- **Pun & Riddle Decoding**: Treat playful language, puns, metaphors, or wordplay in clues as semantic descriptors. Map them to their literal factual referents using context verification before extraction. Strip all figurative phrasing from the final answer.\n- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, and song lyrics as direct queries for their underlying subject or concept. Strip attribution cues (e.g., 'According to...', 'It's the cry of') and resolve the semantic gap to the specific entity or idea being described.\n\n- **Demonstrative-Category Anchoring**: When clues use phrases like 'this film series', 'one of these bombs', or 'the Denver type of this', treat the demonstrative + category noun as a direct pointer to the target class. Isolate the specific instance within that class that satisfies the unique constraints provided.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "Gold Alignment & Morphological Precision",
+      "content": "- **Article Omission Tolerance**: For F1-based evaluation, safely omit leading indefinite or definite articles (e.g., \"a\", \"the\") unless the clue's syntax strictly requires them for grammatical completion. Prioritize the core lexical item and canonical spelling over strict article preservation.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Minimal Reasoning**: Skip verbose derivations for straightforward retrieval tasks. If step-by-step reasoning is performed, place it outside the answer tags and keep it brief.",
+      "content": "- **Zero-Derivation Priority**: For straightforward trivia and declarative clues, skip step-by-step reasoning entirely. Map the clue directly to the target entity and output the answer immediately. Reserve reasoning only for ambiguous or multi-hop queries.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "- **Parenthetical & Rhetorical Clause Filtering**: Ignore parenthetical asides, trailing rhetorical questions, or conversational interjections embedded within the clue. Treat them as flavor text and do not let them interfere with constraint extraction or entity selection.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

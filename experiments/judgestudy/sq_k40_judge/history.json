@@ -1,0 +1,994 @@
+[
+  {
+    "step": 1,
+    "epoch": 1,
+    "step_in_epoch": 0,
+    "timing": {
+      "rollout_s": 22.2,
+      "reflect_s": 36.3,
+      "aggregate_s": 62.2,
+      "select_s": 0.0,
+      "update_s": 0.0,
+      "evaluate_s": 32.7
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 56873,
+        "completion_tokens": 17872
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 5957,
+        "completion_tokens": 2711
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 3276,
+        "completion_tokens": 7128
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 47960,
+        "completion_tokens": 25300
+      }
+    },
+    "rollout_hard": 0.825,
+    "rollout_soft": 0.870833,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1043,
+        "n_envs": 40,
+        "hard": 0.825,
+        "soft": 0.8708333333333333,
+        "n_failure_patches": 1,
+        "n_success_patches": 5
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 1,
+    "n_success_patches": 5,
+    "n_edits_merged": 1,
+    "n_edits_ranked": 1,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      7
+    ],
+    "candidate_hash": "9fcddb7419ffcbaf",
+    "candidate_skill_len": 2111,
+    "edit_apply_summary": {
+      "total": 1,
+      "applied": 1,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate introduces explicit rules for minimal entity extraction and fragment resolution that directly address the observed failures, such as over-specifying names and misinterpreting short clues. These rules generalize the failure patterns without contradicting the successful cases, making it a strictly better, non-fitted skill definition.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 404,
+    "judge_usage": {
+      "prompt_tokens": 5957,
+      "completion_tokens": 2711,
+      "total_tokens": 8668
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 1,
+    "current_origin": "step_0001",
+    "best_origin": "step_0001",
+    "skill_len": 2111,
+    "wall_time_s": 153.4
+  },
+  {
+    "step": 2,
+    "epoch": 1,
+    "step_in_epoch": 1,
+    "timing": {
+      "rollout_s": 125.3,
+      "reflect_s": 40.0,
+      "aggregate_s": 63.0,
+      "select_s": 24.9,
+      "update_s": 0.0,
+      "evaluate_s": 14.6
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 78671,
+        "completion_tokens": 24740
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7026,
+        "completion_tokens": 1696
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 5093,
+        "completion_tokens": 11572
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1726,
+        "completion_tokens": 2516
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 65470,
+        "completion_tokens": 18227
+      }
+    },
+    "rollout_hard": 0.9,
+    "rollout_soft": 0.936667,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1044,
+        "n_envs": 40,
+        "hard": 0.9,
+        "soft": 0.9366666666666668,
+        "n_failure_patches": 1,
+        "n_success_patches": 5
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 1,
+    "n_success_patches": 5,
+    "n_edits_merged": 7,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "c32f74dc391a294f",
+    "candidate_skill_len": 3559,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate introduces targeted rules for proper name granularity, category-versus-instance distinction, and exact grammatical alignment that directly address the three failures in the evidence window. These generalized constraints improve precision without altering behavior on previously successful tasks.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 366,
+    "judge_usage": {
+      "prompt_tokens": 7026,
+      "completion_tokens": 1696,
+      "total_tokens": 8722
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 2,
+    "current_origin": "step_0002",
+    "best_origin": "step_0002",
+    "skill_len": 3559,
+    "wall_time_s": 267.7
+  },
+  {
+    "step": 3,
+    "epoch": 1,
+    "step_in_epoch": 2,
+    "timing": {
+      "rollout_s": 95.7,
+      "reflect_s": 47.2,
+      "aggregate_s": 121.2,
+      "select_s": 29.8,
+      "update_s": 0.0,
+      "evaluate_s": 17.4
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 92701,
+        "completion_tokens": 25627
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7385,
+        "completion_tokens": 1905
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 6235,
+        "completion_tokens": 14419
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 2301,
+        "completion_tokens": 3090
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 76670,
+        "completion_tokens": 37602
+      }
+    },
+    "rollout_hard": 0.825,
+    "rollout_soft": 0.877976,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1045,
+        "n_envs": 40,
+        "hard": 0.825,
+        "soft": 0.8779761904761905,
+        "n_failure_patches": 1,
+        "n_success_patches": 5
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 1,
+    "n_success_patches": 5,
+    "n_edits_merged": 10,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "7b2d776e824da2f0",
+    "candidate_skill_len": 4616,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate explicitly formalizes handling of declarative and fragment prompts, which aligns with numerous successful executions in the evidence window. It also adds a critical zero-leakage formatting guard and multi-constraint synthesis rule, addressing observed verbosity and over-extraction failures without altering previously successful behaviors.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 411,
+    "judge_usage": {
+      "prompt_tokens": 7385,
+      "completion_tokens": 1905,
+      "total_tokens": 9290
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 3,
+    "current_origin": "step_0003",
+    "best_origin": "step_0003",
+    "skill_len": 4616,
+    "wall_time_s": 311.3
+  },
+  {
+    "step": 4,
+    "epoch": 1,
+    "step_in_epoch": 3,
+    "timing": {
+      "rollout_s": 10.5,
+      "reflect_s": 49.3,
+      "aggregate_s": 68.9,
+      "select_s": 22.3,
+      "update_s": 0.0,
+      "evaluate_s": 20.2
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 102873,
+        "completion_tokens": 27919
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7404,
+        "completion_tokens": 2384
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 6354,
+        "completion_tokens": 11470
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 2234,
+        "completion_tokens": 2685
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 84483,
+        "completion_tokens": 20827
+      }
+    },
+    "rollout_hard": 0.9,
+    "rollout_soft": 0.939167,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1046,
+        "n_envs": 40,
+        "hard": 0.9,
+        "soft": 0.9391666666666667,
+        "n_failure_patches": 1,
+        "n_success_patches": 5
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 1,
+    "n_success_patches": 5,
+    "n_edits_merged": 8,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      4
+    ],
+    "candidate_hash": "cc70d006f2c91b98",
+    "candidate_skill_len": 5404,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate skill adds Predicate-Entity Alignment, Morphological Precision, and enhanced constraint cross-referencing rules. These changes directly mitigate the observed failures involving keyword hallucinations, canonical name mismatches, and incorrect entity selection, while preserving all previously successful extraction behaviors.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 395,
+    "judge_usage": {
+      "prompt_tokens": 7404,
+      "completion_tokens": 2384,
+      "total_tokens": 9788
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 4,
+    "current_origin": "step_0004",
+    "best_origin": "step_0004",
+    "skill_len": 5404,
+    "wall_time_s": 171.2
+  },
+  {
+    "step": 5,
+    "epoch": 1,
+    "step_in_epoch": 4,
+    "timing": {
+      "rollout_s": 19.4,
+      "reflect_s": 51.9,
+      "aggregate_s": 95.3,
+      "select_s": 34.1,
+      "update_s": 0.0,
+      "evaluate_s": 18.3
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 111808,
+        "completion_tokens": 28447
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 7965,
+        "completion_tokens": 2334
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 9415,
+        "completion_tokens": 14090
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 2699,
+        "completion_tokens": 4018
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 91232,
+        "completion_tokens": 28041
+      }
+    },
+    "rollout_hard": 0.75,
+    "rollout_soft": 0.86,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1047,
+        "n_envs": 40,
+        "hard": 0.75,
+        "soft": 0.86,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 9,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      10,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "cfecbbc1621f633b",
+    "candidate_skill_len": 6285,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate skill replaces three existing rules with refined variants that directly address documented failure modes: enforcing strict granularity for compound and partial names, resolving implicit queries when clues explicitly name entities, and disambiguating temporal labels like \"current.\" These changes generalize specific lessons into robust extraction guidelines without altering behavior for previously successful tasks. The modifications strictly improve precision on known error types while maintaining safe formatting constraints.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 602,
+    "judge_usage": {
+      "prompt_tokens": 7965,
+      "completion_tokens": 2334,
+      "total_tokens": 10299
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 5,
+    "current_origin": "step_0005",
+    "best_origin": "step_0005",
+    "skill_len": 6285,
+    "wall_time_s": 218.9
+  },
+  {
+    "step": 6,
+    "epoch": 1,
+    "step_in_epoch": 5,
+    "timing": {
+      "rollout_s": 20.3,
+      "reflect_s": 44.0,
+      "aggregate_s": 146.9,
+      "select_s": 32.9,
+      "update_s": 0.0,
+      "evaluate_s": 21.6
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 121787,
+        "completion_tokens": 26686
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 8201,
+        "completion_tokens": 2658
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 10725,
+        "completion_tokens": 23046
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 3775,
+        "completion_tokens": 4015
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 97718,
+        "completion_tokens": 33214
+      }
+    },
+    "rollout_hard": 0.75,
+    "rollout_soft": 0.853333,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1048,
+        "n_envs": 40,
+        "hard": 0.75,
+        "soft": 0.8533333333333333,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 15,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "bdd13e84baa2f04d",
+    "candidate_skill_len": 6803,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate replaces noise-filtering heuristics with active descriptive clause filtering, enforces exact canonical string matching to preserve required titles and articles, adds semantic category verification to prevent type mismatches, and mandates multi-snippet constraint intersection. These modifications directly correct documented failures such as answering 'Caustic soda' for an acid clue or omitting 'Sir' from Newton, while maintaining safe, generalized behavior for previously successful tasks.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 563,
+    "judge_usage": {
+      "prompt_tokens": 8201,
+      "completion_tokens": 2658,
+      "total_tokens": 10859
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 6,
+    "current_origin": "step_0006",
+    "best_origin": "step_0006",
+    "skill_len": 6803,
+    "wall_time_s": 265.7
+  },
+  {
+    "step": 7,
+    "epoch": 1,
+    "step_in_epoch": 6,
+    "timing": {
+      "rollout_s": 127.4,
+      "reflect_s": 49.8,
+      "aggregate_s": 122.4,
+      "select_s": 35.5,
+      "update_s": 0.0,
+      "evaluate_s": 25.8
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 129092,
+        "completion_tokens": 31423
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 8444,
+        "completion_tokens": 3240
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 10738,
+        "completion_tokens": 18808
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 3271,
+        "completion_tokens": 4297
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 102238,
+        "completion_tokens": 39596
+      }
+    },
+    "rollout_hard": 0.725,
+    "rollout_soft": 0.805833,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1049,
+        "n_envs": 40,
+        "hard": 0.725,
+        "soft": 0.8058333333333334,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 15,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "42fb15f2a257352b",
+    "candidate_skill_len": 7616,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate replaces rigid morphological alignment with a priority on canonical lexical forms, directly addressing multiple expansion failures (e.g., 'Sirius Satellite Radio' vs 'Sirius'). It also strengthens declarative clue parsing by explicitly instructing mental conversion to query slots, fixing descriptive answer failures. These changes are evidence-backed, generalizable, and improve precision without risking previously successful tasks.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 505,
+    "judge_usage": {
+      "prompt_tokens": 8444,
+      "completion_tokens": 3240,
+      "total_tokens": 11684
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 7,
+    "current_origin": "step_0007",
+    "best_origin": "step_0007",
+    "skill_len": 7616,
+    "wall_time_s": 360.8
+  },
+  {
+    "step": 8,
+    "epoch": 1,
+    "step_in_epoch": 7,
+    "timing": {
+      "rollout_s": 70.6,
+      "reflect_s": 49.9,
+      "aggregate_s": 59.3,
+      "select_s": 23.1,
+      "update_s": 0.0,
+      "evaluate_s": 11.0
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 5,
+        "prompt_tokens": 135141,
+        "completion_tokens": 23519
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 9471,
+        "completion_tokens": 1981
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 7094,
+        "completion_tokens": 10151
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 3028,
+        "completion_tokens": 2856
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 108776,
+        "completion_tokens": 36929
+      }
+    },
+    "rollout_hard": 0.8,
+    "rollout_soft": 0.898452,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1050,
+        "n_envs": 40,
+        "hard": 0.8,
+        "soft": 0.8984523809523809,
+        "n_failure_patches": 1,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 5,
+    "n_failure_patches": 1,
+    "n_success_patches": 4,
+    "n_edits_merged": 7,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "872e78eb994ca96d",
+    "candidate_skill_len": 10187,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate introduces Strict Canonical Truncation and Formal vs. Alias Resolution rules that directly resolve three documented failures (Bull Moose Party, funeral pyre, Palazzo Pitti) using generalized entity-normalization heuristics. Article Omission Tolerance is explicitly aligned with F1 scoring patterns from successful tasks, ensuring no regression while improving precision on truncated/aliased entities.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 471,
+    "judge_usage": {
+      "prompt_tokens": 9471,
+      "completion_tokens": 1981,
+      "total_tokens": 11452
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 8,
+    "current_origin": "step_0008",
+    "best_origin": "step_0008",
+    "skill_len": 10187,
+    "wall_time_s": 213.9
+  },
+  {
+    "step": 9,
+    "epoch": 1,
+    "step_in_epoch": 8,
+    "timing": {
+      "rollout_s": 23.4,
+      "reflect_s": 40.0,
+      "aggregate_s": 105.8,
+      "select_s": 38.2,
+      "update_s": 0.0,
+      "evaluate_s": 22.7
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 167081,
+        "completion_tokens": 25699
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 10367,
+        "completion_tokens": 3126
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 12473,
+        "completion_tokens": 17097
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 4119,
+        "completion_tokens": 5151
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 131634,
+        "completion_tokens": 26833
+      }
+    },
+    "rollout_hard": 0.75,
+    "rollout_soft": 0.848333,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1051,
+        "n_envs": 40,
+        "hard": 0.75,
+        "soft": 0.8483333333333333,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 10,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      10,
+      8
+    ],
+    "candidate_hash": "178af524af18d81c",
+    "candidate_skill_len": 12369,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate introduces generalized directives to strip redundant category nouns, middle names, and meta-textual filler, which directly resolve the systematic over-verbosity and descriptive augmentation failures seen in the evidence (e.g., 'Hallmark Cards', 'Denver Mint', 'Charles Julius Guiteau'). It also adds a direct extraction priority rule to curb over-derivation, addressing the 'Transit of Venus' mismatch, making it strictly better without risking regression on successful tasks.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 547,
+    "judge_usage": {
+      "prompt_tokens": 10367,
+      "completion_tokens": 3126,
+      "total_tokens": 13493
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 9,
+    "current_origin": "step_0009",
+    "best_origin": "step_0009",
+    "skill_len": 12369,
+    "wall_time_s": 230.2
+  },
+  {
+    "step": 10,
+    "epoch": 1,
+    "step_in_epoch": 9,
+    "timing": {
+      "rollout_s": 42.3,
+      "reflect_s": 35.0,
+      "aggregate_s": 97.7,
+      "select_s": 23.6,
+      "update_s": 0.0,
+      "evaluate_s": 18.8
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 5,
+        "prompt_tokens": 183999,
+        "completion_tokens": 25824
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 11126,
+        "completion_tokens": 2433
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 10467,
+        "completion_tokens": 16273
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 4836,
+        "completion_tokens": 3121
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 149088,
+        "completion_tokens": 24493
+      }
+    },
+    "rollout_hard": 0.8,
+    "rollout_soft": 0.85,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1052,
+        "n_envs": 40,
+        "hard": 0.8,
+        "soft": 0.85,
+        "n_failure_patches": 1,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 5,
+    "n_failure_patches": 1,
+    "n_success_patches": 4,
+    "n_edits_merged": 14,
+    "n_edits_ranked": 4,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "535021d7db5c07e9",
+    "candidate_skill_len": 13536,
+    "edit_apply_summary": {
+      "total": 4,
+      "applied": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "high",
+    "judge_reason": "The candidate correctly addresses the 'Capital cities' category-leakage failure by adding explicit Category Exclusion to the mirroring rule, and introduces targeted safeguards for prefix preservation and attribute-vs-container resolution that generalize from execution evidence without risking regressions on successful tasks. These changes tighten entity isolation while maintaining the skill's core retrieval logic.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 474,
+    "judge_usage": {
+      "prompt_tokens": 11126,
+      "completion_tokens": 2433,
+      "total_tokens": 13559
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "candidate_gate_score": 0.72,
+    "action": "accept_new_best",
+    "current_score": 0.72,
+    "best_score": 0.72,
+    "best_step": 10,
+    "current_origin": "step_0010",
+    "best_origin": "step_0010",
+    "skill_len": 13536,
+    "wall_time_s": 217.5
+  }
+]

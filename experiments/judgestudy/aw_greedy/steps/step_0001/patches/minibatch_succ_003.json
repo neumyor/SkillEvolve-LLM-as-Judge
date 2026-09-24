@@ -1,0 +1,22 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Close appliances after use and verify inventory post-transformation",
+    "Interpret 'in [furniture]' as placing inside open compartments/drawers",
+    "Sequentially complete take-deliver cycles for multi-object tasks"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate closing appliances (microwave/fridge) after use, verifying inventory after transformations to ensure possession, interpreting 'in' prepositions as placing inside compartments, and sequentially handling multiple objects. Encoding these prevents state corruption, placement failures, and inventory mismatches.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Appliance state management**: After using an appliance (microwave, fridge, sink), always close it (`close <appliance>`) to restore the environment state.\n- **Post-transformation verification**: After heating/cleaning, call `inventory` to confirm you are still holding the transformed item before navigating to the destination.\n- **\"In\" placement heuristic**: When the goal specifies placing an object \"in\" a piece of furniture (e.g., desk, cabinet), prioritize placing it inside its open compartments (drawers, shelves) rather than on top surfaces.\n- **Sequential multi-object delivery**: For tasks requiring multiple items, complete the full `take -> navigate -> place` cycle for each item individually. Do not attempt to hold multiple objects simultaneously."
+      },
+      {
+        "op": "append",
+        "content": "- **Leaving appliances open**: Failing to close microwaves, fridges, or sinks after use can block future interactions or cause state confusion. Always close them immediately after the transformation step.\n- **Misinterpreting prepositions**: Placing an item \"on\" a desk when the goal says \"in\" (or vice versa) will fail. Match the preposition strictly, favoring internal compartments for \"in\" goals."
+      }
+    ]
+  },
+  "source_type": "success"
+}

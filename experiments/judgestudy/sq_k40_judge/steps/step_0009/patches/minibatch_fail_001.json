@@ -1,0 +1,20 @@
+{
+  "batch_size": 2,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Agents extract non-canonical name variants (e.g., including middle initials) or choose less standard synonyms over the expected concise/trivia-formatted answer."
+    }
+  ],
+  "patch": {
+    "reasoning": "Both failures stem from the agent selecting exact contextual strings (middle initials, first-mentioned synonyms) instead of the concise, canonical trivia form. A new rule will guide the agent to strip unnecessary initials/letters and prefer standard canonical variants when multiple options exist.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Name & Variant Canonicalization**: When extracting names or terms with multiple textual variants (e.g., full name with middle initial vs. short name, or alternative spellings), prioritize the concise, widely recognized canonical form. Strip middle initials or letters unless strictly required by the clue. For synonymous terms, select the variant that best aligns with standard trivia usage or the clue's specific descriptors."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

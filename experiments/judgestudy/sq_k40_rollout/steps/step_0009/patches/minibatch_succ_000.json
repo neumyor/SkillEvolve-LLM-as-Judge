@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Definition & Glossary Mapping: Clues often function as dictionary definitions, glossary entries, or acronym expansions. Agents successfully scan for explicit equivalence structures and map clues to canonical headwords.",
+    "Declarative Constraint Parsing: Complete or near-complete factual sentences are treated as lists of independent constraints rather than narrative stories, allowing precise entity identification.",
+    "Reference Snippet Prioritization: When context contains dictionary, glossary, or flashcard-style blocks, agents prioritize the exact headword or defined term over surrounding metadata, examples, or dates."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle definition-style clues, acronym expansions, and complete declarative trivia statements by treating them as structured constraint lists and mapping them to exact canonical terms found in reference snippets. Encoding these patterns will improve robustness for glossary-based queries and declarative Jeopardy clues.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Compound Descriptor Convergence**: Clues often use comma-separated or hyphenated noun phrases (e.g., 'Georgia guy, flag-fashioning pop painter') to point to an answer. Parse each segment as an independent constraint. The correct entity must satisfy all segments simultaneously. Discard literal interpretations of individual segments if they conflict, focusing on the convergent entity.",
+        "content": "- **Compound Descriptor & Declarative Convergence**: Clues often use comma-separated phrases, hyphenated noun strings, or complete declarative sentences to point to an answer. Parse each segment or clause as an independent constraint. The correct entity must satisfy all segments simultaneously. Treat full sentences as constraint lists rather than narrative stories, discarding filler words and focusing on the convergent entity."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+        "content": "\n- **Definition & Glossary Mapping**: Clues frequently function as dictionary definitions, glossary entries, or acronym expansions. Scan for explicit equivalence structures ('X is Y', 'Y stands for X') or definition headers. Map the clue's descriptive phrase or abbreviation directly to the canonical headword or full term defined in the text."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Reference Snippet Prioritization**: When context contains dictionary, glossary, or flashcard-style snippets, prioritize the headword or primary defined term over surrounding examples, dates, or metadata. Extract the exact term that serves as the definition's anchor."
+      }
+    ]
+  },
+  "source_type": "success"
+}

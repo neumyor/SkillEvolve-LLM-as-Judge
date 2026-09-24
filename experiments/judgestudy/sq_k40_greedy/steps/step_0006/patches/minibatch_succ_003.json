@@ -1,0 +1,18 @@
+{
+  "batch_size": 3,
+  "success_patterns": [
+    "Treating non-interrogative noun phrases and declarative statements as direct definitions or role descriptors requiring exact canonical mapping.",
+    "Resolving enumerated examples or subtypes in fragments to their broader parent category or collective group."
+  ],
+  "patch": {
+    "reasoning": "All three successful trajectories feature non-interrogative prompts (statements, noun phrases, or partial quotes) that function as direct trivia clues. The agents successfully bypass conversational framing to perform exact lexical mapping. Two key behaviors emerge: treating standalone noun phrases as direct definitions/roles, and resolving lists of subtypes/examples to their parent category. These are not explicitly covered in the current 'Handling Statement or Fragment Questions' section and should be encoded to prevent over-reasoning or misdirection.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Resolving Implicit References",
+        "content": "- **Noun-Phrase & Declarative Fragments**: Standalone noun phrases or declarative statements lacking interrogative markers should be treated as direct definitions or role descriptors. Map the phrase immediately to the exact canonical term in the context that fulfills that role or category.\n- **Supercategory & Group Resolution**: When a fragment enumerates specific examples, subtypes, or variants (e.g., \"X and Y varieties\"), resolve the implicit pointer to the broader parent category or collective group rather than listing the individual items."
+      }
+    ]
+  },
+  "source_type": "success"
+}

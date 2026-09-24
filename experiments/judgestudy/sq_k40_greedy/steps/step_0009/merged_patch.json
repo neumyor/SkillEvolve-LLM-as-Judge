@@ -1,0 +1,74 @@
+{
+  "reasoning": "Applied all failure-driven patches as high priority. Overrode the conflicting success patch on 'Strip Generic Suffixes & Modifiers' with the failure-driven 'Strict Minimal Entity Extraction' rule per priority guidelines. Preserved all other success-driven patches targeting distinct sections or adding new heuristics. Maintained original support counts and source types. No protected sections were encountered.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. Prioritize the shortest canonical identifier that satisfies all constraints (e.g., \"Roanoke\" not \"Roanoke Island\", \"Sirius\" not \"Sirius Satellite Radio\", \"George Bush\" not \"George H. W. Bush\").",
+      "content": "- **Strict Minimal Entity Extraction**: Aggressively strip non-essential modifiers, corporate suffixes (e.g., \"Cards\", \"Inc.\"), middle initials (e.g., \"B.\"), titles, and roles (e.g., \"King of\", \"President\"). For events or phenomena, extract only the core term (e.g., \"transit\" not \"Transit of Venus\"). Always prioritize the shortest, most direct identifier that satisfies all constraints.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+      "content": "\n\n- **Target Dimension Verification**: Before finalizing, explicitly verify the exact dimension requested (e.g., location, person, original phrase, specific term). Never substitute related concepts such as relationships (\"Sisters\"), phenomena (\"Spoonerism\"), or categories. If the clue describes a place or entity via attributes, output the place/entity itself, not the descriptor or relational link.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Direct Keyword Matching & Scanning**:",
+      "content": "\n- **Demonstrative Placeholder Decoupling**: Questions routinely use phrases like \"this [category]\" or \"these [category]\" as syntactic blanks. Treat the category word as a grammatical placeholder to be ignored during keyword extraction. Focus scanning entirely on locating the specific entity name that fills the blank.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Alias & Cross-Lingual Resolution**:",
+      "content": "\n- **Indirect & Pop-Culture Pointer Resolution**: Trivia frequently uses actors, television shows, or cultural references as indirect pointers (e.g., \"looks like Kevin Sorbo\" → Hercules). Map these proxies to their canonical referents using domain knowledge, then verify against the context. Output the canonical entity name exactly as it appears in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Handling Statement or Fragment Questions",
+      "content": "\n- **Declarative Pointer Resolution**: Non-interrogative prompts containing demonstratives (\"this [category]\", \"her\", \"its\") or possessive/relational phrases (\"the alma mater of...\", \"the favorite rifle of...\") are direct entity blanks. Do not parse them as relational queries requiring multi-step logic; instead, extract the exact noun phrase that grammatically completes the statement.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Snippet/Title Exact Match Priority**: Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning document titles and snippets for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis.",
+      "content": "- **Snippet/Title Exact Match Priority**: Treat document titles (`[TLE]`) and snippets (`[PAR]`) as the primary search surface. Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning these metadata fields for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis. **Crucially, always strip document title prefixes/suffixes and metadata artifacts (e.g., \"- Wikipedia\", \"Official Flag of\") to isolate the core entity requested by the clue.**",
+      "support_count": 9,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Multi-Clause Description Mapping**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously.",
+      "content": "- **Multi-Clause Description Mapping**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Apply a strict logical AND across all stated constraints (temporal, categorical, locational, and attributive); discard any candidate that fails even one anchor. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Abbreviation & Acronym Resolution**: Trivia frequently asks what an acronym or abbreviation stands for, or uses location codes/state abbreviations (e.g., \"PHL\", \"NYC\"). Treat abbreviated forms as direct pointers to their full canonical names. Scan for definition markers like \"short for,\" \"stands for,\" or \"means\" in the context. If the context uses the abbreviation, output it; if it uses the full form, prefer the full form unless the clue strictly demands the abbreviation.",
+      "content": "- **Abbreviation & Acronym Resolution**: Trivia frequently asks what an acronym or abbreviation stands for, or uses location codes/state abbreviations (e.g., \"PHL\", \"NYC\"). Treat abbreviated forms in the *question* as direct pointers to their full canonical names found in the context (e.g., PIP → Picture in Picture). If the context uses the abbreviation, output it; if it uses the full form, prefer the full form unless the clue explicitly requests the short form.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Quiz, Flashcard & Definition Recognition**: Many prompts originate from trivia databases, flashcards, or dictionary entries. Treat these as direct lookup requests. When the question reads as a definition, description, or flashcard prompt, the target is invariably the *term* being defined. If the full question or a significant clause matches a document title or snippet verbatim, treat that document as the definitive source and extract the answer directly without over-analyzing.",
+      "content": "- **Quiz, Flashcard & Definition Recognition**: Many prompts originate from trivia databases, flashcards, or dictionary entries. Treat these as direct lookup requests. When the question reads as a definition, description, or flashcard prompt, the target is invariably the *term* being defined. If the full question or a significant clause matches a document title or snippet verbatim, treat that document as the definitive source and extract the answer directly. Avoid applying complex relational reasoning or multi-hop logic when a direct lexical match exists in the metadata.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "\n## Rapid Trivia Resolution Heuristics\n- **Direct Lookup Priority**: When a question closely mirrors a document title, snippet, or definition sentence, treat it as a direct lookup request. Extract the answer verbatim from the matching passage without applying complex semantic transformations or over-analyzing.\n- **Fragment-to-Entity Mapping**: Treat statement fragments, reverse clues, and demonstrative placeholders as direct pointers to a single proper noun. Do not output descriptive phrases, categories, or partial clauses; resolve the pointer to the exact canonical entity name.\n- **Search Priority Protocol**: Execute a strict three-step search: (1) Scan `[TLE]` and `[PAR]` metadata for exact/near-exact matches; (2) Apply logical AND filters across all stated constraints to narrow candidates; (3) Extract the exact term only if it satisfies every constraint simultaneously. Do not read deeply until shallow scans fail.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

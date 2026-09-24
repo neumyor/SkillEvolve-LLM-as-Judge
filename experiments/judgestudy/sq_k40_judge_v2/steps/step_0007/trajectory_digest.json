@@ -1,0 +1,47 @@
+{
+  "step": 7,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 9,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents select a semantically related but incorrect entity (e.g., answering the 'site' instead of the 'building', or 'pictures' instead of the 'artist').",
+      "count": 9,
+      "task_ids": [
+        "82823aae4a844d19ac0a56464dfe28c0",
+        "3cf34a52916f4ff9a975008fe9d771d2",
+        "3c93b5a9314a453c98d709447a0d9272",
+        "7e9cc91827e049e89624d8004cb786dd",
+        "ae7c2c3d320f45868752d8044309d64a",
+        "3408f804dc7e4a6bb51891e3da461a54",
+        "af7efd5e34a443a79b86b8e86373c577",
+        "1f6f687c79a642328a742e61154c9d90",
+        "0b550017552f4b8ea569fba16a6516ed"
+      ]
+    }
+  ],
+  "score_before": 0.73,
+  "score_after": 0.73,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "- **Exact Term & Grammatical Fidelity**: Extract the exact term matching the question's grammatical slot. Strictly preserve singular/plural forms, parts of speech, and capitalization. Drop generic geographic or descriptive suffixes (e.g., 'Island', 'River') unless they are integral to the official name or explicitly required. Match the expected entity's precise morphological form.",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked."
+    },
+    {
+      "op": "replace",
+      "content": "- **Jeopardy, Cloze & Definition Mapping**: Treat fragmentary, Jeopardy-style, declarative clues, definitions, slogans, and trailing blanks as direct fill-in-the-blank requests. Isolate the core subject entity being described, strictly ignoring tangential attributes, genres, or secondary examples. Map the clue's descriptive phrasing directly to the exact terminology in the `[DOC]` passages.",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Slot & Role Alignment**: Identify the exact semantic role requested by the question (e.g., person, location, concept). Do not default to adjacent nouns or descriptive phrases mentioned in the clue. If the question asks for 'he' or 'this site', extract the subject/entity itself, not associated objects or attributes.",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer."
+    },
+    {
+      "op": "replace",
+      "content": "3. Provide a concise verification trace that explicitly quotes the exact sentence or phrase from the context confirming the answer. Directly link the question's core descriptor to this textual evidence before extracting the final term.",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 7,
+      "description": "Predicted answers are overly descriptive, use full names/modifiers, or misinterpret clue types, failing to match concise gold answers."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 7,
+      "description": "Skill lacks explicit guidelines for handling trivia/Jeopardy-style fragments and enforcing minimal entity extraction."
+    }
+  ],
+  "patch": {
+    "reasoning": "All 7 failures involve trivia or Jeopardy-style clues where the gold answer is a highly specific, minimal entity (single word, surname, or letter). Agents consistently over-generate descriptive phrases, use full names, add unnecessary modifiers, or misclassify declarative clues as True/False questions. The edits enforce strict minimal-entity extraction, forbid redundant descriptors/full names, and provide explicit handling rules for incomplete trivia clues.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "## Answer Format\nThink step by step, then provide your final answer inside <answer>...</answer> tags.\nKeep your answer concise — typically a few words or a short phrase.\nDo not repeat the question. Do not include unnecessary explanation in the answer tags.\n\nExample:\n<answer>Abraham Lincoln</answer>",
+        "content": "## Answer Format\nThink step by step, then provide your final answer inside <answer>...</answer> tags.\nPrioritize exact, minimal entity extraction. For trivia and Jeopardy-style clues, the answer is often a single word, surname, or specific term. Avoid adding descriptors (e.g., output \"C\" not \"Vitamin C\", \"Genet\" not \"Jean Genet\"), do not convert statements into Yes/No answers, and never output descriptive phrases when a specific entity is requested.\n\nExample:\n<answer>Abraham Lincoln</answer>"
+      },
+      {
+        "op": "append",
+        "content": "\n## Trivia & Clue Extraction Rules\n- Many questions are incomplete clues or trivia statements. Identify the missing subject, object, or keyword rather than summarizing the context.\n- When multiple entities appear in the context, select the one that directly completes the clue or matches the expected brevity.\n- Strip modifiers and use only surnames or key terms if the gold answer is minimal.\n- Do not guess based on metaphorical phrasing without verifying factual alignment."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

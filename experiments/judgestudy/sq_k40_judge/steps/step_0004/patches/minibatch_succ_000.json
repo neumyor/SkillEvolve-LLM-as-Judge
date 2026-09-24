@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Strict semantic category validation to prevent categorical mismatches",
+    "Morphological precision in preserving singular/plural forms and exact granularity"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate precise extraction of the exact entity type requested by the clue's anchor, avoiding semantically related but categorically wrong candidates. They also maintain strict morphological alignment (singular/plural) and granularity with gold answers. These patterns address recurring failures in categorical misalignment and pluralization.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+        "content": "\n- **Strict Category Validation**: When the clue anchors to a specific semantic type (e.g., 'this city', 'this coin', 'this author'), verify that the extracted entity strictly belongs to that category. Discard candidates that are merely related (e.g., returning a university when a city is asked for, or a region when a specific town is requested)."
+      },
+      {
+        "op": "replace",
+        "target": "- **Gold Alignment**: Match the granularity and phrasing of the expected answer exactly. If the gold answer is a single word or short phrase, do not expand it into a full sentence or add explanatory clauses inside the answer tags.",
+        "content": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses."
+      }
+    ]
+  },
+  "source_type": "success"
+}

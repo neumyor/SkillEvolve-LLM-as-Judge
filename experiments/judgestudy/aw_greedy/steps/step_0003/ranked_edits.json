@@ -1,0 +1,42 @@
+{
+  "reasoning": "Prioritized failure-driven edits to resolve contradictory state-verification instructions and enforce critical operational protocols (termination, admissible jumps, no intermediate storage). Deduplicated overlapping success edits targeting the same principles, strictly retaining the failure versions where direct conflicts existed. Preserved all unique success insights covering multi-instance handling, proactive inventory diagnostics, appliance retention logic, sequential multi-object workflows, and admissible action inference. All edits maintain their original support counts and source types. No protected sections were targeted. [optimizer-ranked: selected 4/13 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "6. **Verify Transformation State**: After using an appliance, explicitly check the object's state (e.g., via `examine`). If the state does not match the goal, return to the appliance to re-process immediately. Do not assume the transformation succeeded on the first try.",
+      "content": "6. **Trust Transformation & Proceed**: After a successful `heat`, `cool`, or `clean` action, trust the outcome immediately. Do not use `examine` or `inventory` to re-verify the object's state, as this often triggers infinite loops. Proceed directly to the next sub-goal (usually delivery) without delay.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Multi-Object Local Scan**: For tasks requiring multiple items (e.g., `pick_two_obj_and_place`), after successfully placing the first item, immediately scan your current location for the remaining target(s). Only leave the area if the second item is not visible or reachable here.",
+      "content": "- **Sequential Multi-Object Workflow**: For tasks requiring multiple items, always transport the first acquired item directly to the destination receptacle and place it before searching for the second. Never attempt to hold multiple objects or search for the second item while carrying the first, as this blocks inventory and wastes steps. After placing the first item, scan your immediate surroundings for the remainder before departing.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Appliance Retrieval Protocol**: When heating, cooling, or cleaning, always follow the sequence: interact with appliance -> close/appliance cycle -> open appliance -> **take/retrieve item** -> proceed to destination. Do not assume the item stays in your inventory automatically after appliance interactions.",
+      "content": "- **Appliance Interaction & Retention**: For heating, cooling, or cleaning, perform the transformation **while holding the object** at the open appliance. After the action completes, close the appliance. **Do not reopen** to retrieve the item; successful transformations typically leave the object in your inventory. Proceed directly to delivery.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **State Verification Trust**: After a successful `heat`, `cool`, or `clean` action, proceed directly to the next step. Do not repeatedly `examine` the object to verify its state, as observations may lag or report generic names. Trust the action success and advance.",
+      "content": "\n- **Success Termination Protocol**: Once the final placement action succeeds (observation confirms movement to target), the task is complete. Cease all further actions. Do not perform `look`, `inventory`, or `examine` after successful completion unless the goal explicitly requires tracking multiple distinct items.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit 0 resolves a critical contradiction between General Principle 6 and Advanced Handling rules that causes infinite verification loops, a widespread failure pattern. Edit 11 fundamentally corrects the workflow for multi-object tasks, preventing inventory blockage and inefficient searching by enforcing strict sequential delivery. Edit 10 streamlines appliance interactions by eliminating complex open/close/retrieve cycles that frequently lead to item loss or deadlocks. Edit 2 establishes a clear termination protocol, preventing wasted steps and completion errors. These four edits are highly complementary, covering state verification, multi-object handling, appliance management, and task completion, while replacing contradictory or inefficient guidance with concrete, actionable protocols.",
+    "selected_indices": [
+      0,
+      11,
+      10,
+      2
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Perform heating/cleaning transformations while holding the object at the open appliance, rather than placing it inside first.",
+    "Systematically backtrack through unvisited containers/surfaces when the target is not found in the initial logical location.",
+    "Rely on admissible actions to disambiguate navigation targets and confirm object states during search."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate that heating and cleaning operations are most reliable when executed while holding the object at the open appliance, avoiding state-lock issues that occur when items are placed inside closed appliances. Additionally, when targets are not found immediately, agents succeed by systematically backtracking through other admissible locations rather than prematurely terminating the search. These patterns address common failure modes in appliance interaction and early-stage search.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Manage appliance states: Always open closed appliances (microwave, fridge, sink) before attempting to heat, cool, clean, or place items. Ensure doors are open for placement interactions.",
+        "content": "Manage appliance states: Always open closed appliances before interacting. For heating or cleaning, prioritize performing the transformation while **holding the object** at the open appliance, as placing items inside closed appliances can sometimes block subsequent interaction commands. Only place items inside if explicitly required by the task."
+      },
+      {
+        "op": "append",
+        "content": "\n9. **Systematic Backtracking**: If the target is not found in the first logical location, do not assume it is absent. Cycle through other unvisited containers and surfaces systematically. Revisit room zones if necessary, but always prioritize unexplored locations first to avoid redundant checks."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Search & Navigation Protocol",
+        "content": "\n### Adaptive Search Pivoting\n- **Follow Admissible Paths**: When multiple locations are available, prioritize navigating to those that offer relevant admissible actions (e.g., `open drawer`, `take object`).\n- **Observation-Driven Decisions**: Use immediate observations to pivot search strategies. If a surface reveals unexpected objects or hints, evaluate them quickly before moving on.\n- **Inventory Checks**: If progress stalls, use `inventory` to verify held items and reassess whether the current search path aligns with remaining sub-goals."
+      }
+    ]
+  },
+  "source_type": "success"
+}

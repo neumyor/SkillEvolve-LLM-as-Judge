@@ -1,0 +1,25 @@
+{
+  "batch_size": 5,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Agents over-specify answers by appending non-essential suffixes or descriptors (e.g., 'Jr.', 'Desert') to core entity names."
+    },
+    {
+      "failure_type": "other",
+      "count": 2,
+      "description": "Agents select prominent but tangential entities when questions contain tight constraints or implicit references (e.g., 'seen here', specific facilities)."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch consistently fails on two fronts: (1) over-specifying proper nouns by appending common suffixes or descriptors when a shorter core name suffices, and (2) selecting highly visible but tangential entities when the question contains restrictive clues or implicit references. The proposed edits enforce minimal entity extraction and constraint-driven filtering to align predictions with gold answers.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Proper Noun Pruning**: Strip non-essential descriptive suffixes or generic descriptors (e.g., 'Jr.', 'Sr.', 'Desert', 'River', 'Base') unless they are strictly part of the official title or explicitly requested. Default to the shortest, most direct entity name found in the context (e.g., 'Sahara' over 'Sahara Desert', 'Shepard' over 'Alan B. Shepard, Jr.') to avoid over-specification.\n- **Constraint-Driven Selection**: When multiple entities partially match a query, filter strictly by the most restrictive clue (e.g., exact dates, unique actions, or implicit references like 'seen here'). Discard prominent but loosely matching items. Prioritize the entity that uniquely satisfies all constraints simultaneously."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

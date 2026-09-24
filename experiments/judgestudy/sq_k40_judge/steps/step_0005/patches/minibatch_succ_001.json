@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating declarative, fragmented, and symbol-heavy prompts as direct fill-in-the-blank queries.",
+    "Resolving demonstratives and pronouns to exact contextual anchors without over-parsing.",
+    "Intersecting parenthetical, symbolic, and conjoined constraints to isolate single entities.",
+    "Enforcing zero-conversational-leakage in final outputs, stripping all reasoning fragments before closing tags."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handle declarative fragments, demonstratives, and symbolic/parenthetical constraints as direct entity requests. They also strictly enforce minimal output formatting. These patterns are not fully explicit in the current skill and should be encoded to prevent regression on similar prompt types.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Declarative Clue Parsing**: Treat declarative statements, descriptive fragments, and incomplete prompts identically to interrogative questions. Identify the grammatical slot or subject being described and treat it as a direct request for the missing entity.",
+        "content": "\n- **Grammatical Incompleteness Tolerance**: Ignore missing question marks, trailing ellipses, or syntactic gaps in the prompt. Focus solely on the semantic gap and treat the fragment as a direct fill-in-the-blank request."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Constraint Synthesis**: When a clue provides multiple independent attributes (e.g., date, role, location, party, quantity), intersect these constraints to isolate the single matching entity. Discard candidates that satisfy only a subset of conditions.",
+        "content": "\n- **Parenthetical & Symbolic Constraint Parsing**: Treat parentheses, colons, ampersands (&), semicolons (;), and other symbols as additional independent constraints. Intersect these with the main clue to narrow down candidates and isolate the exact target entity."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.",
+        "content": "\n- **Zero-Conversational-Leakage**: Strictly forbid any conversational framing, reasoning fragments, or explanatory text inside `<answer>` tags. Strip all leading labels, trailing punctuation, and prompt artifacts before closing the tag, regardless of how verbose the preceding reasoning may be."
+      }
+    ]
+  },
+  "source_type": "success"
+}

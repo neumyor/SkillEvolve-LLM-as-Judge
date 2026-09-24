@@ -1,0 +1,29 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Rapid title and snippet scanning for direct fact retrieval",
+    "Conditional reasoning traces to avoid verbosity on straightforward matches",
+    "Constraint-driven filtering to isolate the exact entity among similar candidates"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate three high-value behaviors: (1) scanning document titles and opening lines for immediate answers rather than reading full paragraphs, (2) omitting lengthy reasoning steps when the match is direct, and (3) applying strict constraint filtering to distinguish between similar entities (e.g., multiple kings or locations). These patterns directly address verbosity and disambiguation failures observed in earlier steps.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Title & Snippet Priority**: Scan `[TLE]` and opening lines first for factual queries. These often yield direct answers, bypassing unnecessary paragraph reading."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a single-sentence verification trace only if disambiguation is needed. Omit reasoning for direct matches to prevent verbosity."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Constraint Filtering**: When multiple candidates exist, isolate the one satisfying the most restrictive clue (dates, unique actions). Discard tangential matches."
+      }
+    ]
+  },
+  "source_type": "success"
+}

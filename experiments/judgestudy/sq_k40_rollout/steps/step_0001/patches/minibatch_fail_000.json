@@ -1,0 +1,25 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 7,
+      "description": "Model consistently outputs overly descriptive or expanded answers (full names, added qualifiers, generic descriptions) instead of the exact concise term expected."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 7,
+      "description": "Skill lacks guidance for Jeopardy-style clues, causing the model to misinterpret statements as True/False questions or guess broadly rather than identifying the precise missing entity."
+    }
+  ],
+  "patch": {
+    "reasoning": "Every failure stems from the model failing to recognize Jeopardy-style trivia formats and producing verbose or descriptively altered answers. Adding explicit rules for handling statement-based clues, enforcing strict conciseness, and prioritizing exact entity extraction will align predictions with the expected short-form answers.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Handling Jeopardy-Style Clues & Trivia Statements\n- Questions may appear as incomplete sentences or factual statements rather than direct interrogatives. Treat these as fill-in-the-blank or identification queries.\n- Answers must be strictly concise and match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").\n- Never interpret statement-based clues as True/False questions. Always identify the missing entity or term.\n- When context contains multiple related terms, select the one that precisely completes the clue or matches the specific trivia fact, avoiding broad generalizations."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

@@ -1,0 +1,42 @@
+{
+  "reasoning": "Prioritized all 4 high-priority failure-driven patches to address critical systemic extraction failures (span granularity, title verification, partial name resolution, subject/container & temporal disambiguation). Integrated 6 success-driven patches that provide complementary structural and parsing enhancements (noise filtering, idiom mapping, clue parsing refinement, conjoined constraints, multi-passage convergence, mandatory verification template). No direct point conflicts required deduplication; all edits target distinct rules or non-overlapping sections. Preserved all support counts and source types as provided. [optimizer-ranked: selected 4/10 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs.",
+      "content": "- **Title-First & Semantic Verification**: While `[TLE]` markers are high-signal, never assume the title is the answer. Verify that the title's entity semantically matches the clue's description. If the clue defines a concept, synonym, or relationship found in the paragraph text, prefer the text-defined answer over the document title. Cross-check the candidate against the clue's core constraints before finalizing.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Leverage Structural Tags**: Use `[DOC]`, `[TLE]`, and `[PAR]` markers to segment and scan the context efficiently.",
+      "content": "\n- **Filter Contextual Noise & Metadata**: Actively ignore boilerplate, dates, URLs, platform labels (e.g., \"Wikipedia\", \"IMDb\", \"Privacy Policy\"), and navigational text in `[TLE]` and `[PAR]` blocks. Focus scanning exclusively on semantic sentences containing named entities and factual claims. Before extracting, verify that the candidate span satisfies every distinct constraint in the question. Actively ignore narrative wrappers, introductory phrases, and irrelevant surrounding documents that do not contribute to constraint satisfaction.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+      "content": "- **Mandatory Single-Sentence Verification**: Always precede the final answer with exactly one sentence of reasoning using a fixed template: 'The context explicitly states/describes [Evidence], directly satisfying the question's constraint about [Clue].' Explicitly quote or reference the exact context span that satisfies each constraint. This forces verifiable grounding, eliminates filler, and strictly prevents reliance on external knowledge.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+      "content": "- **Span Granularity & Canonical Form**: Extract the exact context span that matches the clue's required granularity. Do not artificially shorten, expand, or swap modifiers unless explicitly instructed. If the clue targets a system/category, extract the system name; if it targets a specific instance, extract the instance. Prioritize the shortest unambiguous identifier that directly satisfies the clue's constraints, avoiding redundant titles or generic descriptors unless they are part of the official short name.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [1] addresses the pervasive failure mode of over-trusting document titles by mandating semantic verification, significantly boosting accuracy. Edit [4] tackles widespread noise and metadata interference, providing essential guidance to filter boilerplate and focus on semantic signals. Edit [9] converts optional reasoning into a mandatory, templated verification step, enforcing strict grounding and preventing hallucination. Edit [0] replaces rigid, arbitrary formatting preferences with a principled span-granularity rule, ensuring precise and context-faithful extraction. Together, these four edits systematically target core RAG/QA failure patterns (title bias, noise, unverified answers, poor span selection) while remaining general, complementary, and highly actionable.",
+    "selected_indices": [
+      1,
+      4,
+      9,
+      0
+    ]
+  }
+}

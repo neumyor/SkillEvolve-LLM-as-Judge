@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative Statement Parsing: Treating full factual sentences as fill-in-the-blank tasks to isolate the missing subject/object slot.",
+    "Semantic & Etymological Mapping: Resolving clues based on literal meanings, translations, or puns rather than taking phrasing literally.",
+    "List-to-Source Resolution: Identifying the overarching title or category when a question lists multiple related specific entities.",
+    "Constraint Verification in Reasoning: Explicitly cross-checking that the extracted span satisfies every predicate in the question."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle full declarative trivia statements by isolating missing slots, resolve semantic/etymological/pun clues by mapping intent to canonical terms, identify parent sources from entity lists, and rigorously verify that extracted answers satisfy all question predicates. These patterns are highly generalizable across trivia formats and should be explicitly codified to prevent misinterpretation of statement-based or wordplay clues.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+        "content": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions frequently appear as complete declarative sentences, fragments, or factual statements. Parse the clue to isolate the **missing entity slot** (subject or object) and its **descriptive constraints**. Treat every statement as a fill-in-the-blank identification task. Never interpret statement-based clues as True/False queries. Scan the context to find the single entity that simultaneously satisfies all stated predicates."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+        "content": "\n- **Semantic, Etymological & Pun Resolution**: Clues often rely on literal definitions, language translations, or wordplay/puns (e.g., 'means union', 'put to'). Parse the clue's underlying semantic intent or linguistic root rather than taking phrases literally. Map the intended meaning directly to the canonical term in the context."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+        "content": "\n- **List-to-Source Resolution**: When a question provides a comma-separated list of specific entities, characters, or items, treat the list as a collective pointer. Identify the shared source, title, franchise, or overarching category that encompasses all listed items."
+      },
+      {
+        "op": "replace",
+        "target": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span.",
+        "content": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly verify that the extracted answer satisfies *every* distinct constraint or predicate in the question. Quote or closely paraphrase the exact context span that anchors the answer, ensuring no clue element is overlooked."
+      }
+    ]
+  },
+  "source_type": "success"
+}

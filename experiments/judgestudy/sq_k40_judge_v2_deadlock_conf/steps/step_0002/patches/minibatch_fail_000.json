@@ -1,0 +1,21 @@
+{
+  "batch_size": 6,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Agents consistently fail to match the exact length/granularity of the gold answer, either by over-expanding single-word answers with descriptors, titles, or adjectives, or by omitting required honorifics, and occasionally substituting specific examples for general categories."
+    }
+  ],
+  "patch": {
+    "reasoning": "All six failures share a common root cause: incorrect answer granularity and unnecessary expansion/omission of modifiers. The agent grabs the most prominent entity span from the context rather than the precise minimal span requested. The proposed rules explicitly enforce minimal span extraction, dictate name/title granularity matching, and prevent example/category substitution.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Answer Precision & Format Rules\n- **Minimal Span Extraction**: Extract the shortest text span that directly answers the question. Never append descriptive nouns, roles, or adjectives (e.g., use 'Madge' not 'Madge the Manicurist', 'Arthur' not 'Chester A. Arthur', 'pudding' not 'Hasty pudding').\n- **Name Granularity**: Match the name format implied by the question. If the clue references a surname or first name alone, return that alone. Include honorifics (e.g., 'Sir') only if they are standardly attached to the name in the context.\n- **Category vs. Example**: Do not substitute a specific example mentioned in the text for a general category (or vice versa) unless explicitly asked. Stick to the exact term targeted by the clue."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

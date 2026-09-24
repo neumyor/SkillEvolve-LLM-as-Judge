@@ -1,0 +1,29 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Standalone entity fragments trigger inference of the most salient trivia attribute rather than mirroring the name.",
+    "Convergent alternative clues ('A or B', 'X & Y') require identifying a single unifying concept or category.",
+    "Morphological alignment must strictly follow demonstrative anchors in the prompt (e.g., 'these birds' dictates plural output)."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handled three edge cases: standalone entity names (inferring the queried attribute rather than mirroring), convergent alternative clues (finding a unifying term), and strict plural/singular alignment with demonstratives. These patterns address recurring failure modes in previous steps (mirroring, pluralization errors) and are not fully specified in the current skill.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Uniform Clue Processing",
+        "content": "\n- **Standalone Entity Fragment Resolution**: If the prompt consists solely of a named entity (e.g., \"President X\", \"Forbes magazine\"), infer the most salient trivia attribute being queried (e.g., country, founding year, primary subject) rather than mirroring the entity. Cross-reference context to find the specific attribute requested."
+      },
+      {
+        "op": "insert_after",
+        "target": "Multi-Constraint Synthesis",
+        "content": "\n- **Convergent Alternative Clues**: When prompts use \"or\" or \"&\" to present two distinct descriptors (e.g., \"geographical feature or song title\"), identify the single underlying concept, category, or word that satisfies both. Do not return multiple answers; select the unifying term."
+      },
+      {
+        "op": "replace",
+        "target": "Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses.",
+        "content": "Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's demonstrative or quantifier (e.g., \"these birds\" → plural \"Owls\"); never expand short answers into full sentences or add explanatory clauses."
+      }
+    ]
+  },
+  "source_type": "success"
+}

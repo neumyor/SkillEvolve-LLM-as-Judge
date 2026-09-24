@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied failure-driven patches with strict priority, overriding conflicting success edits on identical targets (e.g., 'Be Strictly Concise'). Preserved success-driven patches introducing distinct strategies (e.g., Title-First Scanning, Co-occurrence Mapping, Explicit Option Filtering, Strict Verbatim Extraction). Resolved overlapping targets by sequencing replacements and insertions logically. Maintained original support_count and source_type. No protected section edits were made. [optimizer-ranked: selected 4/14 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Keyword Spotting & Mapping**: Quickly scan document titles and paragraphs for exact keywords, dates, and unique proper nouns from the question to locate the answer span efficiently.",
+      "content": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Resolve Nicknames & Slogans**: When questions contain colloquial phrases, brand names, or slogans, search across multiple documents for explicit mappings or parenthetical clarifications that link the phrase to a concrete entity.",
+      "content": "\n- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Verbatim Extraction Priority**: To prevent overly descriptive outputs, extract the target term exactly as it appears in the context. Do not paraphrase, expand, or add conversational qualifiers. Preserve original capitalization and formatting when possible to maximize exact-match probability.",
+      "content": "- **Strict Verbatim Extraction**: Extract the answer exactly as it appears in the context, preserving original capitalization, punctuation, and phrasing. Do not alter plurality, strip necessary modifiers, or adapt the term to fit the question's grammar. Prioritize the exact context span over stylistic normalization.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+      "content": "\n- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "These four edits provide comprehensive, non-redundant upgrades across the entire QA pipeline, each targeting a high-frequency failure mode with clear, actionable guidance. [1] replaces a generic keyword search rule with a strategic 'Title-First' scanning approach, drastically improving search efficiency in trivia contexts. [6] fills a critical gap in resolving figurative, pop-culture, and metaphorical clues that commonly cause literal misinterpretations. [11] hardens the output formatting rule to prevent the pervasive LLM tendency to paraphrase or normalize answers, ensuring exact-match compatibility. [10] structures the reasoning step to explicitly map constraints to evidence, forcing rigorous self-verification before extraction. Together, they systematically address search inefficiency, entity resolution ambiguity, output drift, and reasoning misalignment.",
+    "selected_indices": [
+      1,
+      6,
+      11,
+      10
+    ]
+  }
+}

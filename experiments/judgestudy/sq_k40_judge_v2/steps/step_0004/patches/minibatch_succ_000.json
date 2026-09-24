@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Prioritizing document titles (`[TLE]`) and opening snippets for rapid answer location",
+    "Direct mapping of trivia clues to exact entities without synthesis"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently leverage `[TLE]` headings and paragraph openings to instantly resolve trivia and Jeopardy-style questions, bypassing lengthy paragraph scans. They also treat declarative clues as direct fill-in-the-blank requests, extracting the exact entity verbatim. Reinforcing these behaviors will streamline search and reduce verbosity.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. Search the context for those identifiers or their immediate synonyms. Ignore irrelevant tangential documents.",
+        "content": "2. Prioritize scanning document titles (`[TLE]`) and opening snippets, which frequently contain the exact answer or direct paraphrase for trivia queries. Then search paragraphs for identifiers or synonyms, filtering out tangential documents."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Direct Clue Mapping**: When the question is a complete declarative statement or definition, treat it as a direct pointer to a specific fact in the text. Locate the matching sentence and extract the subject or object term verbatim, avoiding inference or category generation."
+      }
+    ]
+  },
+  "source_type": "success"
+}

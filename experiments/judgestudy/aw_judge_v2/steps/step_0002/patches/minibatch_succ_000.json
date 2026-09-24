@@ -1,0 +1,33 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Inferring agent state and inventory from the admissible action list",
+    "Managing appliance states (opening/closing) and multi-step interactions (e.g., microwave)",
+    "Verifying object names and checking inventory when task descriptions mismatch visible objects",
+    "Systematically navigating to transform objects at appliances before final placement"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the batch reveals three key areas needing reinforcement: 1) Agents successfully use admissible actions to infer holding status and resolve ambiguities. 2) Microwave interactions require explicit state management (move in, close, heat) rather than a single step. 3) Object name mismatches (e.g., pen vs pencil) are handled by checking inventory or searching elsewhere instead of forcing incorrect placements. These patterns improve robustness in text-based state tracking.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> heat X -> go to Y -> put X |",
+        "content": "| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> move X to microwave -> close microwave -> heat X with microwave -> take X -> go to Y -> put X |"
+      },
+      {
+        "op": "replace",
+        "target": "4. Transform before placing: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "4. Manage appliance states: Ensure appliances are open before interacting. For microwaves, you must move the object inside, close the door, and then heat it. Perform transformations at the appliance, retrieve the object if needed, then navigate to the final destination."
+      },
+      {
+        "op": "append",
+        "content": "**State Inference via Actions**: Use the admissible action list to deduce your current state. If `take X` is unavailable, you likely hold X. If `inventory` is listed, use it to verify contents or resolve naming discrepancies (e.g., 'pencil' vs 'pen')."
+      },
+      {
+        "op": "append",
+        "content": "**Handle Naming Discrepancies**: If the goal specifies an object not found (e.g., 'pencil' but only 'pen' is visible), do not force interactions. Check your inventory or systematically search other surfaces until the exact target is located."
+      }
+    ]
+  },
+  "source_type": "success"
+}

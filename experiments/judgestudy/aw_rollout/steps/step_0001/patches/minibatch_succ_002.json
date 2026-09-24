@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Appliance state management (open/close/retrieve cycles)",
+    "Exact object identity verification before transformation",
+    "Inventory tracking to resolve state ambiguity"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories reveal that agents frequently struggle with appliance interaction protocols (especially microwaves requiring open/close/retrieve cycles) and object name mismatches (e.g., picking a 'pan' when a 'pot' is requested). Encoding these patterns will prevent wasted steps, deadlocks, and redundant searches.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Transform before placing: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "Transform before placing: Perform cleaning/heating/cooling at the correct appliance *before* navigating to the final destination. Follow full appliance interaction cycles: open closed appliances, execute the transform action, close/reopen as required, and retrieve items if deposited."
+      },
+      {
+        "op": "insert_after",
+        "target": "Only choose admissible actions: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "\n9. **Verify object identity**: Before applying a transformation, confirm the acquired object exactly matches the task's target noun (e.g., 'pot' vs 'pan'). If mismatched, place it down and continue searching.\n10. **Manage appliance states**: Microwaves and fridges often require explicit `open`/`close` actions around the `heat`/`cool` command. Retrieve items after heating/cooling if they are deposited inside.\n11. **Track inventory state**: If uncertain about held items or after complex appliance interactions, use the `inventory` action to verify your current load before proceeding."
+      },
+      {
+        "op": "replace",
+        "target": "- **Skipping state changes**: Do not place an object at the destination without first cleaning/heating/cooling it when required.",
+        "content": "- **Skipping appliance cycles**: For microwaves/fridges, failing to open/close or retrieve items after heating/cooling will stall progress. Always follow the full interaction sequence.\n- **Assuming object synonyms**: Picking up a similar but incorrect object (e.g., 'pan' for 'pot') wastes steps. Verify the exact name matches the goal before transforming."
+      }
+    ]
+  },
+  "source_type": "success"
+}

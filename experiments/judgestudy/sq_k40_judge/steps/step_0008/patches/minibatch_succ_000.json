@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative Fact Decomposition",
+    "Title-First Constraint Matching",
+    "Demonstrative Slot Identification"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently decompose declarative/Jeopardy clues into explicit queries targeting the missing variable, prioritize scanning document titles for exact clue phrases before processing passages, and treat demonstratives as direct pointers to the answer slot. Reinforcing these strategies will improve retrieval speed and accuracy for trivia-style prompts.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Focus solely on the semantic gap.",
+        "content": "\n- **Declarative Fact Decomposition**: Parse declarative statements and historical facts by isolating the *missing variable* (subject, object, or location) that completes the logical proposition. Map each independent attribute (date, role, ownership, action) to a filtering constraint before searching."
+      },
+      {
+        "op": "replace",
+        "target": "- **Title-Passage Triangulation**: Prioritize document titles (`[TLE]`) as high-signal candidate generators for trivia queries. Use titles to rapidly narrow the search space, then verify constraints against the passage body (`[PAR]`) before finalizing the answer.",
+        "content": "- **Title-Passage Triangulation**: Systematically scan document titles (`[TLE]`) first for exact keyword matches or unique phrases from the clue. Use titles as immediate candidate filters. Only verify constraints against the passage body (`[PAR]`) once a high-probability candidate is identified. This two-step process drastically reduces noise and accelerates retrieval."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Title-First Anchor Extraction: Agents consistently scan [TLE] markers first and extract the exact title span when it aligns with constraints, using paragraphs only for verification.",
+    "Event & Narrative Pointer Resolution: Clues often describe actions, publications, or historical events rather than static properties; agents map these narratives directly to canonical titles/names.",
+    "Cross-Doc Frequency Prioritization: Candidates appearing repeatedly across multiple [DOC] blocks (especially in titles) are prioritized as the correct answer over isolated mentions."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories demonstrate a strong reliance on scanning [TLE] markers for exact canonical names, verifying them against paragraph snippets, and prioritizing entities with high cross-document frequency. Additionally, several clues function as narrative descriptions of events or publications rather than static attributes. Encoding these reading strategies and pointer-resolution techniques will reinforce efficient, accurate extraction without introducing rigid templates or altering conciseness rules.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs.",
+        "content": "- **Title-First & Anchor Extraction**: Prioritize checking `[TLE]` markers. When a title's entity semantically aligns with the question's constraints, extract the exact `[TLE]` span as the primary answer candidate. Use `[PAR]` snippets only to verify constraint satisfaction, avoiding paragraph-level paraphrasing that might dilute the canonical name."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "\n- **Cross-Doc Frequency Prioritization**: Candidates that appear repeatedly across multiple `[DOC]` blocks—especially in titles—are statistically more likely to be the correct answer. Favor entities with high contextual frequency over isolated mentions or peripheral references."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+        "content": "\n- **Event & Narrative Pointer Resolution**: Clues frequently describe historical events, publications, actions, or processes (e.g., '1853 purchase...', 'text deleted... restored...'). Map these narrative descriptions directly to the canonical title, name, or entity associated with that event in the context, treating the description as a functional definition."
+      }
+    ]
+  },
+  "source_type": "success"
+}

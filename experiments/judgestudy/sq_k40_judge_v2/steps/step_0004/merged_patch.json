@@ -1,0 +1,46 @@
+{
+  "reasoning": "Failure-driven patches take strict priority and are preserved to address systematic over-specification and tangential entity selection. Their 'Proper Noun Pruning' and 'Constraint-Driven Selection' rules are appended to enforce minimal, constraint-based extraction. Success-driven patches are integrated where they do not conflict, enhancing trivia handling, snippet leverage, and workflow conciseness. The 'Exact Term Preference' success edit and 'Proper Noun Pruning' failure edit are kept distinct as they target different linguistic elements (general modifiers vs. proper noun suffixes), satisfying the deduplication guideline only where truly overlapping. All edits retain their original support counts and source types.",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+      "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase, allowing rapid extraction before reading full paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, cloze blanks, and declarative statements as direct fill-in-the-blank requests. Map descriptive attributes directly to the exact subject entity in the context, ignoring conversational framing, trailing punctuation, or metadata.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. Strip unnecessary articles, adjectives, or plurals unless strictly required. Output only the core entity.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "2. Search the context for those identifiers or their immediate synonyms. Ignore irrelevant tangential documents.",
+      "content": "2. Prioritize scanning document titles (`[TLE]`) and opening snippets for quick matches, then search paragraphs for identifiers or synonyms. Ignore irrelevant tangential documents.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Perform a single-sentence verification trace linking the question's core descriptor to the extracted entity. Skip extended analysis for straightforward trivia queries to maintain conciseness.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "- **Proper Noun Pruning**: Strip non-essential descriptive suffixes or generic descriptors (e.g., 'Jr.', 'Sr.', 'Desert', 'River', 'Base') unless they are strictly part of the official title or explicitly requested. Default to the shortest, most direct entity name found in the context (e.g., 'Sahara' over 'Sahara Desert', 'Shepard' over 'Alan B. Shepard, Jr.') to avoid over-specification.\n- **Constraint-Driven Selection**: When multiple entities partially match a query, filter strictly by the most restrictive clue (e.g., exact dates, unique actions, or implicit references like 'seen here'). Discard prominent but loosely matching items. Prioritize the entity that uniquely satisfies all constraints simultaneously.",
+      "support_count": 5,
+      "source_type": "failure"
+    }
+  ]
+}

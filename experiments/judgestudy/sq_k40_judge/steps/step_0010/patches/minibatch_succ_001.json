@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Nicknames, Epithets & Cultural Monikers Resolution",
+    "Verbatim Gap Filling for Lyrics & Definitions",
+    "Minimal Derivation for Direct Lookup Queries"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories treated trivia, lyric, and definition clues as direct string lookups, prioritizing exact verbatim extraction over derivation. Two specific sub-patterns emerged consistently: resolving famous nicknames/monikers to canonical names, and completing explicit semantic gaps (lyrics, definitions, or rank advancements) with exact context strings. These patterns are not explicitly codified as standalone rules in the current skill.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, and song lyrics as direct queries for their underlying subject or concept. Strip attribution cues (e.g., 'According to...', 'It's the cry of') and resolve the semantic gap to the specific entity or idea being described.",
+        "content": "\n- **Nicknames, Epithets & Cultural Monikers**: When clues use famous nicknames, epithets, or cultural monikers (e.g., \"America's Sherlock Holmes in Sneakers\"), resolve them to the canonical name of the person, character, or work they refer to. Do not return the nickname itself unless it is the primary identifier."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Minimal Reasoning**: Skip verbose derivations for straightforward retrieval tasks. If step-by-step reasoning is performed, place it outside the answer tags and keep it brief.",
+        "content": "\n- **Direct Lookup Heuristic**: For straightforward trivia, factual statements, or fill-in-the-blank clues, treat the task as a direct string lookup rather than a complex reasoning problem. Locate the exact verbatim match in the context or titles, verify it satisfies the clue's constraints, and output immediately. Avoid multi-step deduction when a direct match exists."
+      },
+      {
+        "op": "replace",
+        "target": "- **Article Omission Tolerance**: For F1-based evaluation, safely omit leading indefinite or definite articles (e.g., \"a\", \"the\") unless the clue's syntax strictly requires them for grammatical completion. Prioritize the core lexical item and canonical spelling over strict article preservation.",
+        "content": "- **Article Omission Tolerance & Verbatim Gap Filling**: For F1-based evaluation, safely omit leading indefinite or definite articles (e.g., \"a\", \"the\") unless the clue's syntax strictly requires them for grammatical completion. Prioritize the core lexical item and canonical spelling over strict article preservation. When clues present explicit semantic gaps (lyrics, definitions, or completions), extract the exact missing phrase verbatim from the context without paraphrasing, expansion, or syntactic mirroring."
+      }
+    ]
+  },
+  "source_type": "success"
+}

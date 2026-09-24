@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Preserving conjunctions (&, and) as logical constraint delimiters rather than stripping them as noise",
+    "Prioritizing exact string/structural matching for formulas, etymologies, and definitions over semantic paraphrasing",
+    "Using specific proper nouns, brands, and known entities as immovable anchors to rapidly isolate the correct context passage"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently treat '&' and 'and' as structural connectors that separate independent mandatory constraints, not as filler to strip. They also excel at literal matching for non-narrative clues (formulas, etymologies) and leverage specific proper nouns/brands as primary locators to bypass noisy contexts. Encoding these strategies prevents over-stripping and improves precision.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+        "content": "- **Direct Keyword Matching & Scanning**: Extract core anchor phrases by removing only non-informative punctuation and filler words. **Preserve conjunctions like \"&\" and \"and\"** as logical connectors that delineate separate mandatory constraints rather than stripping them. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Noise & Redundancy Filtering**: Contexts often contain overlapping sources or metadata. Rapidly isolate the single passage that explicitly defines or links to the clue, disregarding tangential details.",
+        "content": "\n- **Literal & Structural Matching**: For non-narrative clues such as mathematical formulas, etymologies, dictionary definitions, or precise technical descriptions, prioritize exact string or structural matches in the context over semantic paraphrasing. The target entity is almost always the subject of the matched formula or definition."
+      },
+      {
+        "op": "replace",
+        "target": "- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+        "content": "- **Proper Noun & Brand Anchoring**: Treat specific proper nouns, geographic locations, brand names, and established terms (e.g., \"Chipotle\", \"Ciudad Juarez\", \"Brahma\") as immovable anchors. Use them to instantly isolate the relevant context passage, then apply remaining constraints to pinpoint the target. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs."
+      }
+    ]
+  },
+  "source_type": "success"
+}

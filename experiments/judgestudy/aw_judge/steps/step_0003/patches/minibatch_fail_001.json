@@ -1,0 +1,45 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 1,
+      "description": "Agent cycles between microwave and coffeemachine >40 times without resolving placement blockage."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 1,
+      "description": "Agent discards 'cup' as invalid despite skill guideline accepting functional equivalents."
+    },
+    {
+      "failure_type": "action_loop",
+      "count": 1,
+      "description": "Agent repeatedly executes 'heat' and 'put' despite identical 'Nothing happens' feedback and no state verification."
+    }
+  ],
+  "patch": {
+    "reasoning": "The trajectory shows a severe action/navigation loop caused by blind retries of heating and placing despite blocked actions. The agent ignores functional equivalence rules and lacks a fallback protocol when direct appliance commands fail to update object state. Edits introduce a consecutive failure limit, a direct-to-full-sequence appliance fallback, and explicit reset triggers to break infinite loops.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance.",
+        "content": "Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance. **Fallback Rule**: If the direct command succeeds but the object's state does not update (verify via `examine`), or if subsequent placement/interaction fails, immediately switch to the full enclosed appliance workflow (`open` -> `move in` -> `close` -> `heat/cool` -> `open` -> `take`). Do not persist with direct commands if they do not advance the task state."
+      },
+      {
+        "op": "append",
+        "content": "\n11. **Consecutive Failure Limit**: Track failed attempts at critical steps. If `put`, `open`, or `heat` fails or returns 'Nothing happens' 3 times consecutively, halt the current approach. Execute `inventory` and `examine` both the held object and the target receptacle. If states appear correct but actions remain blocked, try `open <receptacle>` (if applicable), `examine <receptacle>`, or navigate away to reset context. Never repeat a blocked action without a verified state change.\n\n12. **Functional Equivalence Enforcement**: Never discard a valid object solely based on naming differences if it fulfills the task's physical requirements. If the goal asks for a 'mug' and you hold a 'cup', proceed with the task. Only search for alternatives if the current object is fundamentally incompatible or if exhaustive searching confirms it doesn't exist."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Neglecting appliance/receptacle states**: Attempting to use or store items in closed appliances causes errors. Always open microwaves, fridges, and cabinets before interacting.",
+        "content": "- **Blind Retrying**: Continuously executing the same action (e.g., heating, placing) despite identical feedback wastes steps. Each retry must be preceded by a new observation (`examine`, `inventory`, or `look`) that justifies the action. If feedback is identical, change direction or strategy immediately."
+      },
+      {
+        "op": "replace",
+        "target": "7. **Avoid loops**: Track your recent navigation history. If you find yourself cycling through the same 3+ locations without progress, **stop and reassess**. Verify your inventory, check if you are holding the target, or consider that the target may be named differently than expected. Force a change of direction to a completely unvisited room or furniture type.",
+        "content": "7. **Avoid loops**: Track your recent navigation history. If you find yourself cycling through the same 3+ locations or returning to the same appliance/receptacle without progress, **stop and reassess**. Verify your inventory, check object states via `examine`, and confirm receptacle states. If stuck, force a complete context reset: leave the current room, call `inventory`, and pivot to a completely different task sub-goal or unexplored zone. Do not re-enter a location until you have a new hypothesis for why the previous attempt failed."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

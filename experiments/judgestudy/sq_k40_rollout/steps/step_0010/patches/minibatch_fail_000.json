@@ -1,0 +1,46 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 5,
+      "description": "Model over-specifies answers by extracting full names, organizational titles, or redundant compound terms instead of canonical short forms or base nouns."
+    },
+    {
+      "failure_type": "rule_wrong",
+      "count": 2,
+      "description": "Existing hypernym rule incorrectly pushes the model to output generic categories (e.g., 'city', 'capital cities') instead of specific entities or attributes."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Skill lacks explicit guidance for resolving puns, phonetic wordplay, and list/fragment clues, causing literal keyword matching or category misinterpretation."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals three systematic failures: (1) over-specification/redundancy in extracted spans, (2) incorrect defaulting to hypernyms/categories due to a misleading existing rule, and (3) failure to decode puns/wordplay or parse list fragments. The proposed edits replace the harmful hypernym rule, tighten granularity/redundancy handling, explicitly address puns/wordplay, and add a directive for list/fragment clues. These changes directly target the root causes across all 8 failures without hardcoding question-specific values.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+        "content": "- **Specific Entity Priority Over Hypernyms**: Do not default to extracting generic categories or hypernyms (e.g., 'city', 'capital cities', 'businesses') unless the question explicitly asks for a classification. When clues present lists, single words, or vague pointers, prioritize identifying the specific named entity, its location, or its defining attribute. Treat hypernyms only as search anchors, not final answers."
+      },
+      {
+        "op": "replace",
+        "target": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+        "content": "- **Canonical Form & Redundancy Stripping**: Extract the shortest, widely recognized identifier for the entity. Aggressively remove redundant phrasing that duplicates the question (e.g., if the clue says 'this market', output 'bear' not 'bear market'; if it says 'these businesses', output 'laundries' not 'Chinese Hand Laundry Alliance'). For persons and places, favor the core proper noun or standard short form over full formal names, middle initials, or corporate suffixes. Preserve necessary modifiers only if they are part of the official short name or strictly required by the clue."
+      },
+      {
+        "op": "replace",
+        "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+        "content": "- **Decode Puns, Wordplay & Phonetic Clues**: Clues frequently rely on puns, double meanings, phonetic similarities, or idiomatic expressions (e.g., 'Ball of Fire' for a person named Ball). Treat these as semantic identifiers rather than literal descriptions. Cross-reference the clue's figurative meaning with candidate entities in the context, prioritizing semantic alignment and wordplay over exact keyword matches. Discard the literal pointer phrasing and output the mapped canonical entity."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "\n- **List & Single-Word Clue Parsing**: Questions may consist solely of comma-separated lists or a single proper noun. Treat these as direct entity references or implicit location/attribute queries. Do not interpret them as requests for categories or definitions. Scan the context to find the specific entity, its associated attribute, or the missing item in the set that aligns with the gold answer's granularity."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

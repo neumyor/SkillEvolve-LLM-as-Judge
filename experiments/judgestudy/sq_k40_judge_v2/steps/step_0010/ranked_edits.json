@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied failure-driven patches with strict priority per guidelines. Deduplicated overlapping edits for 'Trivia/Fragment Handling' and workflow step 3, retaining the failure versions due to higher precedence. Preserved all success-driven patches that introduced distinct, non-overlapping strategies ('Snippet & Title Prioritization', 'Slot & Constraint Alignment', 'List & Attribute Mapping', 'Context-Anchor Bridging'). Retained failure-only additions ('Semantic Slot & Distractor Filtering', 'Exact Term & Conciseness'). Maintained original support counts and source types throughout. [optimizer-ranked: selected 4/8 edits]",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Strict Conciseness**: Output only the exact entity, word, or short phrase requested. Never include full sentences, explanations, or conversational filler inside `<answer>...</answer>`.",
+      "content": "\n- **Semantic Slot & Distractor Filtering**: Parse the question to identify the precise semantic role requested (e.g., person, location, business type). Strictly filter candidates to match that role. Explicitly verify that the candidate entity actually satisfies the question's primary descriptor, discarding loosely matching items, tangential examples, or literal string matches that point to the wrong subject.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "- **Cloze & Jeopardy Parsing**: Treat declarative statements, Jeopardy-style clues, and trailing blanks as direct fill-in-the-blank requests. Extract the exact missing subject or entity, never a category, boolean, or descriptive phrase. Be alert for puns, wordplay, or double meanings; map descriptors directly to the core noun or proper name that fulfills the clue's intent.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Perform a single-sentence verification linking the question's core descriptor directly to the extracted entity, confirming exact textual alignment and grammatical slot satisfaction. Skip extended analysis for straightforward trivia matches and explicitly rule out incidental or tangential matches.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "\n- **Slot & Constraint Alignment**: Parse implicit question slots and explicit constraints (e.g., 'this holiday', 'First name of...', 'of it'). Extract only the term that directly fills the requested slot, strictly mirroring the grammatical form, number, and length demanded. Do not expand to full names, titles, or compound phrases unless explicitly required.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [2] addresses the most pervasive QA failure mode (selecting wrong entity types or falling for distractors) and introduces a critical missing analytical step. Edit [1] systematically upgrades the handling of clue-based/JEOPARDY questions, replacing a vague existing rule with precise parsing instructions. Edit [7] optimizes the execution workflow by replacing generic reasoning traces with targeted verification, reducing token waste and improving output alignment. Edit [4] ensures strict adherence to implicit/explicit constraints and grammatical forms, preventing format mismatches that frequently degrade evaluation scores. Together, they cover entity filtering, question parsing, verification, and constraint alignment with high generality and actionability.",
+    "selected_indices": [
+      2,
+      1,
+      7,
+      4
+    ]
+  }
+}

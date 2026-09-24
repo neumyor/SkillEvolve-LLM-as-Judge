@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Prefer `inventory` over `examine` to verify holding state and transformation completion.",
+    "Resolve contradiction between 'Verify State' and 'Trust Action' by standardizing on `inventory` checks post-appliance.",
+    "Accept any valid instance of a target object when multiple are present.",
+    "Use `inventory` proactively when a searched container is empty to rule out accidental pickup."
+  ],
+  "patch": {
+    "reasoning": "Trajectories 6 and 7 demonstrate that checking `inventory` is more reliable than `examine` for confirming object state and possession after appliance interactions or empty searches. The current skill contains a direct contradiction between Principle 6 (explicitly check via `examine`) and Advanced Handling Rule 3 (trust action, do not `examine`). Standardizing on `inventory` resolves this and matches successful agent behavior. Additionally, agents successfully handle multiple target instances by grabbing any visible one immediately.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "6. **Verify Transformation State**: After using an appliance, explicitly check the object's state (e.g., via `examine`). If the state does not match the goal, return to the appliance to re-process immediately. Do not assume the transformation succeeded on the first try.",
+        "content": "6. **Verify Holding State via Inventory**: After using an appliance (`heat`, `cool`, `clean`), call `inventory` to confirm you are still holding the transformed object. Do not rely on `examine` for state verification, as observations may lag or report generic names. Trust the action success, but ensure possession before navigating."
+      },
+      {
+        "op": "delete",
+        "target": "- **State Verification Trust**: After a successful `heat`, `cool`, or `clean` action, proceed directly to the next step. Do not repeatedly `examine` the object to verify its state, as observations may lag or report generic names. Trust the action success and advance."
+      },
+      {
+        "op": "insert_after",
+        "target": "2. **Grab Immediately**: When a target object is visible and reachable, take it immediately. Do not delay acquisition to search elsewhere.",
+        "content": "- **Handle Multiple Instances**: If multiple instances of the target object are visible, select any valid instance immediately. Do not waste steps comparing IDs or preferring specific variants unless the task specifies otherwise.\n- **Proactive Inventory Checks**: If a searched container/surface is empty, call `inventory` to verify you haven't accidentally picked up the target earlier. Use `inventory` as your primary diagnostic tool during searches and post-interaction."
+      },
+      {
+        "op": "replace",
+        "target": "8. **Track Progress & Proactive Checks**: Maintain an internal count of remaining objectives. Use `inventory` immediately after picking up or transforming objects to confirm holdings and states before navigating. Adjust search strategy early if the expected item is missing.",
+        "content": "8. **Track Progress & Proactive Checks**: Maintain an internal count of remaining objectives. Rely on `inventory` calls to confirm holdings and transformation states before navigating. Adjust search strategy early if the expected item is missing or if `inventory` reveals unexpected items."
+      }
+    ]
+  },
+  "source_type": "success"
+}

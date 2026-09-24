@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Title-First Scanning: Prioritize checking `[TLE]` markers for exact answer matches before parsing paragraphs, as trivia contexts frequently embed the answer directly in document titles.",
+    "Declarative Frame Stripping: Recognize that clues are often declarative sentences, definitions, or joke setups. Strip away introductory framing phrases (e.g., 'A joke says...', 'According to...', 'It's the...') to isolate the core semantic constraint.",
+    "Residual Adjective Filtering: When extracting the answer, actively strip any descriptive adjectives or noun phrases that belong to the clue's framing rather than the target entity itself, ensuring a bare entity output."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories demonstrate a consistent workflow: they quickly verify document titles for direct matches, strip declarative/joke framing from statement-based clues to find the core constraint, and rigorously filter out clue adjectives to produce bare entity answers. These patterns directly counteract previous failures where models appended clue descriptors or got lost in paragraph text.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Keyword Spotting & Mapping**: Quickly scan document titles and paragraphs for exact keywords, dates, and unique proper nouns from the question to locate the answer span efficiently.",
+        "content": "- **Title-First Scanning**: Prioritize checking `[TLE]` markers for exact answer matches before parsing paragraphs. Trivia contexts frequently embed the answer directly in document titles; verifying titles first saves time and reduces noise.\n- **Keyword Spotting & Mapping**: Once titles are checked, scan remaining paragraphs for exact keywords, dates, and unique proper nouns to locate the answer span efficiently."
+      },
+      {
+        "op": "insert_after",
+        "target": "Scan the context to find the entity that satisfies all constraints, prioritizing explicit matches over assumptions.",
+        "content": "\n- **Strip Declarative Framing**: Clues are rarely direct questions; they are often definitions, joke setups, or factual statements. Ignore introductory wrappers (e.g., 'A joke says that...', 'According to...', 'It's the...') and focus strictly on the predicate or defining constraint to identify the target."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Filter Residual Clue Adjectives**: When extracting the final answer, actively remove any descriptive adjectives or noun phrases that were part of the question's framing (e.g., strip 'giant' from 'giant snake', 'remote' from 'remote land'). Return only the bare named entity or term."
+      }
+    ]
+  },
+  "source_type": "success"
+}

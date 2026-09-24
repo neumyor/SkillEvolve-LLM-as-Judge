@@ -1,0 +1,32 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Heuristic search prioritization based on object category",
+    "Appliance state management (open before use/search, close after)",
+    "Strict sequential processing for multi-object tasks"
+  ],
+  "patch": {
+    "reasoning": "Agents consistently used category-based heuristics to locate objects quickly, managed appliance states by opening/closing them appropriately, and strictly handled objects sequentially without attempting to hold multiple items. These patterns improve efficiency and environmental consistency.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Heuristic & Systematic Exploration**: Begin searches in high-probability locations based on object type (e.g., food -> fridge/countertops; utensils -> cabinets/drawers/sink; electronics -> desks/shelves). Once started, search each surface/container exactly once before revisiting. Always open closed containers/appliances before searching inside."
+      },
+      {
+        "op": "append",
+        "content": "\n9. **Appliance State Management**: Interact with appliances (microwave, fridge, sink, desklamp) according to their required state. Open closed appliances before using them. After completing a transformation or storage step, close the appliance (e.g., fridge, microwave) to restore the environment state unless the task requires it to remain open."
+      },
+      {
+        "op": "append",
+        "content": "\n10. **Strict Sequential Processing**: For multi-object or multi-step tasks, fully resolve one sub-task (locate -> acquire -> transform -> deliver) before starting the next. Never attempt to hold multiple objects simultaneously; place the first item at its destination before retrieving the second."
+      },
+      {
+        "op": "replace",
+        "target": "- **Revisiting searched locations**: Keep track of which surfaces/containers have been checked; do not re-examine them.",
+        "content": "- **Ignoring heuristic search cues**: Do not wander randomly. Prioritize locations matching the object's typical category to save steps.\n- **Neglecting appliance states**: Failing to open closed containers/appliances before searching or using them wastes turns. Close them after use when appropriate."
+      }
+    ]
+  },
+  "source_type": "success"
+}

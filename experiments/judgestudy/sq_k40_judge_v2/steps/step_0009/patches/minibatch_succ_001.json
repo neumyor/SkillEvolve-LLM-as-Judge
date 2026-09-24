@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct Cloze & Jeopardy Mapping: Treating fragmentary, declarative, or clue-like prompts as direct fill-in-the-blank requests, mapping descriptive phrases straight to the exact head noun or core entity.",
+    "Primary Subject Isolation: Actively filtering out tangential examples, secondary mentions, or loosely matching candidates to isolate the single entity that uniquely satisfies the question's core descriptor."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently excel at handling Jeopardy-style fragments and demonstrative placeholders ('this instrument', 'his favorite rifle') by treating them as direct slot-filling tasks. They also reliably ignore tangential context (e.g., other mints, schools, or historical figures) to isolate the precise subject requested. Reinforcing these behaviors in the existing rules will solidify the agents' high accuracy on trivia and cloze queries without introducing unnecessary complexity.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Cloze & Jeopardy Mapping**: Treat fragmentary, declarative, and Jeopardy-style clues as direct fill-in-the-blank requests. Map the descriptive phrasing directly to the exact head noun or core entity in the context, ignoring trailing punctuation, metadata, or conversational framing."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "\n- **Primary Subject Isolation**: When contexts mention multiple related entities or tangential examples, isolate the single entity that directly satisfies the question's core descriptor. Discard loosely matching items, historical anecdotes, or secondary mentions to prevent over-specification."
+      }
+    ]
+  },
+  "source_type": "success"
+}

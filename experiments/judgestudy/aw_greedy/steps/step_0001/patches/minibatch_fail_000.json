@@ -1,0 +1,44 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 8,
+      "description": "Agents repeatedly visit the same containers/surfaces without tracking visited locations, causing infinite search cycles."
+    },
+    {
+      "failure_type": "missed_object",
+      "count": 5,
+      "description": "Agents fail to remember or return to locations where target objects were previously spotted, resorting to blind searching."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 3,
+      "description": "Agents lack guidance on handling placement failures, receptacle states, and verifying object states before shuttling between appliances and destinations."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch exhibits severe navigation loops due to lack of visited-location tracking, frequent forgetting of known object locations, and confusion during placement/state-verification phases. These edits enforce strict search logging, mandate returning to known object spots, and clarify appliance/receptacle interaction protocols to break loops and improve task completion.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration**: Maintain a strict mental log of every surface and container visited. Mark each as 'checked' immediately upon arrival. Never revisit a 'checked' location until all other unvisited options in the current room are exhausted. Open closed containers to inspect contents before marking them checked."
+      },
+      {
+        "op": "replace",
+        "target": "- **Revisiting searched locations**: Keep track of which surfaces/containers have been checked; do not re-examine them.",
+        "content": "- **Blind looping**: Repeatedly cycling through the same set of locations (e.g., cabinet 1 -> 2 -> 1 -> 2) wastes steps. Force yourself to move to a completely different, unvisited location or use `inventory` to assess progress before changing direction."
+      },
+      {
+        "op": "append",
+        "content": "\n## Search & Navigation Protocol\n\n1. **Track Visited Locations**: Explicitly state which containers/surfaces have been checked in your thinking. Do not move to a location unless it is unvisited or contains a known target object.\n2. **Remember Object Spots**: If you see a target object on a surface or inside a container, record its exact name and location. After completing transformations or deliveries, navigate directly back to that recorded location. Do not resume blind searching if the object's whereabouts are known.\n3. **Verify Before Shuttling**: Check your inventory and object states (e.g., temperature, cleanliness) with a single `examine` or `inventory` call. Only travel between appliances and destinations when the current sub-goal is fully satisfied. Avoid oscillating between locations without advancing the task."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Placement & Receptacle States**: If the `put` action is unavailable, examine the receptacle to check if it is closed or requires a specific interaction. Do not attempt to place objects into closed or incompatible receptacles. Verify object states once, then proceed directly to the next step without unnecessary returns."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

@@ -1,0 +1,41 @@
+{
+  "reasoning": "Failure-driven patches are prioritized and preserved as they address distinct, high-impact corrective needs (implicit query inference for truncated questions and strict entity type/form alignment). No direct conflicts exist between failure and success patches; therefore, all success-driven patches are retained to reinforce high-prevalence patterns (Jeopardy-style handling, alias resolution, cross-document mapping, and streamlined workflow steps). Edits are applied sequentially, maintaining structural integrity while ensuring failure corrections take precedence where applicable. Support counts and source types are carried forward as specified. [optimizer-ranked: selected 4/8 edits]",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "\n- **Cloze & Definition Mapping**: Treat fragment questions as direct definition requests. Locate the exact sentence matching the clue and extract the subject term verbatim.\n- **Primary Subject Isolation**: When multiple entities are mentioned, isolate the one that directly satisfies the question's descriptor. Ignore tangential examples, historical anecdotes, or secondary mentions to prevent over-specification.\n- **Semantic Paraphrase Mapping**: Questions frequently rephrase factual statements using synonyms, descriptors, or cloze-style blanks. Map the question's descriptive phrasing directly to the exact terminology in the `[DOC]` passages before extraction.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "- **Entity Type & Form Alignment**: Parse the question to identify the exact entity type requested (e.g., territory, sport, species). Answer strictly with that entity, avoiding tangential details or related institutions. Strictly preserve the exact grammatical form (singular/plural), retain all necessary modifiers, and output the complete compound term (e.g., 'Brown pelican', 'the South Sea Bubble') as it appears in the context. Do not truncate, expand, or substitute with synonyms.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and declarative statement prompts (e.g., 'It's the...', 'This [noun]...') as direct fill-in-the-blank or definition requests. Ignore non-semantic tokens like trailing clue numbers, colons, or parentheses. Identify the target entity immediately without describing relationships or generating categories.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Provide a concise, single-sentence grounded justification that directly links the question's clue to the extracted entity, confirming context alignment. Skip extended analysis for straightforward trivia queries to prevent verbosity.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [3] introduces critical comprehension strategies (semantic paraphrase mapping, primary subject isolation) that address widespread failures in interpreting descriptive or rephrased questions. Edit [1] directly tackles a pervasive extraction error where models alter grammatical forms, drop modifiers, or substitute synonyms, ensuring strict exact-match compliance. Edit [2] robustly upgrades fragment/Jeopardy-style handling by explicitly instructing the model to ignore non-semantic tokens and treat declarative prompts as fill-in-the-blank requests. Edit [7] optimizes the reasoning workflow to enforce conciseness and prevent verbosity, aligning perfectly with the 'Zero Reasoning in Tags' constraint and improving pipeline efficiency. These four edits collectively cover core comprehension, extraction fidelity, clue parsing, and workflow optimization with high actionability and minimal redundancy.",
+    "selected_indices": [
+      3,
+      1,
+      2,
+      7
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "reasoning": "Applied failure-driven patches with strict priority per guidelines. Deduplicated overlapping edits for 'Trivia/Fragment Handling' and workflow step 3, retaining the failure versions due to higher precedence. Preserved all success-driven patches that introduced distinct, non-overlapping strategies ('Snippet & Title Prioritization', 'Slot & Constraint Alignment', 'List & Attribute Mapping', 'Context-Anchor Bridging'). Retained failure-only additions ('Semantic Slot & Distractor Filtering', 'Exact Term & Conciseness'). Maintained original support counts and source types throughout.",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+      "content": "\n- **Snippet & Title Prioritization**: For factual and trivia queries, prioritize scanning document titles (`[TLE]`) and opening snippets first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "- **Cloze & Jeopardy Parsing**: Treat declarative statements, Jeopardy-style clues, and trailing blanks as direct fill-in-the-blank requests. Extract the exact missing subject or entity, never a category, boolean, or descriptive phrase. Be alert for puns, wordplay, or double meanings; map descriptors directly to the core noun or proper name that fulfills the clue's intent.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Strict Conciseness**: Output only the exact entity, word, or short phrase requested. Never include full sentences, explanations, or conversational filler inside `<answer>...</answer>`.",
+      "content": "\n- **Semantic Slot & Distractor Filtering**: Parse the question to identify the precise semantic role requested (e.g., person, location, business type). Strictly filter candidates to match that role. Explicitly verify that the candidate entity actually satisfies the question's primary descriptor, discarding loosely matching items, tangential examples, or literal string matches that point to the wrong subject.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "- **Exact Term & Conciseness**: Prioritize the shortest, most direct entity name that uniquely satisfies the query. Strip generic organizational suffixes (e.g., 'Alliance', 'Market', 'Inc.'), formal titles, and non-essential descriptors unless integral to the official short name. Preserve necessary prefixes/modifiers exactly as used in standard reference. Prefer the exact term found in the context over synonyms or acronyms.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "\n- **Slot & Constraint Alignment**: Parse implicit question slots and explicit constraints (e.g., 'this holiday', 'First name of...', 'of it'). Extract only the term that directly fills the requested slot, strictly mirroring the grammatical form, number, and length demanded. Do not expand to full names, titles, or compound phrases unless explicitly required.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "\n- **List & Attribute Mapping**: When questions present a list of names, features, or sequential steps (e.g., character rosters, rank progressions), identify the overarching container, title, or final target entity. Do not output the list components themselves; resolve them to the single subject requested.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "\n- **Context-Anchor Bridging**: If the context provides a definitive anchor (e.g., familial ties, geographic hints, associated works), confidently supply the precise entity even if it requires minor external recall. Verify only that the answer aligns with the contextual clue before extracting.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Perform a single-sentence verification linking the question's core descriptor directly to the extracted entity, confirming exact textual alignment and grammatical slot satisfaction. Skip extended analysis for straightforward trivia matches and explicitly rule out incidental or tangential matches.",
+      "support_count": 9,
+      "source_type": "failure"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating non-interrogative inputs (statements, fragments, noun phrases) as direct entity identification tasks",
+    "Prioritizing verbatim extraction of the target term to ensure exact matches and avoid overly descriptive outputs"
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates consistent success in handling non-standard question formats (fragments, noun phrases, statements) by treating them as direct identification queries rather than requiring complete interrogative syntax. Additionally, all successful trajectories prioritize exact verbatim extraction over paraphrasing, directly addressing the epoch's noted failure mode of overly descriptive answers. Encoding these patterns will improve robustness on trivia/Jeopardy-style tasks.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Passage Corroboration**",
+        "content": "\n- **Fragment & Noun-Phrase Recognition**: Questions frequently appear as standalone noun phrases, titles, or incomplete clauses (e.g., \"The 'Cyclone State'\", \"The Greek god of erotic love\"). Treat these as direct definitions or identifiers. Locate the exact entity or term that the phrase describes, without requiring a complete sentence structure."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Be Strictly Concise**",
+        "content": "\n- **Verbatim Extraction Priority**: To prevent overly descriptive outputs, extract the target term exactly as it appears in the context. Do not paraphrase, expand, or add conversational qualifiers. Preserve original capitalization and formatting when possible to maximize exact-match probability."
+      }
+    ]
+  },
+  "source_type": "success"
+}

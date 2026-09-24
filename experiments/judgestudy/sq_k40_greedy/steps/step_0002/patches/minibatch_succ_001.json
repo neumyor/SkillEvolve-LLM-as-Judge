@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Inferring target entity category from explicit or implicit question cues (e.g., 'this nation', 'this group', 'this playwright') to constrain the candidate pool.",
+    "Stripping quotes, punctuation, and filler words from the question to isolate core anchor phrases for matching.",
+    "Leveraging document titles and metadata to rapidly disambiguate competing candidates sharing similar keywords."
+  ],
+  "patch": {
+    "reasoning": "Across all 8 successful trajectories, agents consistently parse implicit/explicit target categories (e.g., 'this nation', 'this group', 'this 1970 film') to narrow their search scope. They also effectively strip quotes and punctuation to focus on core search anchors, and use document titles/metadata to resolve ambiguities when multiple entities share keywords. These strategies are critical for Jeopardy-style QA but are only vaguely hinted at in the current skill.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Map descriptive phrases directly to the target entity (person, place, term, work).",
+        "content": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Immediately parse the question for explicit or implicit target categories (e.g., \"this nation\", \"this group\", \"this playwright\") to constrain the candidate pool. Map descriptive phrases directly to the target entity."
+      },
+      {
+        "op": "replace",
+        "target": "- **Direct Keyword Matching & Scanning**: Prioritize scanning document titles, snippets, and paragraphs for exact or near-exact keyword matches. Quickly locate supporting sentences using unique identifiers (dates, numbers, quotes, proper nouns) before reading deeply.",
+        "content": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, and filler words (e.g., \"&\", \"who\") from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content."
+      },
+      {
+        "op": "replace",
+        "target": "## Distractor Management\nContexts often contain multiple names or related terms. Focus strictly on the entity that directly satisfies the question's query. Ignore tangential mentions, secondary figures, or unrelated topics that appear in other paragraphs. When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+        "content": "## Distractor Management\nContexts often contain multiple names or related terms. Focus strictly on the entity that directly satisfies the question's query and inferred target category. Use document titles and metadata to disambiguate competing candidates, and ignore tangential mentions or secondary figures."
+      }
+    ]
+  },
+  "source_type": "success"
+}

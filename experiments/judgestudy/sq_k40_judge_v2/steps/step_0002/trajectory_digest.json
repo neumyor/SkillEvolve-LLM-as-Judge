@@ -1,0 +1,36 @@
+{
+  "step": 2,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 3,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents consistently over-specify answers by returning plurals, full names, or specific examples instead of the precise, minimal term or category requested.",
+      "count": 3,
+      "task_ids": [
+        "f8a442980c55415b82527160422a2688",
+        "a842c4623d4845f0b0169730dcb1863c",
+        "8cde5fd949c8425a8a651fb64249411b"
+      ]
+    }
+  ],
+  "score_before": 0.73,
+  "score_after": 0.73,
+  "rejected_edits": [
+    {
+      "op": "insert_after",
+      "content": "\n- **Grammatical & Structural Fidelity**: Strictly match the grammatical form implied by the question. Provide only the surname if asked for a name, avoid plurals if a singular term is requested, and omit articles unless integral to the term. Never add middle initials or expand names beyond what the question demands.\n- **Concept Over Example**: For clue-like, Jeopardy-style, or definition-seeking questions, identify the overarching category, function, or concept. Do not default to a specific instance or example from the text unless the question explicitly asks for one.",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Placeholder & Cloze Parsing**: Treat generic pointers (e.g., \"this film\", \"a [adjective] dessert\") and Jeopardy-style fragments as direct fill-in-the-blank requests. Map category hints directly to the specific subject named in the context.\n- **Temporal & Qualifier Awareness**: Scrutinize historical markers, superlatives (e.g., 'largest', 'first'), and dates. These qualifiers often distinguish between past/present entities, renamed locations, or similar namesakes.\n- **Heading & Snippet Prioritization**: For trivia queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase, anchoring your search before diving into paragraphs.\n- **Distractor Filtering**: When context contains quiz pairs, forums, or mixed snippets, explicitly ignore incorrect guesses, anecdotes, or tangential details. Anchor strictly to definitive factual statements.",
+      "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match."
+    },
+    {
+      "op": "replace",
+      "content": "3. Provide a concise, single-sentence verification trace (e.g., \"Based on the provided context...\") only if synthesis or disambiguation is required. Skip extended analysis for straightforward matches to prevent verbosity.",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context."
+    }
+  ]
+}

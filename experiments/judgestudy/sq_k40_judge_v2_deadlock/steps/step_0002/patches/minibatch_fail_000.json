@@ -1,0 +1,20 @@
+{
+  "batch_size": 4,
+  "failure_summary": [
+    {
+      "failure_type": "rule_missing",
+      "count": 4,
+      "description": "Agent fails on truncated/trivia clues by outputting full names, plural forms, or specific examples instead of the exact short phrase, surname, or abstract category requested."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch consistently fails on cryptic, truncated, or Jeopardy-style questions. The agent defaults to verbose full names, ignores singular/plural cues in the prompt, and substitutes specific contextual examples for the abstract category or term being defined. Adding targeted precision-extraction rules will force the model to align its output granularity, grammatical form, and abstraction level with the question's constraints.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Precision Extraction Rules for Cryptic & Trivia Questions\n- **Truncated Clue Handling**: Treat fragmented, incomplete, or Jeopardy-style prompts as direct definitions. Output the exact term being defined rather than substituting specific examples found in the context.\n- **Name Granularity**: For historical figures, public figures, or characters, default to the surname or shortest widely recognized identifier unless the question explicitly requests a full name. Omit middle initials or full first-middle-last strings.\n- **Grammatical Alignment**: Strictly match the grammatical number and form of the question. If the prompt uses singular phrasing (\"this is the term\", \"a ...\"), output the singular form. Preserve exact capitalization and hyphenation.\n- **Abstract vs. Concrete Targeting**: When a question describes a function, category, property, or role, extract the abstract category or functional term. Do not answer with a concrete instance or specific product mentioned in the context unless explicitly asked."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

@@ -1,0 +1,73 @@
+{
+  "reasoning": "Prioritized failure-driven patches per guidelines, preserving their high-confidence directives on canonical name handling and anecdote/container resolution. Deduplicated overlapping concepts regarding descriptor rejection and canonical isolation, retaining the failure-driven version for stricter operational boundaries. Preserved all success-driven patches as they address distinct semantic gaps (meta-text stripping, zero-leakage enforcement, declarative-to-slot conversion, trailing demonstratives, acronym expansion, and quote exceptions) without conflicting with failure patches. All edits carry forward original support counts and source types. Edits are ordered to integrate seamlessly into the existing skill structure.",
+  "edits": [
+    {
+      "op": "append",
+      "content": "- **Canonical Name & Variant Handling**: When extracting names or terms with multiple textual variants, aggressively strip middle initials, middle names, and redundant category nouns (e.g., \"Mint\", \"Cards\", \"Kings\"). Prioritize the concise, widely recognized canonical form that aligns with standard trivia usage. Preserve necessary definite articles only if integral to the canonical name (e.g., \"the Adirondacks\"). For synonymous terms, select the variant that best matches the clue's specific descriptors rather than mirroring contextual strings.",
+      "support_count": 10,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "- **Anecdote & Container Resolution**: When a clue references a famous misquote, pun, or historical anecdote, resolve the query to the *intended phrase* or *actual entity* being referenced, not the linguistic term or abstract category (e.g., output \"Dear old queen\" not \"Spoonerism\"). When processing lists of related entities, prioritize geographic, political, or corporate containers over relational descriptors (e.g., output \"Monaco\" not \"Sisters\" for royal family members). Cross-reference context to identify the overarching location or organization before finalizing.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Immediately identify the missing variable (subject, object, or complement) that completes the logical proposition. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+      "content": "\n- **Meta-Text & Conversational Filler Stripping**: When clues contain director cues, stage directions, conversational asides, or self-referential commentary (e.g., '(Schumacher reads his clue.)', 'hey, it was basically...'), strip these non-factual elements entirely. Focus exclusively on the underlying factual constraints and the semantic gap they define.\n- **Direct Extraction Priority**: For declarative trivia prompts, treat the task as a direct lookup rather than a complex reasoning problem. Identify the missing variable and extract the exact verbatim entity from document titles or passage headers. Avoid over-deriving or rephrasing; the correct answer is typically a direct string match present in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer. Ensure zero-leakage by stripping any leading labels, reasoning fragments, trailing punctuation, or prompt artifacts before closing the tag.",
+      "content": "\n- **Zero-Leakage Enforcement**: Never include reasoning steps, conversational framing, or transitional phrases inside `<answer>` tags. The tag content must contain ONLY the isolated entity or phrase. Place all derivation logic strictly outside the tags.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Article Omission Tolerance**: For F1-based evaluation, safely omit leading indefinite or definite articles (e.g., \"a\", \"the\") unless the clue's syntax strictly requires them for grammatical completion. Prioritize the core lexical item and canonical spelling over strict article preservation.",
+      "content": "\n- **Declarative-to-Slot Conversion**: When faced with a complete declarative statement or headline-style clue, bypass natural language parsing and directly map it to a 'Fill-in-the-blank: [Statement] ___' structure. Extract only the term that logically completes the blank, ignoring surrounding narrative context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.",
+      "content": "\n- **Descriptor Rejection & Canonical Isolation**: Actively reject descriptive phrases, categorical nouns, or prepositional modifiers present in the clue. If the canonical answer is a short name or surname, output only that term. Do not expand the answer to match the clue's grammatical structure or descriptive density.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, and song lyrics as direct queries for their underlying subject or concept. Strip attribution cues (e.g., 'According to...', 'It's the cry of') and resolve the semantic gap to the specific entity or idea being described.",
+      "content": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, and song lyrics as direct queries for their underlying subject or concept. Strip attribution cues (e.g., 'According to...', 'It's the cry of') and resolve the semantic gap to the specific entity or idea being described. **Exception**: If the prompt is a verbatim excerpt ending mid-sentence or with a trailing pronoun (e.g., '...and this'), treat it as a direct text-completion task rather than a subject query.",
+      "support_count": 6,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Demonstrative-Category Anchoring**: When clues use phrases like 'this film series', 'one of these bombs', or 'the Denver type of this', treat the demonstrative + category noun as a direct pointer to the target class. Isolate the specific instance within that class that satisfies the unique constraints provided.",
+      "content": "\n- **Trailing Demonstrative & Cut-off Handling**: When prompts end abruptly or trail off with a demonstrative ('this', 'that', 'these'), treat the trailing word as a direct placeholder for the missing answer. Ignore preceding descriptive clauses as context and focus exclusively on filling the final blank.\n- **Generic Descriptor Mapping**: When clues use broad or functional descriptors (e.g., 'this part of the tree', 'this cheek cosmetic'), cross-reference with the context to map the descriptor to its precise anatomical, technical, or canonical term (e.g., 'leaves', 'blush'). Do not output the generic descriptor itself.",
+      "support_count": 6,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Pun & Riddle Decoding**: Treat playful language, puns, metaphors, or wordplay in clues as semantic descriptors. Map them to their literal factual referents using context verification before extraction. Strip all figurative phrasing from the final answer.",
+      "content": "\n- **Acronym & Abbreviation Expansion**: When clues use acronyms, initialisms, or shortened forms (e.g., PIP, uke, NASA), expand them to their full canonical terms if the context supports it. Prioritize the unabbreviated form unless the gold answer explicitly requires the short version.\n- **Playful & Cultural Aside Filtering**: Treat pop-culture references, jokes, historical anecdotes, or non-factual asides in clues as secondary constraints or distractors. Prioritize hard factual anchors (dates, locations, proper nouns, explicit categories) to isolate the target entity, and strip away any humorous or conversational framing from the final answer.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

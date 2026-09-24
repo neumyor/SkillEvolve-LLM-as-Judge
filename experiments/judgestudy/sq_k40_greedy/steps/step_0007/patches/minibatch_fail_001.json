@@ -1,0 +1,20 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Agent outputs full formal name instead of expected acronym/abbreviation."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent correctly identified the organization but returned the full formal name ('Ladies Professional Golf Association') instead of the gold standard acronym ('LPGA'). Trivia datasets and Jeopardy-style evaluations frequently use acronyms as the canonical answer key. The skill lacks explicit guidance on handling full names vs. acronyms, leading to exact match failures when the agent defaults to verbosity. Adding a priority rule for acronyms/abbreviations will align agent output with typical gold-answer formatting.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n- **Acronym & Short Form Priority**: Trivia evaluation frequently expects the widely recognized acronym or abbreviation (e.g., LPGA, NASA, NBA) rather than the full formal name. If the context provides both, default to the acronym/short form unless the question explicitly requests the full title. Preserve the exact casing of the acronym."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

@@ -1,0 +1,29 @@
+{
+  "batch_size": 5,
+  "success_patterns": [
+    "Option-aware extraction for multiple-choice style clues",
+    "Acceptance of common noun phrases/concepts when proper nouns are not applicable",
+    "Single-pass direct extraction for trivia/clue-based queries"
+  ],
+  "patch": {
+    "reasoning": "Analysis of 5 successful trajectories reveals consistent success in handling Jeopardy-style clues, including those with explicit options (Trajectory 5) and conceptual/common-noun answers (Trajectory 3). Agents resolved all queries in a single step via direct keyword matching. These patterns warrant reinforcement to prevent over-reasoning, handle option-based questions, and ensure flexibility with non-proper-noun answers.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+        "content": "\n\n**Option-Aware Selection**: If the question provides explicit alternatives (e.g., \"Of A, B, or C...\"), treat it as a constrained selection task. Filter the listed options against the context and return only the one that directly satisfies the clue."
+      },
+      {
+        "op": "replace",
+        "target": "Answers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.",
+        "content": "Answers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.\n- **Conceptual Answers**: Preserve necessary articles or standard phrasing if the clue targets a common noun or concept rather than a proper noun (e.g., output \"the atmosphere\")."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Constraint Verification**: Cross-check the extracted entity against specific constraints in the question (e.g., years, roles, locations) using the context to ensure accuracy.",
+        "content": "\n- **Single-Pass Efficiency**: For clue-based and trivia queries, aim to resolve the answer in a single scan. Directly extract the matched entity without generating intermediate reasoning steps, as over-analysis often introduces noise."
+      }
+    ]
+  },
+  "source_type": "success"
+}

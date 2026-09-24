@@ -1,0 +1,74 @@
+{
+  "reasoning": "Merged the high-priority failure patch which completely overhauls the 'Answer Precision and Conciseness' section with strict morphological preservation, suffix stripping, and acronym priority rules. Applied all nine success-driven patches as they target distinct sections (heuristics, constraint verification, keyword scanning) or introduce new, non-conflicting handling strategies (flashcard recognition, abbreviation resolution, fill-in-the-blank, boilerplate handling, strong association bridging). No overlapping points were found between the two groups, allowing a straightforward consolidation while preserving all unique corrective and reinforcement insights. All edits carry forward their respective support counts and are tagged with their appropriate source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Extraction Priority**: Always extract the exact term or phrase from the context. Trivia evaluation relies on exact string matching; never normalize capitalization, remove leading articles (\"the\", \"a\"), or alter pluralization. Preserve the context's original casing and formatting exactly as presented.\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.\n- Retain necessary descriptors, species names, or qualifiers if they are part of the standard name or required to distinguish the entity (e.g., output \"Brown pelican\", \"American football\", or \"Il Postino\" rather than stripping to \"Pelican\", \"Football\", or \"The Postman\").\n- Match plurality exactly as presented in the context or gold standard (e.g., \"Pineapples\" not \"Pineapple\").\n- When multiple titles exist (e.g., original vs. translated), prefer the original or canonical title unless the question explicitly asks for the localized version.\n- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier.",
+      "content": "- **Exact Form & Morphology Preservation**: Never lemmatize, conjugate, or alter the grammatical form of the answer. If the context or gold standard uses a plural, gerund, or specific inflection, output it exactly as-is (e.g., \"strawberries\" not \"strawberry\", \"Meandering\" not \"meander\").\n- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. Prioritize the shortest canonical identifier that satisfies all constraints (e.g., \"Roanoke\" not \"Roanoke Island\", \"Sirius\" not \"Sirius Satellite Radio\", \"George Bush\" not \"George H. W. Bush\").\n- **Preserve Essential Qualifiers**: Retain descriptors only if they are part of the standard proper name or necessary to distinguish the entity (e.g., \"Brown pelican\", \"American football\").\n- **Acronym & Short Form Priority**: Trivia evaluation frequently expects the widely recognized acronym or abbreviation (e.g., LPGA, NASA, NBA) rather than the full formal name. If the context provides both, default to the acronym/short form unless the question explicitly requests the full title. Preserve the exact casing of the acronym.\n- **Title & Variant Preference**: When multiple titles exist, prefer the original or canonical title unless the question explicitly asks for the localized version. Prefer surnames or nicknames only if they are the primary identifier in the context.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+      "content": "- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries, catalog entries, or flashcards where the target entity is explicitly named. When multiple candidates exist, prioritize the document where the *highest concentration* of query anchors aligns with the title or opening sentence, indicating a direct definition or catalog match.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords.",
+      "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, temporal markers, and geographic boundaries as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords. When multiple entities share similar attributes, use precise temporal or geographic boundaries to isolate the correct match.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "content": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), ellipses, and **parenthetical stage directions or metadata** from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Verbatim Context Lifting**: Trivia questions are often copied verbatim or near-verbatim from context sentences, titles, or flashcards. Prioritize scanning for exact or near-exact string matches in document titles and snippets before attempting semantic reasoning or keyword stripping.",
+      "content": "\n\n- **Quiz, Flashcard & Definition Recognition**: Many prompts originate from trivia databases, flashcards, or dictionary entries. Treat these as direct lookup requests. When the question reads as a definition, description, or flashcard prompt, the target is invariably the *term* being defined. If the full question or a significant clause matches a document title or snippet verbatim, treat that document as the definitive source and extract the answer directly without over-analyzing.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Typo & Variant Tolerance**: Queries may contain minor misspellings, OCR errors, or phonetic variants (e.g., \"steaing\" for \"stealing\"). Apply fuzzy matching or semantic equivalence when scanning for anchor phrases, prioritizing conceptual matches over strict string equality.",
+      "content": "\n\n- **Abbreviation & Acronym Resolution**: Trivia frequently asks what an acronym or abbreviation stands for, or uses location codes/state abbreviations (e.g., \"PHL\", \"NYC\"). Treat abbreviated forms as direct pointers to their full canonical names. Scan for definition markers like \"short for,\" \"stands for,\" or \"means\" in the context. If the context uses the abbreviation, output it; if it uses the full form, prefer the full form unless the clue strictly demands the abbreviation.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Partial Quote & Ellipsis Matching**: When a question contains a truncated sentence or partial quote, scan the context for the exact phrase or its immediate continuation. The missing word or phrase completing the thought is almost always the target entity.",
+      "content": "\n\n- **Fill-in-the-Blank & Word Completion**: When a clue implies a missing word or phrase (e.g., \"In titles it preceded...\"), treat the question as a structural blank. Identify the required syntactic role and locate the exact term that completes the pattern or fits the described relationship in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Resolving Implicit References**: Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.",
+      "content": "\n\n- **Ignoring Generic Category Suffixes**: When a question ends with a broad category (e.g., \"these animals,\" \"this ethnic group,\" \"this comic network\"), treat the category word as a structural placeholder, not the target. Ignore it during extraction and focus solely on the specific proper noun, acronym, or term that fulfills the description.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Handling Clue Comparisons & Analogies**: Questions frequently use a known entity as a comparative anchor (e.g., \"like [Name]\", \"similar to [Entity]\"). Never output the comparison term itself. Instead, extract the target category, role, or relationship being described, and resolve the pointer to the actual subject of the query.",
+      "content": "\n\n- **Boilerplate & Repetition Handling**: Contexts often consist of repetitive templates (e.g., job postings, dictionary entries, news wires). Ignore boilerplate formatting, dates, and metadata. Focus solely on the invariant factual core that repeats across documents to identify the answer.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "\n\n- **Strong Association Bridging**: When exact keyword matches are sparse, leverage high-confidence domain collocations and functional associations (e.g., \"dipper\" → honey, \"Emmentaler\" → Swiss cheese). Map the clue's functional descriptor to its standard real-world counterpart found in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

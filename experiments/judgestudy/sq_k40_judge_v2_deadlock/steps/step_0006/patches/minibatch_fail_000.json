@@ -1,0 +1,21 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 8,
+      "description": "Agents consistently output full names, descriptive phrases, plural forms, or collective terms instead of the exact short canonical entity requested."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates a systematic failure where agents over-extract by providing full names, titles, descriptions, pluralizations, or broader categories when the gold standard requires a precise, short canonical entity. Replacing the empty placeholder with targeted extraction rules will enforce canonical shortest forms, strict grammatical alignment, direct entity-only outputs, and constraint-based selection over prominence.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat descriptive, fragmented, or definition-style prompts as direct queries for a specific named entity. Match key descriptors directly to candidates in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n\n## Precision Extraction Rules\n- **Canonical Shortest Form**: Default to the shortest, most widely recognized identifier for an entity. Omit full middle names, honorifics, and descriptive clauses unless explicitly requested (e.g., output \"Fragonard\" not \"Jean-Honoré Fragonard\"; \"Sweden\" not \"Scandinavian country\").\n- **Exact String & Grammatical Alignment**: Strictly match the exact number (singular/plural), capitalization, and presence of articles (a/an/the) as specified by the gold standard or implied by the prompt. Do not generalize or simplify (e.g., output \"a falcon\" not \"Maltese Falcon\"; \"a sinkhole\" not \"sinkholes\").\n- **Direct Entity Over Description**: Never output a person's title, role, job description, or explanatory phrase. Extract only the named entity itself (e.g., output \"Vietnam\" not \"President of Vietnam...\"; output \"Vicar\" not \"vicar or rector\").\n- **Fragmented Query Resolution**: For incomplete prompts, lists, or noun-phrase-only questions, isolate the single target concept being queried. Ignore adjacent metadata, dates, or broader categories. Prioritize direct entity matches over inferred relationships or collective terms.\n- **Constraint Over Prominence**: When multiple entities in the context could fit a vague clue, select the one that strictly satisfies the unique constraint in the question. Do not default to the most frequently mentioned or prominently listed entity."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

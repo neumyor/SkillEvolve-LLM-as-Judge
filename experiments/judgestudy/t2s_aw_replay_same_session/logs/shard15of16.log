@@ -1,0 +1,77 @@
+method=trace2skill backend=api games=8
+out_dir=experiments/judgestudy/t2s_aw_replay_same_session/shard15of16
+shard 15/16: 8 of 134 games (corpus 725a53a6bf9e44fc)
+Initializing AlfredTWEnv...
+  0%|          | 0/341 [00:00<?, ?it/s] 92%|█████████▏| 314/341 [00:00<00:00, 3124.23it/s]100%|██████████| 341/341 [00:00<00:00, 3212.83it/s]
+Overall we have 134 games in split=eval_out_of_distribution
+Evaluating with 134 games
+[1/8] pick_and_place               success=True steps=5 invalid=0 (10.8s)
+[2/8] pick_heat_then_place_in_recep success=True steps=15 invalid=0 (57.6s)
+[3/8] look_at_obj_in_light         success=False steps=50 invalid=0 (485.6s)
+[4/8] pick_two_obj_and_place       success=True steps=12 invalid=0 (57.7s)
+[5/8] pick_clean_then_place_in_recep success=False steps=50 invalid=0 (523.0s)
+[6/8] pick_cool_then_place_in_recep success=True steps=6 invalid=0 (11.3s)
+[7/8] pick_clean_then_place_in_recep success=True steps=9 invalid=0 (27.3s)
+[8/8] pick_heat_then_place_in_recep success=False steps=50 invalid=0 (206.6s)
+
+==== Summary ====
+{
+  "n_episodes": 8,
+  "success_rate": 0.625,
+  "avg_steps": 24.62,
+  "invalid_action_rate": 0.0,
+  "invalid_request_rate": 0.0,
+  "uncorrected_invalid_request_rate": 0.0,
+  "corrections": {
+    "invalid_requests": 0,
+    "uncorrected_invalid_requests": 0,
+    "correction_attempts": 0,
+    "correction_successes": 0,
+    "truncated_responses": 0
+  },
+  "termination": {
+    "success": 5,
+    "environment_done": 3,
+    "step_limit": 0
+  },
+  "per_task_type": {
+    "look_at_obj_in_light": {
+      "count": 1,
+      "success_rate": 0.0,
+      "avg_steps": 50.0
+    },
+    "pick_and_place": {
+      "count": 1,
+      "success_rate": 1.0,
+      "avg_steps": 5.0
+    },
+    "pick_clean_then_place_in_recep": {
+      "count": 2,
+      "success_rate": 0.5,
+      "avg_steps": 29.5
+    },
+    "pick_cool_then_place_in_recep": {
+      "count": 1,
+      "success_rate": 1.0,
+      "avg_steps": 6.0
+    },
+    "pick_heat_then_place_in_recep": {
+      "count": 2,
+      "success_rate": 0.5,
+      "avg_steps": 32.5
+    },
+    "pick_two_obj_and_place": {
+      "count": 1,
+      "success_rate": 1.0,
+      "avg_steps": 12.0
+    }
+  },
+  "usage": {
+    "prompt_tokens": 172510,
+    "completion_tokens": 147306,
+    "api_calls": 197,
+    "api_errors": 1
+  }
+}
+
+Saved to experiments/judgestudy/t2s_aw_replay_same_session/shard15of16

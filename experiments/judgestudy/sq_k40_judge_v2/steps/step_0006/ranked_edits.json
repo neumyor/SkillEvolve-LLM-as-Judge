@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied failure-driven priority to deduplicate overlapping directives on Trivia/Fragment Handling, retaining the failure-driven 'Minimal Entity & Descriptor Pruning' rule as instructed. Preserved all non-conflicting success-driven insights, including Shared Attribute Inference, Primary Subject Isolation, Context Noise Filtering, Contextual Gap Bridging, and the optimized Workflow Step 3. Maintained original support counts and source types. Edits are ordered logically to align with the existing skill structure. [optimizer-ranked: selected 4/7 edits]",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "\n- **Minimal Entity & Descriptor Pruning**: For short, fragmentary, or keyword-only questions, extract only the single core entity or exact term. Strip all descriptive clauses, temporal markers, titles, and generic categories. Default to the shortest direct name that uniquely satisfies the query. Never output multi-word descriptions unless they form a fixed proper name. Strictly preserve indefinite/definite articles ('a', 'an', 'the') and singular/plural forms; do not alter number agreement or strip articles to force conciseness.",
+      "support_count": 11,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match.",
+      "content": "\n- **Primary Subject Isolation**: When contexts mention multiple related entities, isolate the one that directly satisfies the question's descriptor. Ignore tangential examples, historical anecdotes, or secondary mentions to prevent over-specification.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match.",
+      "content": "\n- **Context Noise Filtering**: When contexts contain mixed snippets (e.g., recipe blogs, forum comments, book reviews), explicitly ignore conversational framing, personal anecdotes, and tangential mentions. Anchor strictly to definitive factual statements or direct definitions that name the target entity.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "\n- **Category Constraint Enforcement**: When the question specifies a noun class or type (e.g., 'this acid', 'these birds'), strictly filter candidate entities to match that semantic constraint. Ignore closely related terms that share keywords but belong to a different category (e.g., reject 'soda' when the clue explicitly asks for an 'acid').",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit 0 has the highest support score and directly addresses the pervasive issue of verbose or grammatically altered outputs by providing concrete pruning rules that complement existing conciseness guidelines. Edits 2 and 3 tackle the two most common context-processing failures: entity distraction/confusion and noisy/unstructured text, respectively. Edit 4 prevents semantic/category mismatches, a frequent source of incorrect answers in trivia/QA tasks. Together, these four edits form a highly complementary set of general, actionable principles that systematically improve extraction precision, context filtering, and entity disambiguation across diverse tasks.",
+    "selected_indices": [
+      0,
+      2,
+      3,
+      4
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "batch_size": 2,
+  "success_patterns": [
+    "Direct entity extraction for trivia and clue-based questions",
+    "Strict adherence to <answer> tags with exact-match output",
+    "Minimal, direct reasoning linking clue to context"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently treat trivia and descriptive prompts as direct entity lookups, prioritizing exact-match extraction and strict formatting within <answer> tags while keeping reasoning minimal. Encoding these core behaviors establishes a reliable baseline for handling similar question types.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat trivia, Jeopardy-style, or descriptive prompts as direct queries for a specific named entity. Match key descriptors directly to candidates in the context.\n- **Exact Match Priority**: Output only the precise word, short phrase, or entity requested. Do not paraphrase, expand abbreviations, or add descriptive clauses unless explicitly asked.\n- **Grammatical Alignment**: Strictly match the number (singular/plural), capitalization, and form of the expected answer. Default to the shortest widely recognized identifier unless a full name is requested.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format.\n- **Concise Output**: Limit answers to a few words or a short phrase. Omit conversational filler or restatements.\n- **Minimal Reasoning**: Provide a single sentence linking the clue to the context before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

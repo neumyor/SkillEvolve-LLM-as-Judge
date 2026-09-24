@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Cross-Clause Fact Linking",
+    "Fractional & Percentage Normalization",
+    "Abbreviation & Code Resolution",
+    "Direct Q/A Pair Recognition"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate four key strategies not fully captured in the current skill: linking disparate factual clauses to a single entity, converting fractions to percentages for statistical matching, resolving city/airport codes, and recognizing direct Q/A pairings common in scraped trivia dumps.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "\n- **Cross-Clause Fact Linking**: Questions often split identifying attributes across multiple clauses or documents (e.g., 'wealthy inventor who died in a plane'). Parse each clause as an independent constraint and locate the single entity that bridges all described facts simultaneously."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+        "content": "\n- **Fractional & Percentage Normalization**: Questions frequently use fractions, ratios, or approximate proportions (e.g., 'about 1/5', 'nearly half') to describe demographics or statistics. Convert these values to comparable percentages or decimals to accurately match numerical data in the context."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Resolve Nicknames & Slogans**: When questions contain colloquial phrases, brand names, or slogans, search across multiple documents for explicit mappings or parenthetical clarifications that link the phrase to a concrete entity.",
+        "content": "\n- **Resolve Abbreviations & Codes**: Questions may use city codes, airport abbreviations, or acronyms (e.g., 'PHL', 'USA'). Map these to their full canonical names by leveraging contextual location cues, standard mappings, or surrounding geographic references."
+      },
+      {
+        "op": "replace",
+        "target": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs.",
+        "content": "- **Title-First & Direct Pair Recognition**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. In scraped trivia or quiz contexts, the answer is often explicitly stated immediately after the clue, separated by punctuation, or embedded in a parallel list. Scan for direct answer spans following question-like fragments before searching for inferred matches."
+      }
+    ]
+  },
+  "source_type": "success"
+}

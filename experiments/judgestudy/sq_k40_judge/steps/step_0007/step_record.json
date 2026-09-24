@@ -1,0 +1,100 @@
+{
+  "step": 7,
+  "epoch": 1,
+  "step_in_epoch": 6,
+  "timing": {
+    "rollout_s": 127.4,
+    "reflect_s": 49.8,
+    "aggregate_s": 122.4,
+    "select_s": 35.5,
+    "update_s": 0.0,
+    "evaluate_s": 25.8
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 129092,
+      "completion_tokens": 31423
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 8444,
+      "completion_tokens": 3240
+    },
+    "merge": {
+      "calls": 3,
+      "prompt_tokens": 10738,
+      "completion_tokens": 18808
+    },
+    "ranking": {
+      "calls": 1,
+      "prompt_tokens": 3271,
+      "completion_tokens": 4297
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 102238,
+      "completion_tokens": 39596
+    }
+  },
+  "rollout_hard": 0.725,
+  "rollout_soft": 0.805833,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1049,
+      "n_envs": 40,
+      "hard": 0.725,
+      "soft": 0.8058333333333334,
+      "n_failure_patches": 2,
+      "n_success_patches": 4
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 2,
+  "n_success_patches": 4,
+  "n_edits_merged": 15,
+  "n_edits_ranked": 4,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    8,
+    8,
+    8,
+    8
+  ],
+  "candidate_hash": "42fb15f2a257352b",
+  "candidate_skill_len": 7616,
+  "edit_apply_summary": {
+    "total": 4,
+    "applied": 4,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_verdict": "ACCEPT",
+  "judge_confidence": "high",
+  "judge_reason": "The candidate replaces rigid morphological alignment with a priority on canonical lexical forms, directly addressing multiple expansion failures (e.g., 'Sirius Satellite Radio' vs 'Sirius'). It also strengthens declarative clue parsing by explicitly instructing mental conversion to query slots, fixing descriptive answer failures. These changes are evidence-backed, generalizable, and improve precision without risking previously successful tasks.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 505,
+  "judge_usage": {
+    "prompt_tokens": 8444,
+    "completion_tokens": 3240,
+    "total_tokens": 11684
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "candidate_gate_score": 0.72,
+  "action": "accept_new_best",
+  "current_score": 0.72,
+  "best_score": 0.72,
+  "best_step": 7,
+  "current_origin": "step_0007",
+  "best_origin": "step_0007",
+  "skill_len": 7616,
+  "wall_time_s": 360.8
+}

@@ -1,0 +1,77 @@
+method=trace2skill backend=api games=8
+out_dir=experiments/judgestudy/t2s_aw_judge/final_t2s_judge_test/shard9of16
+shard 9/16: 8 of 134 games (corpus 725a53a6bf9e44fc)
+Initializing AlfredTWEnv...
+  0%|          | 0/341 [00:00<?, ?it/s] 82%|████████▏ | 281/341 [00:00<00:00, 2808.93it/s]100%|██████████| 341/341 [00:00<00:00, 2881.04it/s]
+Overall we have 134 games in split=eval_out_of_distribution
+Evaluating with 134 games
+[1/8] pick_and_place               success=True steps=5 invalid=0 (13.5s)
+[2/8] pick_cool_then_place_in_recep success=True steps=11 invalid=0 (41.0s)
+[3/8] look_at_obj_in_light         success=False steps=50 invalid=1 (885.5s)
+[4/8] pick_two_obj_and_place       success=False steps=50 invalid=1 (195.7s)
+[5/8] pick_and_place               success=False steps=50 invalid=3 (200.2s)
+[6/8] pick_cool_then_place_in_recep success=False steps=50 invalid=0 (256.2s)
+[7/8] pick_clean_then_place_in_recep success=True steps=32 invalid=0 (117.5s)
+[8/8] pick_heat_then_place_in_recep success=True steps=16 invalid=0 (244.7s)
+
+==== Summary ====
+{
+  "n_episodes": 8,
+  "success_rate": 0.5,
+  "avg_steps": 33.0,
+  "invalid_action_rate": 0.0189,
+  "invalid_request_rate": 0.0189,
+  "uncorrected_invalid_request_rate": 0.0,
+  "corrections": {
+    "invalid_requests": 5,
+    "uncorrected_invalid_requests": 0,
+    "correction_attempts": 5,
+    "correction_successes": 5,
+    "truncated_responses": 0
+  },
+  "termination": {
+    "success": 4,
+    "environment_done": 4,
+    "step_limit": 0
+  },
+  "per_task_type": {
+    "look_at_obj_in_light": {
+      "count": 1,
+      "success_rate": 0.0,
+      "avg_steps": 50.0
+    },
+    "pick_and_place": {
+      "count": 2,
+      "success_rate": 0.5,
+      "avg_steps": 27.5
+    },
+    "pick_clean_then_place_in_recep": {
+      "count": 1,
+      "success_rate": 1.0,
+      "avg_steps": 32.0
+    },
+    "pick_cool_then_place_in_recep": {
+      "count": 2,
+      "success_rate": 0.5,
+      "avg_steps": 30.5
+    },
+    "pick_heat_then_place_in_recep": {
+      "count": 1,
+      "success_rate": 1.0,
+      "avg_steps": 16.0
+    },
+    "pick_two_obj_and_place": {
+      "count": 1,
+      "success_rate": 0.0,
+      "avg_steps": 50.0
+    }
+  },
+  "usage": {
+    "prompt_tokens": 254086,
+    "completion_tokens": 183475,
+    "api_calls": 269,
+    "api_errors": 3
+  }
+}
+
+Saved to experiments/judgestudy/t2s_aw_judge/final_t2s_judge_test/shard9of16

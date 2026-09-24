@@ -1,0 +1,44 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 7,
+      "description": "Agents repeatedly cycle through the same few locations without tracking visited sites or expanding search scope."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 7,
+      "description": "Agents ignore systematic exploration and loop-avoidance principles, leading to infinite search cycles."
+    },
+    {
+      "failure_type": "appliance_error",
+      "count": 3,
+      "description": "Agents fail to verify inventory or appliance states after transformations, causing placement failures or holding incorrect objects."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch consistently shows agents cycling through identical locations (drawers, shelves, countertops) without tracking visited sites or pivoting categories. Additionally, agents frequently lose track of object state after appliance interactions. These edits enforce strict visited-location tracking, mandate category pivoting upon repeated failures, and require explicit inventory/appliance state checks to break loops and prevent premature placements.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "**Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "**Systematic exploration**: Maintain a mental checklist of visited locations. Visit each surface/container exactly once per category. If a specific furniture type (e.g., drawers, shelves) yields no results after 2 full passes, immediately pivot to a different category (e.g., countertops, tables, dressers)."
+      },
+      {
+        "op": "replace",
+        "target": "**Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+        "content": "**Avoid loops**: If you return to the same location 3 times without finding the target or altering your inventory/state, force an immediate jump to a completely unvisited area or furniture type. Do not cycle through known-empty containers."
+      },
+      {
+        "op": "append",
+        "content": "**Appliance & Inventory verification**: After any transformation (heating, cooling, cleaning) or appliance interaction, always check your inventory (`inventory`) to confirm what you are holding. Objects often remain inside appliances; retrieve them before navigating elsewhere."
+      },
+      {
+        "op": "append",
+        "content": "**Pre-placement state check**: Before attempting to place an object, verify it matches the goal description (e.g., correct temperature, cleanliness, object type). If mismatched or missing, abort placement and resume searching or transforming."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

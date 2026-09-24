@@ -1,0 +1,74 @@
+{
+  "reasoning": "Prioritized failure-driven edits for syntactic slot alignment, modifier handling, and morphological matching per guideline #1. Preserved success-driven enhancements for implicit reference resolution, declarative parsing, constraint verification, type priming, multi-constraint synthesis, and artifact stripping. Deduplicated morphological alignment rules by retaining the higher-priority failure version and removing the overlapping success bullet per guideline #2. Maintained original support counts and source types. Edits are ordered to reflect document structure while respecting priority rules.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Implicit Reference Resolution**: Map demonstratives like \"this [noun]\" directly to the concrete entity described in the context.",
+      "content": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as the primary query anchors. Map them directly to the concrete entity described in the context, ignoring intervening descriptive clauses.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Implicit Reference Resolution**: Map demonstratives like \"this [noun]\" directly to the concrete entity described in the context.",
+      "content": "\n- **Declarative Clue Parsing**: Treat declarative statements, descriptive fragments, and incomplete prompts identically to interrogative questions. Identify the grammatical slot or subject being described and treat it as a direct request for the missing entity.\n- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Ignore trailing metadata (e.g., question numbers) and focus solely on the semantic gap.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Constraint-Driven Verification**: Prioritize exact matches for numerical, temporal, or proper-noun constraints embedded in the clue. Discard candidates that satisfy the general topic but fail specific quantitative or categorical filters.",
+      "content": "- **Constraint-Driven Verification**: Prioritize exact matches for numerical, temporal, or proper-noun constraints embedded in the clue. Use these unique identifiers to cross-reference multiple documents or snippets, discarding candidates that satisfy the general topic but fail specific quantitative or categorical filters.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+      "content": "- **Clue Syntax Mapping & Type Priming**: Use early structural cues (e.g., \"this substance\", \"author of\", \"named for\") to pre-constrain the expected answer category (person, place, object, concept). Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+      "content": "\n- **Target Entity Isolation**: Strictly align the extracted answer with the grammatical slot queried. If the clue targets a location, territory, or state, do not return a city, university, or organization situated there. If it targets a role or title, do not default to a specific individual's name unless explicitly asked. Discard semantically related but syntactically incorrect candidates.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+      "content": "\n- **Multi-Constraint Synthesis**: When a clue provides multiple independent attributes (e.g., date, role, location, party, quantity), intersect these constraints to isolate the single matching entity. Discard candidates that satisfy only a subset of conditions.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+      "content": "- **Canonical Phrasing & Modifier Stripping**: Preserve specific distinguishing modifiers (e.g., species names like \"Brown\", regional qualifiers like \"American\", or official titles) if they are required to uniquely identify the entity or appear in the source text. Do not append external qualifiers or expand abbreviations not present in the context. Strip only generic descriptors or redundant biographical details. Match the exact noun-phrase granularity of the expected answer.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Trivia & Clue Extraction Rules",
+      "content": "\n- **Placeholder-to-Hypernym Resolution**: When clues use vague placeholders like \"these\", \"this group\", or \"species of\", map them directly to the specific category or hypernym identified in the context (e.g., \"Bears\", \"Hamstrings\"). Do not list examples or repeat the placeholder.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "\n## Additional Extraction Guidelines\n- **Exact Morphological Matching**: Preserve the exact singular or plural form of the entity as it appears in the context or matches the clue's grammatical structure. Do not auto-normalize plurals to singulars or vice versa unless the prompt explicitly demands it. Prioritize exact string alignment with the gold answer.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer.",
+      "content": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer. Ensure zero-leakage by stripping any leading labels, reasoning fragments, trailing punctuation, or prompt artifacts before closing the tag.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

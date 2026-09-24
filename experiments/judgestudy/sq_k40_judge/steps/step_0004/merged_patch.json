@@ -1,0 +1,61 @@
+{
+  "reasoning": "Applied failure-driven edits with highest priority. The overlapping success edit on 'Canonical Phrasing & Modifier Stripping' was superseded by the failure version per deduplication rules. All other success-driven edits targeting distinct rules were preserved. Added failure-driven 'Predicate-Entity Alignment' rule. Maintained original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+      "content": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles, official titles, country designations, and standard trivia forms exactly as they appear in canonical references (e.g., \"the Sahara\", \"People's Republic of China\"). Strip only non-essential adjectives, redundant descriptors, or conversational filler.",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+      "content": "\n- **Predicate-Entity Alignment**: Before extracting, verify that the candidate entity actually performs, possesses, or is located at the specific attribute/action described in the clue. Do not select an entity simply because it shares keywords with the prompt; confirm the semantic relationship holds in the context.",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts (e.g., scraped lists, flashcard dumps), ignore duplicated passages and isolate the single mention that directly defines or completes the query.",
+      "content": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts, cross-reference every constraint from the clue against candidate passages. Ignore duplicated entries and discard any entity that matches only some attributes or belongs to a different category.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Declarative Clue Parsing**: Treat declarative statements, descriptive fragments, and incomplete prompts identically to interrogative questions. Identify the grammatical slot or subject being described and treat it as a direct request for the missing entity.",
+      "content": "\n- **Title/Fragment Prompt Inference**: For prompts consisting solely of a title, name, or isolated fragment without an explicit question word, infer the likely query target (e.g., creator, director, subject matter) from surrounding context or metadata, and extract the corresponding entity.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+      "content": "\n- **Category, Syntactic & Morphological Alignment**: Verify that the candidate entity matches the exact grammatical role, categorical type, and number agreement implied by the clue (e.g., person vs. place, singular vs. plural, city vs. state). Discard candidates that satisfy factual constraints but fail the syntactic, categorical, or morphological filter.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Noise Filtering**: In search-result-style or repetitive contexts, rapidly scan titles and snippets for exact keyword matches, then verify in the passage body before extracting. Ignore duplicated passages.",
+      "content": "\n- **Delimiter-Aware Extraction**: When contexts resemble flashcards, search dumps, or pipe/comma-delimited lists (e.g., `CLUE | ANSWER` or `TERM, ANSWER`), treat structural delimiters as direct extraction boundaries. Extract the exact token immediately following the clue without adding contextual modifiers or completing sentences grammatically.",
+      "support_count": 4,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Minimal Reasoning**: Skip verbose derivations for straightforward retrieval tasks. If step-by-step reasoning is performed, place it outside the answer tags and keep it brief.",
+      "content": "- **Minimal Reasoning**: For direct retrieval or fill-in-the-blank queries, skip step-by-step derivation entirely. If reasoning is included, limit it to a single line confirming the exact match location. Place all reasoning outside `<answer>` tags.",
+      "support_count": 4,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Gold Alignment**: Match the granularity and phrasing of the expected answer exactly. If the gold answer is a single word or short phrase, do not expand it into a full sentence or add explanatory clauses inside the answer tags.",
+      "content": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

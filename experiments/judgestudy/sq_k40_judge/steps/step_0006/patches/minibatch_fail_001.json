@@ -1,0 +1,20 @@
+{
+  "batch_size": 2,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Agents over-specify answers by attaching proper noun modifiers or substituting collective categories for specific entities, failing to match the minimal/generic form of the gold answer."
+    }
+  ],
+  "patch": {
+    "reasoning": "Both failures demonstrate a systematic tendency to over-specify minimal or generic clues. The agent expanded '1 of these birds' to the full proper noun 'Maltese Falcon' and substituted a collective region name 'Nordic countries' for a specific country 'Sweden'. The current skill lacks explicit instructions on preserving the base noun/class when quantifiers imply a generic type, and on resisting geographic/proprietary modifier attachment. This edit enforces strict scope discipline and modifier stripping for common nouns.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Scope & Modifier Discipline**: When a clue queries a class, type, or generic entity (e.g., \"1 of these birds\", \"this region\"), extract the base noun or minimal identifier. Do not expand to full proper names, branded titles, or collective categories (e.g., output \"falcon\" not \"Maltese Falcon\", \"Sweden\" not \"Nordic countries\") unless the clue explicitly requires the specific designation. Strip geographic, proprietary, or descriptive modifiers that do not change the core factual target."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

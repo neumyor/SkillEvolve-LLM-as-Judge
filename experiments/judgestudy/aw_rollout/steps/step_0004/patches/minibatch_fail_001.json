@@ -1,0 +1,30 @@
+{
+  "batch_size": 2,
+  "failure_summary": [
+    {
+      "failure_type": "action_loop",
+      "count": 2,
+      "description": "Agent successfully cools and places object but enters a repetitive loop of re-picking, re-cooling, and re-placing due to uncertainty about task completion."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 2,
+      "description": "Skill lacks explicit instructions for verifying task completion and terminating, causing the agent to doubt successful execution and loop."
+    }
+  ],
+  "patch": {
+    "reasoning": "Both trajectories show the agent completing the cool-and-place sequence correctly but failing to recognize success, leading to infinite loops of re-execution. The skill needs explicit verification and termination guidelines, plus guidance on handling common object name variations (e.g., pot/pan) to prevent unnecessary re-searching.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Task Completion Verification\n1. **Verify State**: After placing the transformed object, check your inventory (`inventory`) and the target receptacle observation. If you are holding nothing and the object is visible on/at the target, the task is complete.\n2. **Terminate Immediately**: Once verified, output `<action>done</action>` to end the episode. Do not perform extra `look` or `take` actions unless the state clearly indicates failure.\n3. **Handle Synonyms**: In household tasks, objects like 'pot' and 'pan', or 'mug' and 'cup', are often used interchangeably in goals. If the exact goal word isn't found, use the closest functional equivalent already acquired or visible.\n4. **Break Doubt Loops**: If you have performed the required transformation and placement, trust the observation. Repeating the process will not change the outcome and wastes steps."
+      },
+      {
+        "op": "replace",
+        "target": "**Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+        "content": "**Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location. **Crucially**, do not re-perform transformations (clean/heat/cool) after placing the object unless explicitly instructed to do so again."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

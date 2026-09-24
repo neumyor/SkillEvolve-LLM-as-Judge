@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Heuristic location prioritization based on object type",
+    "Explicit appliance interaction protocol (open -> interact -> close)",
+    "Inventory verification after state-changing actions"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate smart search heuristics (prioritizing fridge for food, beds/desks for small items), strict appliance interaction protocols (opening before use, closing after), and inventory checks to resolve ambiguity after transformations. These patterns improve efficiency and robustness beyond the current generic 'systematic exploration' rule.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n9. **Heuristic Search**: Prioritize checking locations based on object type (e.g., fridge for food/perishables, beds/desks for small items, cabinets/drawers for storage) to reduce search time.\n10. **Appliance & Inventory Protocol**: Open appliances before interacting. After state-change actions (heat/cool/clean), use `inventory` to verify you are holding the transformed item if the observation is unclear. Close appliances after use to maintain environment state."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Common Mistakes to Avoid",
+        "content": "- **Ignoring appliance states**: Always open appliances before interacting. Neglecting to check inventory after transformations can lead to stuck states or misplaced items."
+      }
+    ]
+  },
+  "source_type": "success"
+}

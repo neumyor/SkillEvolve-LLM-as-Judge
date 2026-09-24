@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied Group 2's higher-consensus replacements and insertions for Jeopardy parsing, placeholder resolution, fragment handling, and justification standardization. Per priority rules, replaced 'Be Strictly Concise' with Group 1's 'Strict Name & Entity Formatting', then preserved Group 2's 'Verbatim Extraction Priority' as a complementary addition. Added Group 1's failure-driven rules for excluding clue modifiers/puns and prioritizing functional terms over instances, as they address critical parsing gaps not covered by success patches. All edits retain their original support counts and source types. [optimizer-ranked: selected 4/8 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions may appear as incomplete sentences or factual statements rather than direct interrogatives. Treat these as fill-in-the-blank or identification queries. Never interpret statement-based clues as True/False questions; always identify the missing entity or term. When context contains multiple related terms, select the one that precisely completes the clue or matches the specific trivia fact, avoiding broad generalizations.",
+      "content": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+      "content": "\n- **Verbatim Extraction Priority**: To prevent overly descriptive outputs, extract the target term exactly as it appears in the context. Do not paraphrase, expand, or add conversational qualifiers. Preserve original capitalization and formatting when possible to maximize exact-match probability.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions may appear as incomplete sentences or factual statements rather than direct interrogatives. Treat these as fill-in-the-blank or identification queries. Never interpret statement-based clues as True/False questions; always identify the missing entity or term. When context contains multiple related terms, select the one that precisely completes the clue or matches the specific trivia fact, avoiding broad generalizations.",
+      "content": "\n- **Resolve Placeholders & Figurative Terms**: Questions frequently use placeholders ('this [entity]', '& this [entity]'), quoted metaphors/puns, or standalone noun phrases to point to the answer. Treat these as direct identifiers and map them to the specific named entity in the context, ignoring the literal phrasing of the pointer itself.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+      "content": "\n- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [0] systematically upgrades the core trivia parsing strategy by introducing a clear framework to isolate entity slots and descriptive constraints, addressing a widespread failure mode in statement-based queries. Edit [5] provides a highly actionable, concrete mechanism (verbatim extraction) that directly solves the pervasive LLM tendency to over-paraphrase or add qualifiers, perfectly complementing the conciseness rule. Edits [1] and [2] fill critical gaps in handling abstract pointers, figurative language, and structural noise (fragments/ellipses/appositives), offering general principles that robustly anchor entity resolution across diverse question formats. Together, they form a cohesive, high-impact pipeline upgrade without duplicating existing content.",
+    "selected_indices": [
+      0,
+      5,
+      1,
+      2
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct entity extraction from trivia/factoid questions by mapping descriptive phrases to explicit statements in context snippets.",
+    "Efficient scanning strategy prioritizing document titles and opening lines to locate factual answers quickly.",
+    "Strict adherence to concise output formatting, placing only the final answer inside <answer> tags without extra commentary."
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories successfully answered trivia-style questions by directly extracting named entities from context snippets. Agents consistently used a fast scanning approach on titles/first lines and strictly formatted outputs. Encoding these patterns will reinforce efficient retrieval, reduce overthinking, and ensure correct formatting for similar factoid tasks.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n## Core Principles\n- **Direct Fact Matching**: For trivia and factoid questions, map descriptive phrases in the question to explicit statements in the context. Prioritize exact keyword overlaps between the question and document titles/snippets.\n- **Efficient Scanning**: Quickly scan document titles and the first sentence of each passage. Factual answers are typically stated directly in these locations without requiring deep synthesis or cross-document reasoning.\n- **Concise Output**: Always provide the final answer strictly inside `<answer>...</answer>` tags. Keep the content to a few words or a short phrase. Omit explanations, greetings, or restatements of the question.\n\n## Execution Steps\n1. **Identify Key Clues**: Extract the core entity or concept the question asks for (e.g., person, place, title, term).\n2. **Scan & Match**: Look for direct matches in the context. If a snippet explicitly defines or names the clue, select it immediately.\n3. **Format Answer**: Wrap the extracted entity in `<answer>` tags. Ensure spelling matches standard usage unless the context specifies otherwise."
+      }
+    ]
+  },
+  "source_type": "success"
+}

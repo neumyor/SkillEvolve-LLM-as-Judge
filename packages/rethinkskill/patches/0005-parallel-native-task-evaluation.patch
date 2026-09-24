@@ -1,0 +1,214 @@
+--- a/src/rethinkskill/runtime/runner.py
++++ b/src/rethinkskill/runtime/runner.py
+@@ -3,6 +3,8 @@
+ from __future__ import annotations
+ 
+ import json
++import threading
++from concurrent.futures import ThreadPoolExecutor
+ from collections.abc import Callable, Mapping
+ from contextlib import AbstractContextManager
+ from dataclasses import dataclass, field, replace
+@@ -93,6 +95,7 @@
+     _attempted: int = field(default=0, init=False, repr=False)
+     _completed: int = field(default=0, init=False, repr=False)
+     _known: bool = field(default=True, init=False, repr=False)
++    _lock: threading.Lock = field(default_factory=threading.Lock, init=False, repr=False)
+ 
+     def __post_init__(self) -> None:
+         self._manifest = freeze_json_mapping(self._manifest)
+@@ -101,9 +104,10 @@
+         return thaw_json_mapping(self._manifest)
+ 
+     def snapshot(self) -> ObservedCallAccounting:
+-        return ObservedCallAccounting(
+-            attempted=self._attempted, completed=self._completed, known=self._known
+-        )
++        with self._lock:
++            return ObservedCallAccounting(
++                attempted=self._attempted, completed=self._completed, known=self._known
++            )
+ 
+     def delta(self, baseline: ObservedCallAccounting) -> ObservedCallAccounting:
+         if type(baseline) is not ObservedCallAccounting:
+@@ -131,9 +135,16 @@
+         except Exception:
+             self._known = False
+             raise
+-        self._attempted += outcome.attempted_calls
+-        self._completed += outcome.completed_calls
++        with self._lock:
++            self._attempted += outcome.attempted_calls
++            self._completed += outcome.completed_calls
+         return outcome
++
++    def record_outcome(self, outcome: ModelOutcome) -> None:
++        """Merge one independently observed task into the run total."""
++        with self._lock:
++            self._attempted += outcome.attempted_calls
++            self._completed += outcome.completed_calls
+ 
+ 
+ _CAPABILITY_KEYS = {
+@@ -341,6 +352,7 @@
+     seed: int = 42
+     asset_root: Path | None = None
+     timeout_seconds: int = 900
++    task_workers: int = 1
+ 
+     def validate(self) -> None:
+         if (
+@@ -355,6 +367,8 @@
+             raise ConfigurationError("native limit and ids_file are mutually exclusive")
+         if type(self.timeout_seconds) is not int or self.timeout_seconds < 1:
+             raise ConfigurationError("native timeout_seconds must be positive")
++        if type(self.task_workers) is not int or not 1 <= self.task_workers <= 64:
++            raise ConfigurationError("native task_workers must be between 1 and 64")
+         if type(self.seed) is not int or self.seed < 0:
+             raise ConfigurationError("native seed must be non-negative")
+         if self.ids_file is not None and (
+@@ -893,7 +907,15 @@
+     state: NativeRunState,
+     failure_stage: FailureStage,
+ ) -> None:
+-    """Execute the frozen task sequence and update core-owned run state."""
++    """Execute frozen tasks, optionally overlapping independent task calls.
++
++    Materialization and publication remain ordered.  Only the model/harness
++    boundary is submitted concurrently; results are consumed in plan order so
++    receipts, rows, call totals and audit artifacts retain the official order.
++    A parallel task failure is recorded and later validity checks still reject
++    non-study failures; it does not silently disappear or abort sibling tasks.
++    """
++    prepared = []
+     for task, rendered in zip(plan.tasks, plan.rendered_tasks, strict=True):
+         with failure_stage("task_materialization"):
+             rendered.validate_for(task)
+@@ -902,72 +924,79 @@
+             verifier_workspace = task_root / "verifier"
+             materialize_rendered_workspace(rendered, workspace, skill_name="rethinkskill-target")
+             atomic_write(task_root / "invocation.txt", rendered.invocation.encode("utf-8"))
+-            materialize_task_assets(
+-                task, workspace=workspace, verifier_workspace=verifier_workspace
+-            )
+-        with failure_stage("task_execution"):
++            materialize_task_assets(task, workspace=workspace, verifier_workspace=verifier_workspace)
++            prepared.append((task, rendered, task_root, workspace, verifier_workspace))
++
++    def invoke(item):
++        task, rendered, task_root, workspace, verifier_workspace = item
++        try:
++            # The native boundary compares executor counts before/after each
++            # task. A private observer is required while tasks overlap; its
++            # frozen outcome is merged into the run observer on publication.
++            task_executor = executor
++            if workers > 1:
++                task_executor = ObservedModelExecutor(executor._executor, executor.public_manifest())
+             execution = execute_native_task_boundary(
+-                harness=plan.spec.harness,
+-                task=task,
+-                rendered=rendered,
+-                executor=executor,
+-                workspace=workspace,
++                harness=plan.spec.harness, task=task, rendered=rendered,
++                executor=task_executor, workspace=workspace,
+                 verifier_workspace=verifier_workspace,
+                 timeout_seconds=plan.options.timeout_seconds,
+             )
++            return execution
++        except Exception as exc:
++            return NativeTaskExecution(
++                outcome=ModelOutcome(status="FAILED", response="", raw="", process={},
++                    attempted_calls=0, completed_calls=0,
++                    failure_class="parallel_task_error", failure=boundary_failure("task execution", exc)),
++                abort_after_task=True, call_accounting_known=False,
++            )
++
++    def publish(item, execution):
++        task, rendered, task_root, workspace, verifier_workspace = item
+         outcome = execution.outcome
+-        state.call_accounting_known = (
+-            state.call_accounting_known and execution.call_accounting_known
+-        )
++        if workers > 1:
++            executor.record_outcome(outcome)
++        state.call_accounting_known = state.call_accounting_known and execution.call_accounting_known
+         state.attempted_calls += outcome.attempted_calls
+         state.completed_calls += outcome.completed_calls
+         with failure_stage("task_result"):
+             atomic_write(task_root / "raw.txt", outcome.raw.encode("utf-8"))
+             atomic_write_json(task_root / "EXECUTION.json", outcome.public())
+             try:
+-                row = result_payload(
+-                    plan,
+-                    task,
+-                    outcome_status=outcome.status,
+-                    response=outcome.response,
+-                    attempted_calls=outcome.attempted_calls,
+-                    completed_calls=outcome.completed_calls,
+-                    failure_class=outcome.failure_class,
+-                    failure=outcome.failure,
+-                    process=outcome.process,
+-                    workspace=workspace,
+-                    verifier_workspace=verifier_workspace,
+-                )
++                row = result_payload(plan, task, outcome_status=outcome.status,
++                    response=outcome.response, attempted_calls=outcome.attempted_calls,
++                    completed_calls=outcome.completed_calls, failure_class=outcome.failure_class,
++                    failure=outcome.failure, process=outcome.process,
++                    workspace=workspace, verifier_workspace=verifier_workspace)
+             except Exception as exc:
+-                row = result_payload(
+-                    plan,
+-                    task,
+-                    outcome_status="FAILED",
+-                    response=outcome.response,
+-                    attempted_calls=outcome.attempted_calls,
+-                    completed_calls=outcome.completed_calls,
+-                    failure_class="verifier_presemantic_failure",
+-                    failure=boundary_failure("verifier boundary", exc),
+-                    process={
+-                        **thaw_json_mapping(outcome.process),
+-                        "verifier_boundary": {"exception_type": safe_exception_type(exc)},
+-                    },
+-                    workspace=workspace,
+-                    verifier_workspace=verifier_workspace,
+-                )
++                row = result_payload(plan, task, outcome_status="FAILED", response=outcome.response,
++                    attempted_calls=outcome.attempted_calls, completed_calls=outcome.completed_calls,
++                    failure_class="verifier_presemantic_failure", failure=boundary_failure("verifier boundary", exc),
++                    process={**thaw_json_mapping(outcome.process), "verifier_boundary":{"exception_type":safe_exception_type(exc)}},
++                    workspace=workspace, verifier_workspace=verifier_workspace)
+             atomic_write_json(task_root / "RESULT.json", row)
+         with failure_stage("task_evidence"):
+-            state.task_evidence[task.task_id] = write_native_task_evidence(
+-                plan.output_root,
+-                task=task,
+-                result=row,
+-            )
++            state.task_evidence[task.task_id] = write_native_task_evidence(plan.output_root, task=task, result=row)
+         state.rows.append(row)
+-        if execution.abort_after_task:
++        # In parallel mode all already-submitted siblings are allowed to finish.
++        # Their failures remain visible in the receipt and invalidate the run
++        # unless the explicit study policy accepts them.
++        if execution.abort_after_task and workers == 1:
+             state.aborted_after_task_id = task.task_id
+             state.abort_failure_class = str(outcome.failure_class)
+-            break
++            return True
++        return False
+ 
++    workers = plan.options.task_workers
++    if workers > 1:
++        with ThreadPoolExecutor(max_workers=min(workers, len(prepared)),
++                                thread_name_prefix="rethinkskill-task") as pool:
++            for item, execution in zip(prepared, pool.map(invoke, prepared), strict=True):
++                publish(item, execution)
++    else:
++        for item in prepared:
++            if publish(item, invoke(item)):
++                break
+ 
+ def _provenance_files(plan: NativeRunPlan) -> tuple[Path, ...]:
+     provenance_files = getattr(plan.spec.harness, "provenance_files", None)

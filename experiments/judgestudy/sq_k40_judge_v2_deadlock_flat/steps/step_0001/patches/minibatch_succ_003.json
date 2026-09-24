@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Keyword-driven entity resolution from descriptive or trivia-style clues",
+    "Cross-document scanning to locate exact phrase matches or semantic equivalents",
+    "Strict extraction of the target entity name without extra explanation",
+    "Handling implicit references (nicknames, aliases, cultural shorthand)"
+  ],
+  "patch": {
+    "reasoning": "All successful trajectories demonstrate a consistent pattern of treating trivia/descriptive prompts as entity-matching tasks. Agents successfully scan fragmented contexts for exact keywords or semantic equivalents (e.g., 'Jewish penicillin' → chicken soup, 'Happiest Place on Earth' → Disneyland), resolve implicit references, and output only the precise entity name. Encoding these strategies will improve robustness for similar QA tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "# Question Answering Skill\n\n(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Reading Strategy\n- **Scan for Keywords & Semantic Equivalents**: Quickly locate exact terms from the question or their direct aliases/nicknames in the context (e.g., \"Jewish penicillin\" → chicken soup, \"Happiest Place on Earth\" → Disneyland).\n- **Resolve Descriptive Clues**: Treat trivia-style or declarative prompts as entity-matching tasks. Map descriptive phrases to the specific subject they refer to.\n- **Cross-Document Verification**: If multiple documents mention the keyword, prioritize the one that explicitly links the clue to the target entity or provides the most direct confirmation.\n\n## Answer Generation\n- **Extract Core Entity Only**: Return only the precise name or phrase requested. Strip away dates, locations, or explanatory clauses unless explicitly part of the answer.\n- **Handle Implicit References**: Recognize cultural shorthand, historical aliases, or colloquial names and map them to their canonical forms if needed, but stick to the exact wording expected by the gold answer.\n- **Format Strictly**: Provide brief step-by-step reasoning outside the tags, then place the final concise answer inside `<answer>...</answer>` tags. Do not repeat the question or add filler text."
+      }
+    ]
+  },
+  "source_type": "success"
+}

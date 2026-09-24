@@ -1,0 +1,35 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 5,
+      "description": "Agents repeatedly cycle through the same furniture type (drawers, shelves, cabinets) without switching categories or exhausting other location types."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 3,
+      "description": "Agents lose track of inventory state after appliance interactions, leading to trips to destinations without the object or repeated heating/cooling cycles."
+    },
+    {
+      "failure_type": "missed_object",
+      "count": 3,
+      "description": "Agents overlook visible target objects or incorrectly substitute similar items (e.g., pot for pan, bowl for plate) due to loose object matching."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch shows systematic failures in three areas: (1) getting stuck in single-category search loops, (2) mishandling appliance open/close/take sequences causing inventory loss, and (3) substituting visually similar but semantically distinct objects. These edits enforce strict appliance workflows, mandate inventory checks when uncertain, require category-switching during search, and prevent object-type substitution.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "\n**Appliance Workflow**: For microwaves and fridges, strictly follow: `open` -> `move [obj] to [appliance]` -> `close` -> `heat/cool [obj] with [appliance]` -> `open` -> `take [obj] from [appliance]`. Never leave the appliance while the object is inside, and always verify possession via `inventory` before navigating to the final destination."
+      },
+      {
+        "op": "append",
+        "content": "\n## Search Optimization\n- **Category Switching**: If a specific container type (e.g., drawers, shelves, cabinets) yields no results after checking multiple instances, immediately pivot to a different furniture category (e.g., countertops, dressers, beds, sofas) rather than cycling through the same type.\n- **Exact Object Matching**: Verify the exact object name matches the goal. Do not substitute similar items (e.g., 'pot' for 'pan', 'bowl' for 'plate'). If the target is not found, re-examine recently visited surfaces carefully before assuming it is hidden."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

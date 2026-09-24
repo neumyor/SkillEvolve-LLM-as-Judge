@@ -1,0 +1,30 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "action_loop",
+      "count": 1,
+      "description": "Agent enters a repetitive take-cool-place cycle after successfully completing the task, failing to recognize termination."
+    },
+    {
+      "failure_type": "missed_object",
+      "count": 1,
+      "description": "Agent substitutes 'pot' for 'pan', completes task with wrong object, then restarts search for exact 'pan' near step limit."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent fails to detect task completion after placing the cooled object, causing a redundant pickup-cool-place loop. It also incorrectly substitutes 'pot' for 'pan', wasting steps before restarting the search. These edits enforce strict termination verification upon successful placement and clarify object-naming precision to prevent invalid substitutions.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "7. Avoid loops: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+        "content": "7. Verify completion & avoid loops: After placing the transformed object, immediately check the observation. If the object is on the target receptacle and you are empty-handed, the task is complete—do not re-pick or continue acting. Never repeat the same action more than twice in a row without new progress."
+      },
+      {
+        "op": "append",
+        "content": "\n## Termination & Validation Protocol\n- **Immediate Stop Condition**: After placing the transformed object, verify via observation that it rests on the target receptacle and your inventory is empty. If confirmed, cease all further actions. Do not re-pick, re-examine, or perform redundant checks; the episode terminates automatically upon success.\n- **Object Naming Precision**: Tasks require exact object matches. If the goal specifies \"pan\", strictly search for \"pan\". Do not substitute similar items (e.g., \"pot\", \"bowl\") unless absolutely necessary, as substitutions frequently fail validation. Exhaustively search standard locations for the exact name before considering alternatives."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

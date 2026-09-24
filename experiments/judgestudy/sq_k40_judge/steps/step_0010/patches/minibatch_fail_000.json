@@ -1,0 +1,51 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Agents append categorical nouns or classifiers from the prompt (e.g., 'bear market', 'Capital cities') instead of isolating the specific entity."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Agents incorrectly strip necessary geographical/administrative prefixes (e.g., 'Lake') or alter canonical spacing/compound forms (e.g., 'Show Boat')."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 2,
+      "description": "Agents return full names or overarching container/organization names when the clue or gold answer requires a surname or specific attribute/component."
+    },
+    {
+      "failure_type": "other",
+      "count": 1,
+      "description": "Agent fails to resolve implicit hierarchical queries (city -> country) due to over-extraction of official titles."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals systematic failures in entity isolation: agents frequently append category labels from the prompt, strip essential canonical prefixes, misapply name granularity (full name vs. surname), and confuse containers with their defining attributes. These edits strengthen existing rules by explicitly forbidding category mirroring, mandating prefix preservation, clarifying attribute-vs-container resolution, and enforcing exact canonical spelling/name length.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.",
+        "content": "- **No Syntactic Mirroring & Category Exclusion**: Never repeat the prompt's phrasing, complete sentences grammatically, or append categorical nouns/classifiers explicitly stated in the clue (e.g., output \"bear\" not \"bear market\", \"Minsk\" not \"Capital cities\"). Treat the prompt's category label as a structural pointer, not part of the answer. Output only the isolated entity requested."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Strict Canonical Truncation**: When extracting titles, organizations, or concepts, prefer the recognized short or canonical form over the full descriptive title. Do not append categorical nouns (e.g., \"Party\", \"Show\", \"Structure\", \"Book\") or prepositional phrases unless they are strictly part of the official short name (e.g., output \"Bull Moose\" not \"Bull Moose Party\", \"Studio 60\" not \"Studio 60 on the Sunset Strip\", \"Pyre\" not \"funeral pyre\").",
+        "content": "- **Preservation of Standard Prefixes**: Do not strip standard geographical, administrative, or institutional prefixes (e.g., \"Lake,\" \"Mount,\" \"St.,\" \"Republic,\" \"People's\") when they constitute the recognized canonical name. Prioritize exact lexical matching over heuristic shortening."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Container-Part Disambiguation**: When a clue references a sub-component, building, or feature located *within* a larger site or entity (e.g., 'building at this site'), always resolve the query to the *container* or *primary subject* requested by the prompt's anchor. Do not answer with the sub-component itself.",
+        "content": "- **Attribute vs. Container Resolution**: When a clue references a collective, organization, or container and queries its constituent parts or defining attributes (e.g., \"alliance of these Chinese businesses\"), isolate the specific attribute, type, or component requested. Do not default to the overarching entity name unless it directly fills the semantic gap."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Formal vs. Alias Resolution**: When both a formal/full name and a common alias or foreign variant appear in the context, prioritize the formal English name for historical/trivia queries (e.g., \"Patricia Hearst\" over \"Patty Hearst\", \"Pitti Palace\" over \"Palazzo Pitti\") unless the clue explicitly signals the alias or foreign term.",
+        "content": "- **Exact Canonical Spelling & Name Granularity**: Preserve exact internal spacing, hyphenation, or compound forms in titles and names (e.g., \"Showboat\" not \"Show Boat\"). For persons, prioritize surnames or concise canonical forms over full multi-part names unless the clue explicitly signals a longer identifier. Avoid adding middle initials or titles unless integral to the official short name."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

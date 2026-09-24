@@ -1,0 +1,19 @@
+{
+  "batch_size": 4,
+  "success_patterns": [
+    "Declarative Factoid Parsing",
+    "Narrative Framing Stripping",
+    "Canonical Proper Noun Targeting"
+  ],
+  "patch": {
+    "reasoning": "All four successful trajectories feature long, declarative trivia clues that function as multi-constraint search queries rather than simple placeholders or reverse clues. The agents successfully stripped narrative/conversational framing, intersected specific predicates (dates, events, titles) to locate the entity, and strictly output the canonical proper noun. These strategies are not explicitly codified in the current skill, which focuses more on placeholders, partial quotes, and reverse clues.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+        "content": "\n\n- **Declarative Factoid Parsing**: When the question is a complete declarative sentence stating a fact or event, treat it as a multi-constraint search query. Extract the subject placeholder (e.g., \"he\", \"this leader\") and key predicates (dates, actions, titles) to intersect with context entities.\n- **Narrative Framing Stripping**: Trivia clues often use dramatic, conversational, or story-like phrasing. Ignore narrative flourishes and focus solely on extracting verifiable factual constraints to anchor the search.\n- **Canonical Proper Noun Targeting**: For declarative clues, the answer is invariably the canonical proper noun of the subject. Never output the predicate, a descriptive summary, or a generic role unless it is part of the official entity name."
+      }
+    ]
+  },
+  "source_type": "success"
+}

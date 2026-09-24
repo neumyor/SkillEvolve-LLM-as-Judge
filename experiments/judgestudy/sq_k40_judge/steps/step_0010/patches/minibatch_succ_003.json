@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative & Fragmented Prompt Conversion",
+    "Catchphrase & Descriptive Phrase Resolution",
+    "Trade Name & Generic Mapping",
+    "Strict Contextual Descriptor Stripping"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently treat fragmented, declarative, and quote-based prompts as direct fill-in-the-blank slots, resolving iconic phrases and trade/generic pairs to exact canonical entities while rigorously stripping contextual descriptors from the final output. These patterns address subtle failure modes where agents mirror clue categories, fail to map branded/generic terms, or over-derive answers instead of performing direct slot-filling.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, and song lyrics as direct queries for their underlying subject or concept. Strip attribution cues (e.g., 'According to...', 'It's the cry of') and resolve the semantic gap to the specific entity or idea being described.",
+        "content": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, catchphrases, slogans, and iconic descriptive phrases as direct queries for their underlying subject or concept. Map playful or cultural phrasing to its literal factual referent using context verification. Strip all figurative, conversational, or attribution framing from the final answer."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Acronym & Abbreviation Expansion**: When clues use acronyms, initialisms, or shortened forms (e.g., PIP, uke, NASA), expand them to their full canonical terms if the context supports it. Prioritize the unabbreviated form unless the gold answer explicitly requires the short version.",
+        "content": "\n- **Trade Name & Generic Mapping**: When a clue provides a generic term (e.g., drug compound, material, chemical) and requests a specific brand, or vice versa, resolve to the exact canonical trade name or official designation. Prioritize the requested form (brand vs. generic) over the contextual mention, and verify alignment with the clue's explicit request."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Contextual Descriptor Stripping**: Before finalizing the answer, actively remove any category nouns, adjectives, or descriptive modifiers from the clue that merely point to the entity's class (e.g., \"fruit\", \"scale\", \"city\", \"film\"). The output must contain ONLY the isolated proper noun or canonical term, never the clue's framing language."
+      }
+    ]
+  },
+  "source_type": "success"
+}

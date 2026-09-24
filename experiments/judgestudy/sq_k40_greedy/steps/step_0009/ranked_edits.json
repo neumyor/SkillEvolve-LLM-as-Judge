@@ -1,0 +1,41 @@
+{
+  "reasoning": "Applied all failure-driven patches as high priority. Overrode the conflicting success patch on 'Strip Generic Suffixes & Modifiers' with the failure-driven 'Strict Minimal Entity Extraction' rule per priority guidelines. Preserved all other success-driven patches targeting distinct sections or adding new heuristics. Maintained original support counts and source types. No protected sections were encountered. [optimizer-ranked: selected 4/10 edits]",
+  "edits": [
+    {
+      "op": "append",
+      "content": "\n## Rapid Trivia Resolution Heuristics\n- **Direct Lookup Priority**: When a question closely mirrors a document title, snippet, or definition sentence, treat it as a direct lookup request. Extract the answer verbatim from the matching passage without applying complex semantic transformations or over-analyzing.\n- **Fragment-to-Entity Mapping**: Treat statement fragments, reverse clues, and demonstrative placeholders as direct pointers to a single proper noun. Do not output descriptive phrases, categories, or partial clauses; resolve the pointer to the exact canonical entity name.\n- **Search Priority Protocol**: Execute a strict three-step search: (1) Scan `[TLE]` and `[PAR]` metadata for exact/near-exact matches; (2) Apply logical AND filters across all stated constraints to narrow candidates; (3) Extract the exact term only if it satisfies every constraint simultaneously. Do not read deeply until shallow scans fail.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Snippet/Title Exact Match Priority**: Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning document titles and snippets for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis.",
+      "content": "- **Snippet/Title Exact Match Priority**: Treat document titles (`[TLE]`) and snippets (`[PAR]`) as the primary search surface. Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning these metadata fields for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis. **Crucially, always strip document title prefixes/suffixes and metadata artifacts (e.g., \"- Wikipedia\", \"Official Flag of\") to isolate the core entity requested by the clue.**",
+      "support_count": 9,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+      "content": "\n\n- **Target Dimension Verification**: Before finalizing, explicitly verify the exact dimension requested (e.g., location, person, original phrase, specific term). Never substitute related concepts such as relationships (\"Sisters\"), phenomena (\"Spoonerism\"), or categories. If the clue describes a place or entity via attributes, output the place/entity itself, not the descriptor or relational link.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. Prioritize the shortest canonical identifier that satisfies all constraints (e.g., \"Roanoke\" not \"Roanoke Island\", \"Sirius\" not \"Sirius Satellite Radio\", \"George Bush\" not \"George H. W. Bush\").",
+      "content": "- **Strict Minimal Entity Extraction**: Aggressively strip non-essential modifiers, corporate suffixes (e.g., \"Cards\", \"Inc.\"), middle initials (e.g., \"B.\"), titles, and roles (e.g., \"King of\", \"President\"). For events or phenomena, extract only the core term (e.g., \"transit\" not \"Transit of Venus\"). Always prioritize the shortest, most direct identifier that satisfies all constraints.",
+      "support_count": 7,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [9] provides a high-impact, structured search protocol that resolves ambiguity in execution order (metadata scan → constraint filtering → extraction), addressing a widespread failure pattern of premature deep reading or missed shortcuts. Edit [5] targets a pervasive RAG-specific failure mode by explicitly instructing the model to strip metadata artifacts from titles/snippets, ensuring clean inputs and preventing noisy outputs. Edit [1] fills a critical gap in constraint verification by mandating explicit dimension/type checking, preventing the common error of substituting categories, relationships, or descriptors for the target entity. Edit [0] strengthens the final formatting stage by aggressively enforcing minimal entity extraction, reducing verbosity and improving precision. Together, they form a complementary, end-to-end pipeline optimization covering workflow, input cleaning, validation, and output formatting.",
+    "selected_indices": [
+      9,
+      5,
+      1,
+      0
+    ]
+  }
+}

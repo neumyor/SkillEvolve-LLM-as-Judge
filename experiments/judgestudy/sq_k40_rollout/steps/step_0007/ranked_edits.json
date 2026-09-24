@@ -1,0 +1,41 @@
+{
+  "reasoning": "Prioritized failure-driven edits addressing conciseness, granularity, primary entity disambiguation, and semantic verification as they carry higher corrective priority. Integrated success-driven edits covering jeopardy-style parsing, title scanning enhancements, multi-passage corroboration, category resolution, definition matching, normalization techniques, abbreviation handling, mandatory grounding, noise filtering, and temporal anchoring. All edits target distinct or complementary regions of the skill with no direct conflicts requiring override. Preserved original support counts and source types. [optimizer-ranked: selected 4/15 edits]",
+  "edits": [
+    {
+      "op": "append",
+      "content": "\n- **Noise Filtering via Cross-Doc Repetition**: Search contexts often contain noisy, fragmented, or boilerplate snippets. Prioritize candidate answers that are explicitly repeated or corroborated across multiple independent `[DOC]` blocks. Disregard isolated mentions or metadata-heavy titles that lack semantic confirmation in the paragraph text.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+      "content": "- **Mandatory Explicit Grounding**: Always precede the final answer with a single-sentence reasoning step that explicitly quotes or closely paraphrases the exact context span containing the answer. Do not rely on external knowledge or implicit assumptions; the evidence must be directly visible in the provided text.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+      "content": "\n- **Definition & Equivalence Resolution**: When clues function as definitions, synonyms, or colloquial labels (e.g., 'A short, witty saying', 'Americans refer to Emmentaler as this'), scan for explicit dictionary-style definitions, glossary entries, or 'X is known as/called Y' structures. Map the clue's descriptive phrase directly to the canonical term defined in the text.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").\n\n- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+      "content": "- **Canonical Short-Name Priority**: Always extract the shortest, most recognizable identifier for the entity. Aggressively strip descriptive suffixes, generic qualifiers, and full formal names (e.g., output 'Sirius' not 'Sirius Satellite Radio', 'Roanoke' not 'Roanoke Island', 'George Bush' not 'George H. W. Bush'). If the clue points to a common name or brand, use that exact short form. Never output definitions, descriptions, or multi-word explanatory phrases.\n- **Morphological & Plurality Alignment**: Match the grammatical number and word form (noun vs. adjective vs. verb) of the expected answer. If the context uses a different form (e.g., singular vs. plural, base verb vs. gerund), normalize to the standard dictionary form or the form implied by the clue's syntax. Prioritize the head term over compound phrases.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Selected edits target the most pervasive failure modes in search-based QA while filling critical gaps without duplicating existing rules. [13] addresses the widespread issue of noisy/fragmented search contexts by prioritizing cross-document repetition, drastically reducing false positives. [12] upgrades optional reasoning to mandatory explicit grounding, forcing evidence citation and eliminating hallucinations. [9] captures a high-frequency trivia pattern (definition/synonym-to-entity mapping) that is currently underspecified. [0] systematically overhauls the output section with aggressive short-name extraction and morphological normalization, directly preventing common grading penalties for verbosity and form mismatches. All four are highly actionable, generalizable, and cover distinct pipeline stages (context filtering, clue interpretation, output formatting, and reasoning grounding).",
+    "selected_indices": [
+      13,
+      12,
+      9,
+      0
+    ]
+  }
+}

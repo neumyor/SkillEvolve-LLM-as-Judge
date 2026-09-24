@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Flashcard/Definition Direct Lookup",
+    "Structural Separator Parsing",
+    "Zero-Reasoning Verbatim Extraction"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories relied on treating flashcard-style and definition prompts as direct string-match requests, completely bypassing semantic reasoning. They also consistently parsed structural punctuation (colons, ampersands) as clue separators rather than semantic content, and preserved exact casing/morphology. These patterns reinforce existing heuristics but require explicit emphasis to prevent agents from over-analyzing or misinterpreting structural artifacts.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Direct Lookup Priority: When a question closely mirrors a document title, snippet, or definition sentence, treat it as a direct lookup request. Extract the answer verbatim from the matching passage without applying complex semantic transformations or over-analyzing.",
+        "content": "Direct Lookup Priority: When a question closely mirrors a document title, snippet, or definition sentence, treat it as a direct lookup request. **Bypass semantic reasoning entirely**; extract the answer verbatim from the matching passage."
+      },
+      {
+        "op": "insert_after",
+        "target": "Verbatim Context Lifting: Trivia questions are often copied verbatim or near-verbatim from context sentences, titles, or flashcards. Prioritize scanning for exact or near-exact string matches in document titles and snippets before attempting semantic reasoning or keyword stripping.",
+        "content": "\n- **Flashcard & Definition Prompts**: When the question reads as a standalone definition or flashcard prompt, treat it as a direct string-match request. Do not attempt to rephrase or infer; locate the exact term being defined in the context and extract it verbatim."
+      },
+      {
+        "op": "insert_after",
+        "target": "Direct Keyword Matching & Scanning: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+        "content": "\n- **Clue Separator & Artifact Parsing**: Questions frequently use colons, ampersands (&), or ellipses (...) as structural separators rather than semantic content. Treat these as delimiters to split the clue into its component constraints, stripping them immediately to isolate the core anchor phrases."
+      }
+    ]
+  },
+  "source_type": "success"
+}

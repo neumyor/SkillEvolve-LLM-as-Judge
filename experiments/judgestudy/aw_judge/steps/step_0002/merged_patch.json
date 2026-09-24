@@ -1,0 +1,80 @@
+{
+  "reasoning": "Prioritized failure-driven patches for critical corrective actions (loop prevention, type exhaustion, appliance verification, done() fallback). Integrated success-driven patches for comprehensive syntax standardization (Task Types table), semantic search guidance, and routine grounding checks where they complemented rather than conflicted with failure priorities. Merged overlapping targets (Principle 2, Table) by synthesizing failure's structural rigor with success's contextual guidance, preserving higher-support insights. Maintained distinct edits for independent sections to capture all unique patterns. All edits respect protected sections and maintain structural integrity.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "| Type | Goal | Key Steps |\n|------|------|-----------|\n| Pick & Place | Put object X in/on receptacle Y | Find X -> take X -> go to Y -> put X in/on Y |\n| Pick Two & Place | Put two instances of X in/on Y | Find X1 -> take -> place -> find X2 -> take -> place |\n| Examine in Light | Examine object X under desklamp | Find X -> take X -> find desklamp -> use desklamp |\n| Clean & Place | Clean object X and put in/on Y | Find X -> take X -> go to sink -> clean X -> go to Y -> put X |\n| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> open -> move X in -> close -> heat X -> open -> take X -> go to Y -> put X |\n| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> open -> move X in -> close -> cool X -> open -> take X -> go to Y -> put X |",
+      "content": "| Type | Goal | Key Steps |\n|------|------|-----------|\n| Pick & Place | Put object X in/on receptacle Y | Find X -> take X -> go to Y -> **move** X **to** Y |\n| Pick Two & Place | Put two instances of X in/on Y | Find X1 -> take -> place -> find X2 -> take -> place |\n| Examine in Light | Examine object X under desklamp | Find X -> take X -> find desklamp -> **use** desklamp |\n| Clean & Place | Clean object X and put in/on Y | Find X -> take X -> go to sink -> **clean X with sink** -> go to Y -> **move X to** Y |\n| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> open -> move X in -> close -> **heat X with microwave** -> open -> take X -> go to Y -> **move X to** Y |\n| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> open -> move X in -> close -> **cool X with fridge** -> open -> take X -> go to Y -> **move X to** Y |",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "2. **Systematic exploration**: Maintain a strict mental log of every container and surface you have already inspected. Once a container is opened and confirmed empty, or a surface is checked and found lacking the target, **do not revisit it** until all other unexplored locations have been exhausted. Prioritize moving to new, unvisited areas over returning to previously checked ones.",
+      "content": "2. **Semantic & Systematic Exploration**: Begin searches at **semantically likely locations** (e.g., cutlery in drawers, produce on countertops, bedding on beds, electronics on desks/dressers). Maintain a strict mental log of every container and surface inspected. Once a specific *type* of furniture (e.g., all drawers, all cabinets) is checked and consistently yields no results, mark that entire category as **exhausted**. Immediately pivot to a different furniture category or room zone. Never revisit an empty container or type while other unexplored options remain, **except** when cycling through an appliance's operational sequence. Prioritize moving to new, unvisited areas over returning to previously checked surfaces.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "7. **Avoid loops**: Track your recent navigation history. If you find yourself cycling through the same 3+ locations without progress, **stop and reassess**. Verify your inventory, check if you are holding the target, or consider that the target may be named differently than expected. Force a change of direction to a completely unvisited room or furniture type.",
+      "content": "7. **Track Furniture Types, Not Just Locations**: Maintain a mental log of *types* of containers/surfaces inspected. If a specific type yields no results after checking 2-3 instances, mark that type as **exhausted** and force a switch to a different furniture category. Do not cycle through the same type repeatedly, even if individual instances were not fully examined.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "9. **Appliance & Receptacle Workflow**: Enclosed appliances and containers require a strict sequence: `open` -> `move object in` -> `close` -> `interact` -> `open` -> `take object`. Always verify receptacles are open before placing items. After interacting with an appliance, close it (`close <appliance>`) before navigating away.",
+      "content": "9. **Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Always close appliances** immediately after interaction and retrieval to maintain environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "9. **Appliance & Receptacle Workflow**: Enclosed appliances and containers require a strict sequence: `open` -> `move object in` -> `close` -> `interact` -> `open` -> `take object`. Always verify receptacles are open before placing items. After interacting with an appliance, close it (`close <appliance>`) before navigating away.",
+      "content": "10. **Appliance Interaction & State Verification**: For heating/cooling tasks, use the explicit admissible command (e.g., `heat <object> with <appliance>` or `cool <object> with <appliance>`). Immediately after any appliance interaction, execute `inventory` to verify you are holding the transformed object and confirm its state before navigating to the destination. Do not assume automatic transfer or skip state checks.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "10. **State Verification & Precision**: Call `inventory` whenever unsure what you hold or if expected actions are missing. Immediately confirm an object's exact name upon pickup. When multiple instances exist, always use the full admissible action string (e.g., `take X from Y`).",
+      "content": "10. **State Verification & Precision**: Call `inventory` **after significant navigation** or when admissible actions seem mismatched with your expectations. Immediately confirm an object's exact name upon pickup. When multiple instances exist, always use the full admissible action string (e.g., `take X from Y`). Use `inventory` to resolve discrepancies between visible objects and available commands.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "**Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+      "content": "**Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions. If `done()` is not listed or returns \"Nothing happens,\" consider the task complete once the final placement action succeeds.",
+      "support_count": 1,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Premature termination**: Do not stop the episode until all goal conditions are verified as met.",
+      "content": "- **Over-verification loops**: Do not pick up a placed object to \"check\" if it was cooled/heated/cleaned. Trust the action feedback. Re-handling the object wastes steps and often leads to infinite loops.",
+      "support_count": 1,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Verify post-appliance state**: Immediately after using a transformation appliance (microwave, fridge, sink), execute `inventory` to confirm you are holding the transformed object before navigating to the final destination. Appliance interactions may auto-transfer items or require explicit retrieval.",
+      "content": "- **Temperature & State Verification**: After heating/cooling, do not assume the state change succeeded without verification. If the task requires a specific state (e.g., 'hot potato'), explicitly check your inventory or observe the object upon retrieval. If the state is missing, repeat the appliance cycle. Never place an object at its final destination without confirming it meets the required state condition.",
+      "support_count": 6,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "\n- **Toggling containers unnecessarily**: Open a container, check contents, and proceed to the next logical location. Do not repeatedly open/close the same container without a clear strategic reason. Forward progression through unvisited locations is more efficient than cycling through known empty ones.\n\n- **Premature termination**: Do not call `done()` until the final placement is visually confirmed by the observation (e.g., \"You move X to Y\") and the object is no longer listed in your inventory or available for pickup. Cross-check the goal conditions against the current room state before ending the episode.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "\n## Task Completion Protocol\n- **Verify Before Stopping**: When `done()` is available, call it only after explicitly verifying that the object is in the correct receptacle/surface AND meets all task conditions. Perform a final `look` or `inventory` check if unsure.\n- **Handle Blocked Actions**: If placement actions are missing from the admissible list, inspect the receptacle's state or re-evaluate the object's properties. Adjust your approach rather than looping or guessing.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ]
+}

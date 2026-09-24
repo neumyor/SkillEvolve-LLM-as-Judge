@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Cloze & Quote Anchoring: Treating exact phrases or fill-in-the-blank structures in questions as direct verbatim pointers to context passages.",
+    "Snippet & Title Priority: Scanning document titles and opening lines first, as trivia answers are frequently stated directly in headings or summaries.",
+    "Descriptor-to-Entity Mapping: Isolating the exact subject that performs the described action or possesses the stated trait, ignoring tangential mentions."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories rely on treating fragmented, quote-heavy, or Jeopardy-style questions as direct cloze/fill-in-the-blank requests. Agents consistently succeed by matching exact phrases or descriptors to the subject entity, often finding the answer in titles or opening snippets. These patterns are not fully captured by the current generic 'Keyword & Clue Anchoring' and 'Trivia/Fragment Handling' rules.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Cloze & Quote Anchoring**: Questions frequently contain exact quotes or fill-in-the-blank structures. Treat these as high-confidence anchors and search for the surrounding entity verbatim rather than paraphrasing."
+      },
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and cloze-style blanks as direct identification requests. Map descriptive phrases directly to the subject entity in the context, ignoring conversational framing or trailing punctuation."
+      },
+      {
+        "op": "insert_after",
+        "target": "2. Search the context for those identifiers or their immediate synonyms. Ignore irrelevant tangential documents.",
+        "content": "\n- **Snippet & Title Priority**: For trivia and cloze queries, scan document titles (`[TLE]`) and opening paragraphs first. Answers are often stated directly in headings or lead sentences before requiring deeper reading."
+      }
+    ]
+  },
+  "source_type": "success"
+}

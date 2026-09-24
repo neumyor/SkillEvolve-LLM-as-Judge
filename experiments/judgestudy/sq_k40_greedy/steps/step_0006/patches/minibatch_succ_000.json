@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Strict Constraint Intersection: Successful agents consistently apply a logical AND filter across all co-occurring constraints (dates, locations, roles, events) to isolate a single entity, overriding frequency or prominence heuristics.",
+    "Snippet/Title-First Extraction: Agents reliably locate answers by prioritizing exact or near-exact string matches in document titles and snippets, treating deep paragraph reading as secondary verification.",
+    "Canonical Core Identifier Preservation: Correct answers strip non-essential contextual suffixes (e.g., 'University', 'Kingdom', 'Conference') while preserving exact plurals, articles, and canonical modifiers required by the gold standard."
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates that success hinges on strict constraint intersection over entity frequency, prioritizing snippet/title matches for rapid extraction, and outputting canonical core identifiers without over-appending contextual suffixes. These patterns directly address historical failure modes (Steps 4 & 5) and reinforce the robust strategies used across all 8 trajectories.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+        "content": "Never default to frequency or prominence if it conflicts with explicit question constraints. Always prioritize the entity that satisfies the maximum intersection of stated filters, even if it appears less frequently in the context."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Suffix & Title Stripping**: Avoid appending generic contextual suffixes (e.g., \"University\", \"Kingdom\", \"Conference\", \"City\") unless they are integral to the canonical name or explicitly requested. Output the core entity identifier exactly as presented in the gold standard or context."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Resolving Implicit References**:",
+        "content": "\n- **Wordplay & Riddles**: Jeopardy-style clues occasionally rely on puns, double meanings, or lateral thinking (e.g., \"doubly one of these\"). Parse the clue literally first, but be prepared to resolve semantic tricks or wordplay to identify the intended target category or role."
+      }
+    ]
+  },
+  "source_type": "success"
+}

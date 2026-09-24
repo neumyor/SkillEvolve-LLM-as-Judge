@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Implicit Slot & Constraint Parsing",
+    "Grammatical & Structural Mirroring",
+    "Direct Cloze-to-Entity Mapping"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently parse implicit question slots (e.g., 'this holiday', 'First name of...', 'of it') and strictly mirror the grammatical form and length constraints requested. This prevents over-specification and ensures exact alignment with the query's structural demands.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Slot & Constraint Alignment**: Parse implicit question slots and explicit constraints (e.g., 'this holiday', 'First name of...', 'of it'). Extract only the term that directly fills the requested slot, strictly mirroring the grammatical form, number, and length demanded. Do not expand to full names, titles, or compound phrases unless explicitly required."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,35 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "action_loop",
+      "count": 1,
+      "description": "Agent repeatedly applies heating actions without verifying if the object is already hot, causing unnecessary travel loops."
+    },
+    {
+      "failure_type": "appliance_error",
+      "count": 1,
+      "description": "Agent attempts to place an object into a closed receptacle without opening it first, triggering silent failures and abandoning the task."
+    }
+  ],
+  "patch": {
+    "reasoning": "The trajectory exhibits two critical flaws: (1) blind repetition of transformation steps without state verification, and (2) ignoring receptacle closure states during placement attempts. These edits enforce explicit pre-action state checks for both objects and receptacles, and provide a recovery protocol for silent placement failures.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "\n4b. **Verify transformation state**: Before executing a heating, cooling, or cleaning action, confirm the object actually requires the transformation. If it is already hot/cold/clean, skip the appliance interaction entirely and proceed to delivery. Do not repeat transformations."
+      },
+      {
+        "op": "insert_after",
+        "target": "5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.",
+        "content": "\n5b. **Check receptacle state before placement**: If the 'put' action is unavailable or returns 'Nothing happens', inspect the target receptacle. If it is closed, open it first, then retry placement. Never assume a receptacle is ready without verification."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Redundant appliance cycling**: Do not return to appliances multiple times for the same object unless explicitly instructed. Track internal state flags for transformations.\n- **Silent failure recovery**: When placement yields no result, do not immediately navigate away. Verify inventory possession and receptacle openness at the location before leaving."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

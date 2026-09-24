@@ -1,0 +1,94 @@
+{
+  "reasoning": "Prioritized failure-driven patches to correct systematic distractor heuristics, enforce definite article preservation, and normalize personal names. These high-priority corrections were preserved as they address critical failure modes without conflicting with success-driven patterns. All success-driven edits were retained, covering refined keyword matching, typo tolerance, enhanced constraint verification, verbatim lifting strategies, multi-clause mapping, declarative parsing, extraction priority, and multiple-choice handling. No protected sections were present. Edits maintain original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+      "content": "When multiple candidates fit, strictly prioritize the one that exactly matches the specific constraints or descriptive phrases in the question, even if another entity is more prominent or frequently mentioned in the context.",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "- Preserve definite articles (e.g., \"the\") if they are part of the canonical name or consistently used in the context/gold standard (e.g., output \"the Sahara\" rather than \"Sahara\").",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "- Normalize personal names by preferring the standard/common form over formal variations. Drop middle initials or suffixes (e.g., \"Jr.\", \"Sr.\", \"III\") unless the question explicitly requires them or the context exclusively uses the formal version.",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "content": "- **Direct Keyword Matching & Scanning**: Preserve quoted phrases in the question as exact verbatim anchors for scanning document titles and snippets. Strip only non-essential punctuation, filler words (e.g., \"&\", \"who\"), and ellipses to extract core anchor phrases. Prioritize exact matches in titles/snippets before verifying with paragraph content.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Direct Keyword Matching & Scanning**: Preserve quoted phrases in the question as exact verbatim anchors for scanning document titles and snippets. Strip only non-essential punctuation, filler words (e.g., \"&\", \"who\"), and ellipses to extract core anchor phrases. Prioritize exact matches in titles/snippets before verifying with paragraph content.",
+      "content": "\n- **Typo & Variant Tolerance**: Queries may contain minor misspellings, OCR errors, or phonetic variants (e.g., \"steaing\" for \"stealing\"). Apply fuzzy matching or semantic equivalence when scanning for anchor phrases, prioritizing conceptual matches over strict string equality.\n- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity.",
+      "content": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat clusters of proper nouns or facts in the clue as a logical AND filter; prioritize candidates that satisfy the maximum number of these anchors.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity. Explicitly check the *requested entity type* in the question (e.g., \"this territory\", \"this sport\") against candidate matches to avoid answering with a related but incorrect entity (e.g., answering a university name when asked for a state/territory). When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+      "content": "\n- **Temporal & Role Anchoring**: Treat explicit dates, eras, and professional titles mentioned in the question as primary disambiguation filters. Use them to immediately narrow the candidate pool before evaluating secondary descriptors, especially when multiple similar entities appear in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Trivia questions are often copied verbatim or near-verbatim from context sentences, titles, or flashcards. Prioritize scanning for exact or near-exact string matches in document titles and snippets before attempting semantic reasoning or keyword stripping.",
+      "content": "Trivia questions are often lifted verbatim or near-verbatim from context titles, headings, or flashcards. Treat document titles (`[TLE]`) as high-priority lookup targets; if the question matches a title or its immediate context, the title itself often contains or directly points to the answer.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Resolving Implicit References**: Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.",
+      "content": "\n- **Multi-Clause Description Mapping**: When a question contains multiple descriptors or roles joined by \"&\" or commas (e.g., \"late California governor & U.S. Chief Justice\"), treat each clause as a required filter. Locate the single entity in the context that satisfies the intersection of all clauses, ignoring tangential figures who may match only one descriptor.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Do not respond with \"True\"/\"False\", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+      "content": "Do not respond with \"True\"/\"False\", nor with vague descriptions. Instead, extract the exact term—whether a proper noun, common noun, role, or specific category—that precisely fits the blank or completes the thought.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "Do not respond with \"True\"/\"False\", nor with vague descriptions. Instead, extract the exact term—whether a proper noun, common noun, role, or specific category—that precisely fits the blank or completes the thought.",
+      "content": "\n\n- **Declarative Factoid Parsing**: When the question is a complete declarative sentence stating a fact or event, treat it as a multi-constraint search query. Extract the subject placeholder (e.g., \"he\", \"this leader\") and key predicates (dates, actions, titles) to intersect with context entities.\n- **Narrative Framing Stripping**: Trivia clues often use dramatic, conversational, or story-like phrasing. Ignore narrative flourishes and focus solely on extracting verifiable factual constraints to anchor the search.\n- **Canonical Proper Noun Targeting**: For declarative clues, the answer is invariably the canonical proper noun of the subject. Never output the predicate, a descriptive summary, or a generic role unless it is part of the official entity name.",
+      "support_count": 4,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.",
+      "content": "## Answer Precision and Conciseness\n- **Extraction Priority**: Always prefer extracting the exact term or phrase from the context over generating or paraphrasing it. Trivia evaluation relies on exact string matches, so retain the context's original phrasing unless it contains unnecessary filler.\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "\n- **Option-List & Multiple-Choice Handling**: When a question explicitly provides candidate options (e.g., \"Of X, Y, or Z...\"), select the exact option that aligns with the context. Do not generate a new answer or modify the wording of the chosen option.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

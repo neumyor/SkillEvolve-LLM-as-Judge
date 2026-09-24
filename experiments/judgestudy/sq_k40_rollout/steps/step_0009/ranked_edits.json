@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied failure-driven patches with highest priority. Resolved the direct conflict on '- **Granularity-First Extraction**' by retaining the failure-driven 'Name Normalization' edit over the success-driven 'Verbatim Extraction' variant, per deduplication rules. Included all remaining success-driven patches that address distinct, non-overlapping patterns (alias resolution, convergent evidence, text continuations, glossary mapping, declarative convergence, placeholder resolution, standardized reasoning, and reference snippet prioritization). Preserved original support counts and source types. [optimizer-ranked: selected 4/10 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+      "content": "- **Alias, Historical & Semantic Pointer Resolution**: Clues frequently use former names, historical references, literary allusions, pop-culture aliases, or semantic variants to point to an answer. Treat these as direct semantic identifiers. Scan the context for explicit mappings, glossary-style definitions, or explanatory bridges that link the pointer to the canonical entity. Discard the literal phrasing of the pointer and output only the exact canonical term.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+      "content": "- **Granularity-First Extraction & Name Normalization**: Prioritize the exact phrase length and structure implied by the clue. For companies, persons, and places, aggressively strip non-essential formal suffixes, corporate designations (e.g., 'Inc.', 'Cards', 'Corp.'), middle initials, and geographic descriptors (e.g., 'Mountains', 'Island') unless the clue explicitly requires them. Favor the core proper noun or widely recognized short form over the full contextual span. Normalize articles and plurality to match the question's syntax. Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+      "content": "- **Standardized Reasoning Format**: Always precede the final answer with exactly one sentence using a fixed structure: 'The context explicitly states/references/identifies [Evidence], directly satisfying the question's constraint about [Clue].' Quote or closely paraphrase the exact context span containing the answer. This enforces grounding, eliminates filler, and aligns with expected output formats.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+      "content": "\n- **Definition, Etymology & Glossary Mapping**: Clues often function as dictionary definitions, glossary entries, acronym expansions, or etymological breakdowns. Scan for explicit equivalence structures ('X is Y', 'Y stands for X'), definition headers, or translation cues. Map the clue's descriptive phrase or abbreviation directly to the canonical headword or full term defined in the text.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [2] systematically broadens pointer resolution beyond pop-culture to cover historical and semantic aliases, addressing a widespread ambiguity pattern in trivia. Edit [1] transforms a vague granularity rule into a highly actionable directive by specifying exact suffixes and descriptors to strip, fixing a common verbosity failure. Edit [8] upgrades optional reasoning to a mandatory, structured template, drastically improving grounding and output consistency across all tasks. Edit [5] fills a critical gap by introducing explicit definition and acronym mapping, a frequent trivia format not currently covered.",
+    "selected_indices": [
+      2,
+      1,
+      8,
+      5
+    ]
+  }
+}

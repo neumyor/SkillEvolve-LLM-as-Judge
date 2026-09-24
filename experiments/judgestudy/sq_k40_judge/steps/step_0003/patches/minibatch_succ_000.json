@@ -1,0 +1,25 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating all prompt formats (fragments, declarative statements, full questions) uniformly as direct fill-in-the-blank entity queries.",
+    "Stripping non-entity trailing metadata (e.g., question numbers like '(15)') and focusing purely on the semantic gap.",
+    "Strictly aligning answer morphology (singular/plural, articles) with the gold answer rather than mirroring the prompt's phrasing.",
+    "Rapidly isolating the target entity from noisy/search-result contexts by prioritizing exact keyword matches and discarding distractors."
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates consistent success in handling highly varied prompt formats (fragments, declarative clues, full questions) by treating them uniformly as direct entity queries. Agents also successfully strip trailing metadata (e.g., question IDs) and strictly align answer morphology (singular/plural) with gold answers, addressing prior pluralization failures. These patterns reinforce robustness against prompt variation and formatting noise.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Clue Syntax Mapping",
+        "content": "- **Uniform Clue Processing**: Treat all prompt formats—whether complete questions, fragmented phrases, or declarative statements—as direct fill-in-the-blank requests. Ignore trailing metadata (e.g., question numbers in parentheses) and focus solely on the semantic gap.\n- **Morphological Alignment**: Match the number (singular/plural) and article usage of the gold answer exactly. Do not adapt the extracted entity to match the prompt's grammar; prioritize the canonical form expected by the evaluation metric."
+      },
+      {
+        "op": "replace",
+        "target": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer.",
+        "content": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer. Strip any trailing prompt artifacts (e.g., numbers, punctuation) before extraction."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "\"this [Category]\" Placeholder Resolution: Questions frequently use demonstrative placeholders like \"this nation\", \"this state\", or \"this unit\" to stand in for the target entity. Treat these as direct blanks to be filled by the specific entity described.",
+    "Verbatim Context Lifting: Trivia questions are often copied verbatim or near-verbatim from context sentences or titles. Prioritize exact string matching in snippets/titles over semantic parsing."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories feature Jeopardy-style clues that either use explicit 'this [category]' placeholders or are lifted verbatim from context snippets. The current skill's 'Resolving Implicit References' section warns against treating demonstratives as missing words, which conflicts with the dominant Jeopardy pattern where 'this X' is literally a blank. Reinforcing this pattern will prevent over-complication of straightforward definition clues and improve retrieval speed.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Handling Statement or Fragment Questions",
+        "content": "- **\"this [Category]\" Placeholders**: Jeopardy-style questions routinely replace the target entity with demonstrative placeholders like \"this nation,\" \"this state,\" \"this bubble,\" or \"this unit.\" Treat these as direct blanks to be filled by the specific entity described in the clause, rather than resolving them as relational pointers.\n- **Verbatim Context Lifting**: Trivia questions are often copied verbatim or near-verbatim from context sentences, titles, or flashcards. Prioritize scanning for exact or near-exact string matches in document titles and snippets before attempting semantic reasoning or keyword stripping."
+      }
+    ]
+  },
+  "source_type": "success"
+}

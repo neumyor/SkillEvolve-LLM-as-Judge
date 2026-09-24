@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Evidence-First Reasoning: Agents consistently quote or closely paraphrase the exact context span in their reasoning step before providing the answer, grounding logic directly in the text.",
+    "Canonical Short-Name Priority: Successful outputs aggressively strip descriptive suffixes, full formal names, and metadata, favoring the shortest recognizable identifier or common name.",
+    "Span Verification & Normalization: Agents verify that the extracted span exactly satisfies every constraint in the question, normalizing articles, plurality, and capitalization to match standard forms.",
+    "Constraint-to-Span Alignment: Reasoning explicitly maps each part of the clue to the corresponding phrase in the quoted context, ensuring no constraint is overlooked and preventing hallucination."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate evidence-first reasoning (quoting exact context spans), strict adherence to canonical short names, and explicit constraint-to-span alignment. These patterns directly address historical failure modes around over-specification, loose matching, and external knowledge reliance. Reinforcing these behaviors in the Answer Formatting section will standardize the extraction process across diverse trivia formats.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+        "content": "- **Evidence-First Reasoning**: Always precede the final answer with a single-sentence reasoning step that explicitly quotes or closely paraphrases the exact context span containing the answer. Anchor your logic directly to the provided text to prevent reliance on external knowledge."
+      },
+      {
+        "op": "replace",
+        "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+        "content": "- **Canonical Short-Name Priority**: Extract the shortest, most recognizable identifier for the entity. Aggressively strip descriptive suffixes, generic qualifiers, and full formal names. If the clue targets a common name, brand, or category, output that exact short form. Never output definitions, descriptions, or multi-word explanatory phrases."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+        "content": "\n- **Span Verification & Normalization**: Before finalizing, verify that the extracted span exactly satisfies every distinct constraint in the question. Normalize articles, plurality, and capitalization to match standard dictionary form or the question's syntax. Prioritize the head term over compound phrases unless the compound is the official short name."
+      },
+      {
+        "op": "replace",
+        "target": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span.",
+        "content": "- **Constraint-to-Span Alignment**: In the reasoning step, explicitly map each part of the question's clue to the corresponding phrase in the quoted context span. This ensures no constraint is overlooked and strictly grounds the answer in the text."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,21 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Agent selects a context keyword ('Boozer') that partially matches a clue component ('pub') but ignores the full definitional constraints, failing to verify semantic fit."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent fell into a keyword-co-occurrence trap, extracting 'Boozer' because it appeared near 'pub' in the text, while ignoring the rest of the clue ('shack', 'town of them') that defines 'shanty'. Adding a mandatory semantic verification rule forces the agent to cross-check candidates against all constraints, preventing distractor extraction.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+        "content": "\n- **Semantic Verification & Distractor Rejection**: Before extracting an answer, verify that the candidate span semantically satisfies *all* descriptive constraints in the question. Do not select terms simply because they co-occur with keywords in the context or appear in adjacent paragraphs. If a clue defines a concept or relationship, ensure the chosen term logically fulfills the entire definition, not just isolated words."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

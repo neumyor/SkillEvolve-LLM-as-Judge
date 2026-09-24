@@ -1,0 +1,100 @@
+{
+  "step": 10,
+  "epoch": 1,
+  "step_in_epoch": 9,
+  "timing": {
+    "rollout_s": 42.3,
+    "reflect_s": 35.0,
+    "aggregate_s": 97.7,
+    "select_s": 23.6,
+    "update_s": 0.0,
+    "evaluate_s": 18.8
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 5,
+      "prompt_tokens": 183999,
+      "completion_tokens": 25824
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 11126,
+      "completion_tokens": 2433
+    },
+    "merge": {
+      "calls": 2,
+      "prompt_tokens": 10467,
+      "completion_tokens": 16273
+    },
+    "ranking": {
+      "calls": 1,
+      "prompt_tokens": 4836,
+      "completion_tokens": 3121
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 149088,
+      "completion_tokens": 24493
+    }
+  },
+  "rollout_hard": 0.8,
+  "rollout_soft": 0.85,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1052,
+      "n_envs": 40,
+      "hard": 0.8,
+      "soft": 0.85,
+      "n_failure_patches": 1,
+      "n_success_patches": 4
+    }
+  ],
+  "n_patches": 5,
+  "n_failure_patches": 1,
+  "n_success_patches": 4,
+  "n_edits_merged": 14,
+  "n_edits_ranked": 4,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    8,
+    8,
+    8,
+    8
+  ],
+  "candidate_hash": "535021d7db5c07e9",
+  "candidate_skill_len": 13536,
+  "edit_apply_summary": {
+    "total": 4,
+    "applied": 4,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_verdict": "ACCEPT",
+  "judge_confidence": "high",
+  "judge_reason": "The candidate correctly addresses the 'Capital cities' category-leakage failure by adding explicit Category Exclusion to the mirroring rule, and introduces targeted safeguards for prefix preservation and attribute-vs-container resolution that generalize from execution evidence without risking regressions on successful tasks. These changes tighten entity isolation while maintaining the skill's core retrieval logic.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 474,
+  "judge_usage": {
+    "prompt_tokens": 11126,
+    "completion_tokens": 2433,
+    "total_tokens": 13559
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "candidate_gate_score": 0.72,
+  "action": "accept_new_best",
+  "current_score": 0.72,
+  "best_score": 0.72,
+  "best_step": 10,
+  "current_origin": "step_0010",
+  "best_origin": "step_0010",
+  "skill_len": 13536,
+  "wall_time_s": 217.5
+}

@@ -1,0 +1,40 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Agents over-specify answers by appending non-essential modifiers, subtitles, or location suffixes to core entities."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Agents select incorrect name/title variants (e.g., nicknames, foreign terms) instead of the exact form requested or implied."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Agents fail to parse malformed or concatenated Jeopardy-style fragments, leading to hallucinated or unrelated guesses."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals three systematic extraction failures: (1) agents routinely add descriptive modifiers, subtitles, or geographic suffixes that exceed the requested entity length; (2) agents struggle to choose between valid name/title variants present in the context; and (3) agents misparse concatenated or malformed clue fragments. These edits tighten the 'Trivia/Fragment Handling' and 'Exact Term Preference' rules while introducing a dedicated 'Compound & Essential Modifier Preservation' rule to balance minimalism with necessary compound terms.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and malformed/concatenated fragments (e.g., missing spaces, run-on phrases) as direct fill-in-the-blank requests. Map the combined descriptors directly to the single target entity named in the context. Identify the target immediately without describing relationships or generating categories."
+      },
+      {
+        "op": "replace",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "- **Exact Term & Variant Selection**: Prioritize the exact term found in the context that best matches the question's implied form. When multiple variants exist (e.g., nicknames vs. formal names, original language vs. English translation), select the one that aligns with the question's grammatical slot or standard reference. Do not default to the most prominent or verbose variant."
+      },
+      {
+        "op": "append",
+        "content": "- **Compound & Essential Modifier Preservation**: Preserve essential compound terms, geographic pairings (e.g., \"City, State\"), and formal titles when they function as a single recognized entity in the context. Conversely, strip non-essential descriptive suffixes, subtitles, or generic qualifiers (e.g., \"on the Sunset Strip\", \"hot air\", \"funeral\") unless strictly part of the official name. Default to the precise short phrase requested."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

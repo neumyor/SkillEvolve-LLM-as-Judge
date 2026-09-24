@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating fragmented, definition-style, or Jeopardy-style prompts as direct queries for a specific named entity.",
+    "Mapping key descriptive clues directly to explicit connections or strong semantic overlaps in the provided context.",
+    "Extracting only the precise entity or short phrase requested, strictly avoiding full sentences, conversational filler, or unnecessary expansions.",
+    "Prioritizing constraint-grounded selection when multiple candidates exist, ensuring the answer matches all specific details (dates, locations, attributes) in the prompt."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle fragmented, trivia-style clues by mapping descriptive phrases to exact named entities in the context. They prioritize direct keyword overlap and explicit connections over inference, and always output concise, exact-match answers wrapped in tags. Encoding these patterns will standardize the agent's approach to Jeopardy-style and definition prompts while preventing verbose or misaligned outputs.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat fragmented, definition-style, or Jeopardy-style prompts as direct queries for a specific named entity. Identify the missing subject or target concept described by the clue.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n\n## Precision Extraction Rules\n- **Exact Match Priority**: Output only the precise word, short phrase, or entity requested. Never add descriptions, parenthetical translations, explanatory clauses, or \"Yes/No\" verdicts unless explicitly asked.\n- **Avoid Unnecessary Expansions**: If the expected answer is a single letter, abbreviation, surname, or title, output only that. Omit articles (a, an, the), plural suffixes, or conversational filler.\n- **Constraint-Grounded Selection**: Carefully map each clue in the question to the specific entity in the context. Avoid defaulting to the most prominent or frequently mentioned entity; prioritize the one that precisely fits the unique constraint or implied reference.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format (typically a single entity or short phrase).\n- **Concise Output**: Limit answers to a few words or a short phrase. Omit restatements of the question or introductory phrases.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

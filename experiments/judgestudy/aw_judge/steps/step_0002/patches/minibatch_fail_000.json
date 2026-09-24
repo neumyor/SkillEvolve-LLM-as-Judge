@@ -1,0 +1,45 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 6,
+      "description": "Agents cycle through empty containers/surfaces of the same type without pivoting strategies."
+    },
+    {
+      "failure_type": "appliance_error",
+      "count": 2,
+      "description": "Agents misuse heating/cooling workflows, skipping state verification or using incorrect command formats."
+    },
+    {
+      "failure_type": "premature_stop",
+      "count": 2,
+      "description": "Agents terminate episodes or get stuck when placement actions are unavailable or goals aren't fully verified."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch shows systemic failures in three areas: (1) agents loop through empty furniture types instead of exhausting categories and switching; (2) agents mishandle appliance interactions by skipping explicit heating/cooling commands or failing to verify inventory/state post-interaction; (3) agents terminate prematurely or stall when facing blocked placement actions. These edits enforce category-based search exhaustion, clarify appliance command syntax with mandatory state verification, and establish a strict pre-termination verification protocol.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Maintain a strict mental log of every container and surface you have already inspected. Once a container is opened and confirmed empty, or a surface is checked and found lacking the target, **do not revisit it** until all other unexplored locations have been exhausted. Prioritize moving to new, unvisited areas over returning to previously checked ones.",
+        "content": "2. **Systematic exploration & Type Exhaustion**: Maintain a strict mental log of every container and surface inspected. Once a specific *type* of furniture (e.g., all drawers, all cabinets) is checked and consistently yields no results, mark that entire category as **exhausted** for this task. Immediately pivot to a different furniture category or room zone. Never revisit an empty container or type while other unexplored options remain."
+      },
+      {
+        "op": "replace",
+        "target": "7. **Avoid loops**: Track your recent navigation history. If you find yourself cycling through the same 3+ locations without progress, **stop and reassess**. Verify your inventory, check if you are holding the target, or consider that the target may be named differently than expected. Force a change of direction to a completely unvisited room or furniture type.",
+        "content": "7. **Track Furniture Types, Not Just Locations**: Maintain a mental log of *types* of containers/surfaces inspected (e.g., 'all drawers', 'all cabinets'). If a specific type yields no results after checking 2-3 instances, mark that type as **exhausted** and force a switch to a different furniture category. Do not cycle through the same type repeatedly, even if individual instances were not fully examined."
+      },
+      {
+        "op": "insert_after",
+        "target": "9. **Appliance & Receptacle Workflow**: Enclosed appliances and containers require a strict sequence: `open` -> `move object in` -> `close` -> `interact` -> `open` -> `take object`. Always verify receptacles are open before placing items. After interacting with an appliance, close it (`close <appliance>`) before navigating away.",
+        "content": "10. **Appliance Interaction & State Verification**: For heating/cooling tasks, use the explicit admissible command (e.g., `heat <object> with <appliance>` or `cool <object> with <appliance>`). Immediately after any appliance interaction, execute `inventory` to verify you are holding the transformed object and confirm its state before navigating to the destination. Do not assume automatic transfer or skip state checks."
+      },
+      {
+        "op": "append",
+        "content": "\n## Task Completion Protocol\n- **Verify Before Stopping**: Never call `done()` immediately after placing an object. Only terminate when you have explicitly verified that the object is in the correct receptacle/surface AND meets all task conditions (e.g., heated, cooled, cleaned). If unsure, perform a final `look` or `inventory` check.\n- **Handle Blocked Actions**: If placement actions are missing from the admissible list, inspect the receptacle's state or re-evaluate the object's properties. Adjust your approach rather than looping or guessing."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

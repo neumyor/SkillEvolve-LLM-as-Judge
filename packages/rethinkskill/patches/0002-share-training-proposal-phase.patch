@@ -1,0 +1,48 @@
+--- a/src/rethinkskill/evolution/loop.py
++++ b/src/rethinkskill/evolution/loop.py
+@@ -859,7 +859,7 @@
+ FailureStage = Callable[[str], AbstractContextManager[None]]
+ 
+ 
+-def execute_evolution_round(
++def prepare_evolution_round(
+     plan: EvolutionPlan,
+     *,
+     state: EvolutionExecutionState,
+@@ -867,8 +867,8 @@
+     optimizer: SkillOptimizer,
+     round_no: int,
+     failure_stage: FailureStage,
+-) -> None:
+-    """Execute one frozen round and mutate only its core-owned run state."""
++) -> tuple | None:
++    """Shared upstream training/proposal phase, without any validation decision."""
+     with failure_stage("training"):
+         training, training_accounting_known = _evaluation_boundary(
+             evaluator,
+@@ -920,6 +920,25 @@
+             return
+         candidate_hash = skill_hash(proposal.candidate_skill)
+         write_candidate_skill(plan, round_no=round_no, candidate_skill=proposal.candidate_skill)
++    return training_for_optimizer, proposal, optimizer_evidence, parent_hash, candidate_hash
++
++
++def execute_evolution_round(
++    plan: EvolutionPlan,
++    *,
++    state: EvolutionExecutionState,
++    evaluator: SkillEvaluator,
++    optimizer: SkillOptimizer,
++    round_no: int,
++    failure_stage: FailureStage,
++) -> None:
++    prepared = prepare_evolution_round(
++        plan, state=state, evaluator=evaluator, optimizer=optimizer,
++        round_no=round_no, failure_stage=failure_stage,
++    )
++    if prepared is None:
++        return
++    training_for_optimizer, proposal, optimizer_evidence, parent_hash, candidate_hash = prepared
+     candidate_score: EvaluationOutcome | None = None
+     if not proposal.valid:
+         state.fail(

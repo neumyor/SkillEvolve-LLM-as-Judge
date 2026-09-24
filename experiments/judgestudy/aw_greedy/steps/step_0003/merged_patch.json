@@ -1,0 +1,96 @@
+{
+  "reasoning": "Prioritized failure-driven edits to resolve contradictory state-verification instructions and enforce critical operational protocols (termination, admissible jumps, no intermediate storage). Deduplicated overlapping success edits targeting the same principles, strictly retaining the failure versions where direct conflicts existed. Preserved all unique success insights covering multi-instance handling, proactive inventory diagnostics, appliance retention logic, sequential multi-object workflows, and admissible action inference. All edits maintain their original support counts and source types. No protected sections were targeted.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "6. **Verify Transformation State**: After using an appliance, explicitly check the object's state (e.g., via `examine`). If the state does not match the goal, return to the appliance to re-process immediately. Do not assume the transformation succeeded on the first try.",
+      "content": "6. **Trust Transformation & Proceed**: After a successful `heat`, `cool`, or `clean` action, trust the outcome immediately. Do not use `examine` or `inventory` to re-verify the object's state, as this often triggers infinite loops. Proceed directly to the next sub-goal (usually delivery) without delay.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Location Exhaustion Rule**: If you visit a container or surface twice and find it empty, mark it as permanently searched. Immediately navigate to a completely different, unvisited location or room. Never repeat the same search pattern more than once.",
+      "content": "\n- **Admissible Jump Strategy**: When manual searching yields no results after 2-3 attempts, stop walking back and forth. Use the `admissible actions` list to jump directly to unvisited rooms or container types. Prioritize teleports to break search cycles efficiently.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **State Verification Trust**: After a successful `heat`, `cool`, or `clean` action, proceed directly to the next step. Do not repeatedly `examine` the object to verify its state, as observations may lag or report generic names. Trust the action success and advance.",
+      "content": "\n- **Success Termination Protocol**: Once the final placement action succeeds (observation confirms movement to target), the task is complete. Cease all further actions. Do not perform `look`, `inventory`, or `examine` after successful completion unless the goal explicitly requires tracking multiple distinct items.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Co-located Efficiency**: If the target object and the required appliance (e.g., desklamp, sink, fridge) are on the same surface, perform actions sequentially at that location without navigating away.",
+      "content": "\n- **No Intermediate Storage**: After transforming an object (heating/cooling/cleaning), do not place it back into appliances, cabinets, or storage. Maintain hold or proceed directly to the final destination receptacle to avoid losing track or triggering retrieval loops.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "2. **Grab Immediately**: When a target object is visible and reachable, take it immediately. Do not delay acquisition to search elsewhere.",
+      "content": "\n- **Handle Multiple Instances**: If multiple instances of the target object are visible, select any valid instance immediately. Do not waste steps comparing IDs or preferring specific variants unless the task specifies otherwise.\n- **Proactive Inventory Checks**: If a searched container/surface is empty, call `inventory` to verify you haven't accidentally picked up the target earlier. Use `inventory` as your primary diagnostic tool during searches and post-interaction.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "8. **Track Progress & Proactive Checks**: Maintain an internal count of remaining objectives. Use `inventory` immediately after picking up or transforming objects to confirm holdings and states before navigating. Adjust search strategy early if the expected item is missing.",
+      "content": "8. **Track Progress & Proactive Checks**: Maintain an internal count of remaining objectives. Rely on `inventory` calls to confirm holdings and transformation states before navigating. Adjust search strategy early if the expected item is missing or if `inventory` reveals unexpected items.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "\n13. **Resolve Holding Ambiguity**: When observations or admissible actions conflict regarding what you are carrying, execute `inventory` immediately. Never assume your state; explicit verification prevents misdirected travel and wasted steps.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Ensure doors are open for placement interactions.",
+      "content": "Ensure doors are open for placement interactions. **Omit closing appliances** after transformations (heat/clean) unless explicitly required for the next step; proceed directly to the destination to conserve steps.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Common Mistakes to Avoid",
+      "content": "\n- **Delay clearing non-targets**: Picking up the wrong item blocks progress. Verify object identity instantly upon pickup; if it mismatches the goal, place it down immediately at your current location.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Location Exhaustion Rule**: If you visit a container or surface twice and find it empty, mark it as permanently searched. Immediately navigate to a completely different, unvisited location or room. Never repeat the same search pattern more than once.",
+      "content": "\n- **Proactive Container Inspection**: When searching for an object, immediately open any closed containers (drawers, cabinets, fridges) you encounter. Do not bypass them; targets are frequently stored inside. Fully inspect contents before marking the location as exhausted.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Appliance Retrieval Protocol**: When heating, cooling, or cleaning, always follow the sequence: interact with appliance -> close/appliance cycle -> open appliance -> **take/retrieve item** -> proceed to destination. Do not assume the item stays in your inventory automatically after appliance interactions.",
+      "content": "- **Appliance Interaction & Retention**: For heating, cooling, or cleaning, perform the transformation **while holding the object** at the open appliance. After the action completes, close the appliance. **Do not reopen** to retrieve the item; successful transformations typically leave the object in your inventory. Proceed directly to delivery.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Multi-Object Local Scan**: For tasks requiring multiple items (e.g., `pick_two_obj_and_place`), after successfully placing the first item, immediately scan your current location for the remaining target(s). Only leave the area if the second item is not visible or reachable here.",
+      "content": "- **Sequential Multi-Object Workflow**: For tasks requiring multiple items, always transport the first acquired item directly to the destination receptacle and place it before searching for the second. Never attempt to hold multiple objects or search for the second item while carrying the first, as this blocks inventory and wastes steps. After placing the first item, scan your immediate surroundings for the remainder before departing.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Object Synonymy**: If the exact goal object is missing after thorough searching, accept functionally equivalent items commonly used in the environment (e.g., treat `pot` as `pan`, `cup` as `mug`, `bowl` as `plate`) to prevent infinite search loops.",
+      "content": "\n- **Admissible Action Inference**: Use the presence or absence of admissible actions to deduce inventory state and object locations. If `take [obj]` is missing despite visibility, the object may already be held or inaccessible. If `move [obj] to [loc]` appears without prior placement, the object is likely in your inventory. Resolve ambiguities instantly using these cues.\n\n- **Inventory Awareness**: Constantly track what is in your hands. If a `take` action fails or returns \"Nothing happens\", it usually means your inventory is full. Immediately navigate to the destination to place the held item, freeing your hands for the next acquisition.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

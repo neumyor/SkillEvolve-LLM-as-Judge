@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Demonstrative placeholder decoupling",
+    "Indirect and pop-culture pointer resolution",
+    "Contextual lexical alignment"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories feature Jeopardy-style clues or statement fragments that rely on demonstrative placeholders ('this state', 'this instrument') or indirect cultural references ('Kevin Sorbo'). Agents succeeded by ignoring the grammatical category word during keyword extraction, mapping indirect pointers to canonical entities, and strictly aligning the final output with the exact phrasing found in the context. These behaviors are critical for avoiding over-analysis and formatting mismatches, but are not sufficiently emphasized in the current skill.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Direct Keyword Matching & Scanning",
+        "content": "\n- **Demonstrative Placeholder Decoupling**: Questions routinely use phrases like \"this [category]\" or \"these [category]\" as syntactic blanks. Treat the category word as a grammatical placeholder to be ignored during keyword extraction. Focus scanning entirely on locating the specific entity name that fills the blank."
+      },
+      {
+        "op": "insert_after",
+        "target": "Alias & Cross-Lingual Resolution",
+        "content": "\n- **Indirect & Pop-Culture Pointer Resolution**: Trivia frequently uses actors, television shows, or cultural references as indirect pointers (e.g., \"looks like Kevin Sorbo\" → Hercules). Map these proxies to their canonical referents using domain knowledge, then verify against the context. Output the canonical entity name exactly as it appears in the context."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Trivia/Jeopardy-style clue recognition requiring entity identification",
+    "Direct contextual keyword matching across multiple document snippets",
+    "Strict concise formatting with minimal preamble"
+  ],
+  "patch": {
+    "reasoning": "The batch consists entirely of trivia-style questions where the model must map descriptive clues to specific entities using provided context snippets. The skill is currently empty, so encoding these core retrieval and formatting strategies will establish a strong baseline for similar tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles for Trivia & Entity QA\n- **Question Analysis**: Treat questions as descriptive clues (often Jeopardy-style) seeking a specific person, title, place, or concept.\n- **Context Scanning**: Systematically scan `[PAR]` blocks for direct keyword overlaps or explicit statements linking the clue to the target entity. Cross-reference multiple documents if needed to confirm accuracy.\n- **Answer Extraction**: Isolate the precise entity or title. Preserve standard capitalization and omit leading articles unless integral to the official name.\n- **Output Discipline**: Provide a brief verification step, then output only the concise answer inside `<answer>...</answer>` tags. Avoid conversational filler or restating the question."
+      }
+    ]
+  },
+  "source_type": "success"
+}

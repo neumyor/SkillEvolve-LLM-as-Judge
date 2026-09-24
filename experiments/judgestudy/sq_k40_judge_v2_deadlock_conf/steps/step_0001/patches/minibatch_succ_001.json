@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct extraction of concise entity names or short phrases from relevant context passages.",
+    "Keyword-driven scanning across multi-document contexts to locate the specific fact answering the question.",
+    "Strict adherence to the <answer>...</answer> format with minimal surrounding text.",
+    "Resolving Jeopardy-style or trivia clues by mapping descriptive attributes to a single target entity."
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories involve trivia/Jeopardy-style questions answered via direct extraction from a multi-document context. Successful agents consistently ignore irrelevant documents, match keywords to find the exact entity, keep answers extremely concise, and strictly use the required XML tags. Encoding these behaviors will improve precision, reduce verbosity, and prevent hallucination when handling dense context blocks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Direct Extraction**: Prioritize extracting exact entity names, titles, or short phrases directly stated in the context. Avoid paraphrasing unless necessary.\n- **Conciseness**: Keep the final answer extremely brief (typically a few words or a single name/title). Do not include full sentences or explanations inside the `<answer>` tags.\n- **Keyword Scanning**: When presented with multiple documents, quickly scan for keywords from the question to isolate the relevant passage. Ignore unrelated context.\n- **Clue Resolution**: For Jeopardy-style or descriptive clues, synthesize the key attributes mentioned in the question to pinpoint the single target entity in the text.\n\n## Formatting Rules\n- Always wrap the final answer in `<answer>...</answer>` tags.\n- Do not repeat the question or add conversational filler before or after the answer tags.\n- If the question asks for a specific term or name, output only that term/name."
+      }
+    ]
+  },
+  "source_type": "success"
+}

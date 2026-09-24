@@ -1,0 +1,47 @@
+{
+  "step": 2,
+  "action": "reject",
+  "n_total": 39,
+  "n_fail": 9,
+  "failure_patterns": [
+    {
+      "pattern": "navigation_loop: Agents repeatedly visit the same containers/surfaces without tracking visited locations or switching search categories.",
+      "count": 9,
+      "task_ids": [
+        "train:0034",
+        "train:0025",
+        "train:0036",
+        "train:0030",
+        "train:0024",
+        "train:0015",
+        "train:0029",
+        "train:0026",
+        "train:0021"
+      ]
+    }
+  ],
+  "score_before": 0.9444444444444444,
+  "score_after": 0.9444444444444444,
+  "rejected_edits": [
+    {
+      "op": "append",
+      "content": "---\n\n## Troubleshooting & Edge Cases\n\n- **Placement Blocked**: If `put <obj> in/on <recep>` is unavailable or fails, run `inventory` to confirm possession. Run `examine <recep>` to check if it needs opening. Resolve the block before moving.\n- **Object Identity & Equivalence**: Match exact names/types from the goal. In ALFWorld, task descriptions often use generic names (e.g., \"pot\", \"container\") while the environment provides specific instances (e.g., \"pan\", \"bowl\"). Accept the first reachable object that functionally matches the goal. Do not substitute similar items unless no other option exists, and do not abandon a valid match to search for a literal name match.\n- **State Persistence**: Objects retain their transformed state (hot/cold/clean) until placed or dropped. Do not re-transform unless explicitly stated or state changed to normal.\n\n### Completion Protocol\n1. **Final Verification**: After placing the object in the target receptacle, read the observation carefully. If the goal object is listed as present in the receptacle, the task is complete.\n2. **Immediate Termination**: Execute `done` immediately upon verification. Do not follow up with `look`, `inventory`, or any other exploratory actions. Continuing after success wastes steps.",
+      "target": ""
+    },
+    {
+      "op": "replace",
+      "content": "2. **Systematic exploration & Loop Breaking**: Prioritize searching closed containers (cabinets, drawers, fridges) before open surfaces. Maintain a mental map of visited locations; never re-examine a container or surface that has already yielded nothing. If you visit the same location twice without progress, force a move to a completely different furniture category or room section. Only stop searching when the target is found or all logical locations are exhausted.",
+      "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty."
+    },
+    {
+      "op": "insert_after",
+      "content": "5. **Appliance Workflow**: For heating/cooling/cleaning tasks: 1) Open appliance, 2) Place object inside, 3) Perform transform action, 4) Close appliance, 5) Take object out immediately. Never navigate away from an appliance while an object is inside it without retrieving it first. Always verify the object's state (hot/cold/clean) after transformation.",
+      "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination."
+    },
+    {
+      "op": "append",
+      "content": "\n9. **Close appliances after use**: After completing a transformation (heating, cooling, cleaning), close the appliance door (e.g., microwave, fridge) to finalize the action and maintain a clean state.\n10. **State inference via actions**: Use the admissible action list to deduce your current state. If `take X` is unavailable, you likely hold X. If `inventory` is listed, use it to verify contents or resolve naming discrepancies.\n12. **Verify state during stalls**: If the task stalls or you lose track of your inventory during long searches, use the `inventory` command to confirm what you are carrying or if you are empty-handed.",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions."
+    }
+  ]
+}

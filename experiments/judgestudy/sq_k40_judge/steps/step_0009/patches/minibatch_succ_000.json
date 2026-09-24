@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Stripping meta-text, conversational fillers, and stage directions from declarative/Jeopardy clues to isolate pure factual constraints.",
+    "Rapid candidate generation via title keywords followed by strict passage-body verification for multi-constraint intersection.",
+    "Strict isolation of canonical entity names, actively rejecting contextual modifiers or syntactic mirroring from the prompt."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently strip conversational asides and meta-cues to reveal core constraints, employ a strict snippet-to-passage verification workflow, and rigorously isolate canonical entities without appending prompt-derived modifiers. These patterns address persistent failure modes like over-specification, syntactic mirroring, and noise sensitivity.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+        "content": "\n- **Meta-Text & Conversational Filler Stripping**: When clues contain director cues, stage directions, conversational asides, or self-referential commentary (e.g., '(Schumacher reads his clue.)', 'hey, it was basically...'), strip these non-factual elements entirely. Focus exclusively on the underlying factual constraints and the semantic gap they define."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.",
+        "content": "\n- **Descriptor Rejection & Canonical Isolation**: Actively reject descriptive phrases, categorical nouns, or prepositional modifiers present in the clue. If the canonical answer is a short name or surname, output only that term. Do not expand the answer to match the clue's grammatical structure or descriptive density."
+      }
+    ]
+  },
+  "source_type": "success"
+}

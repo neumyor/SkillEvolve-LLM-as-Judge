@@ -1,0 +1,42 @@
+{
+  "reasoning": "Prioritized failure-driven patches to correct systematic distractor heuristics, enforce definite article preservation, and normalize personal names. These high-priority corrections were preserved as they address critical failure modes without conflicting with success-driven patterns. All success-driven edits were retained, covering refined keyword matching, typo tolerance, enhanced constraint verification, verbatim lifting strategies, multi-clause mapping, declarative parsing, extraction priority, and multiple-choice handling. No protected sections were present. Edits maintain original support counts and source types. [optimizer-ranked: selected 4/13 edits]",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Direct Keyword Matching & Scanning**: Preserve quoted phrases in the question as exact verbatim anchors for scanning document titles and snippets. Strip only non-essential punctuation, filler words (e.g., \"&\", \"who\"), and ellipses to extract core anchor phrases. Prioritize exact matches in titles/snippets before verifying with paragraph content.",
+      "content": "\n- **Typo & Variant Tolerance**: Queries may contain minor misspellings, OCR errors, or phonetic variants (e.g., \"steaing\" for \"stealing\"). Apply fuzzy matching or semantic equivalence when scanning for anchor phrases, prioritizing conceptual matches over strict string equality.\n- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.",
+      "content": "## Answer Precision and Conciseness\n- **Extraction Priority**: Always prefer extracting the exact term or phrase from the context over generating or paraphrasing it. Trivia evaluation relies on exact string matches, so retain the context's original phrasing unless it contains unnecessary filler.\nAnswers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity.",
+      "content": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat clusters of proper nouns or facts in the clue as a logical AND filter; prioritize candidates that satisfy the maximum number of these anchors.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Resolving Implicit References**: Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.",
+      "content": "\n- **Multi-Clause Description Mapping**: When a question contains multiple descriptors or roles joined by \"&\" or commas (e.g., \"late California governor & U.S. Chief Justice\"), treat each clause as a required filter. Locate the single entity in the context that satisfies the intersection of all clauses, ignoring tangential figures who may match only one descriptor.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [4] addresses widespread search failures caused by OCR errors/typos and inefficient snippet scanning, providing critical heuristics for anchor retrieval. Edit [11] tackles the core failure mode of generating answers instead of extracting them, which is essential for exact-match evaluation systems. Edit [5] significantly strengthens constraint verification by formalizing proper noun clusters as logical AND filters, preventing entity misalignment. Edit [8] fills a gap in handling complex, multi-descriptor clues by mandating intersection-based filtering across clauses. Together, these four edits form a systematic pipeline (search -> extract -> constrain -> resolve) that covers the most recurrent and impactful failure patterns in trivia/QA tasks.",
+    "selected_indices": [
+      4,
+      11,
+      5,
+      8
+    ]
+  }
+}

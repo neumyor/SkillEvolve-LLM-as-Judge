@@ -1,0 +1,25 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treat declarative statements and incomplete sentences as direct identification prompts requiring a specific entity.",
+    "Map colloquial descriptors, nicknames, or contextual clues to canonical terms found in the context.",
+    "Prioritize exact entity extraction over paraphrasing; strip away dates, locations, or explanatory clauses unless explicitly requested.",
+    "Maintain minimalist output: place only the core answer inside <answer> tags, keeping reasoning brief and external."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate that trivia and declarative questions are best handled by treating them as direct identification prompts. Agents succeed by quickly mapping contextual clues to exact entities, stripping non-essential descriptors, and outputting concise answers. Encoding these behaviors will prevent verbose or descriptive responses and improve exact-match accuracy on Jeopardy-style and factual queries.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "# Question Answering Skill\n\n(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Core Principles\n- **Context-First Mapping**: Treat all inputs, including declarative statements and incomplete sentences, as direct identification prompts. Map key descriptors, aliases, or contextual clues to their canonical forms in the provided text.\n- **Exact Entity Extraction**: Prioritize pulling precise names, titles, or terms. Strip away dates, locations, or explanatory clauses unless explicitly required by the prompt.\n- **Minimalist Output**: Keep reasoning concise and external to the final answer. Place only the core entity or exact phrase inside `<answer>` tags."
+      },
+      {
+        "op": "insert_after",
+        "target": "Place only the core entity or exact phrase inside `<answer>` tags.",
+        "content": "\n## Execution Workflow\n1. **Parse & Identify**: Extract core entities, constraints, or descriptive phrases from the question. Recognize trivia-style or fragmented prompts as requests for a specific target.\n2. **Scan & Verify**: Locate matching keywords or semantic equivalents in the context. Cross-reference aliases, nicknames, or colloquialisms with explicit definitions in the passages.\n3. **Extract & Filter**: Pull the precise entity. Remove filler words, categories, or surrounding narrative text.\n4. **Format Output**: Provide brief step-by-step reasoning outside the tags. Deliver the final, concise answer strictly inside `<answer>...</answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

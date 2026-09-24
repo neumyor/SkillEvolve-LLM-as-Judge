@@ -1,0 +1,25 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "rule_missing",
+      "count": 7,
+      "description": "Skill lacks explicit rules for exact-match extraction in trivia/Jeopardy-style questions"
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 7,
+      "description": "Agents output descriptive phrases, full names, or expanded terms instead of the exact expected short answer"
+    }
+  ],
+  "patch": {
+    "reasoning": "All 7 failures stem from trivia/Jeopardy-style questions expecting highly specific short strings. Agents consistently provided semantically related but lexically incorrect answers (e.g., 'Vitamin C' vs 'C', 'Jean Genet' vs 'Genet', 'A U2 tribute band' vs 'U2'). The edits introduce strict extraction rules prioritizing exact lexical matches, forbidding unnecessary expansions or descriptive phrasing, and clarifying handling of fragmented queries.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Answer Extraction Rules\n- **Exact Match Priority**: For trivia, Jeopardy-style, or fill-in-the-blank questions, output the *exact* word or short phrase requested. Do not paraphrase or add descriptive clauses.\n- **Avoid Expansions & Full Names**: If the expected answer is a single letter, abbreviation, or surname, output only that. Do not expand \"C\" to \"Vitamin C\" or \"Genet\" to \"Jean Genet\" unless the question explicitly asks for the full name.\n- **Direct Entity Response**: When a question asks for a person, band, place, or object, provide only the entity name. Do not answer with \"Yes/No\", descriptions (e.g., \"a tribute band\"), or full sentences.\n- **Partial Query Handling**: For fragmented questions (e.g., lyrics, titles, or incomplete statements), infer the missing keyword directly from the context and output it concisely."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

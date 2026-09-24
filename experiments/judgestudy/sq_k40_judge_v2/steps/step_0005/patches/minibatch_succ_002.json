@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating Jeopardy-style declarative clues as direct entity pointers rather than open-ended questions.",
+    "Leveraging document titles ([TLE]) and opening snippets for rapid trivia extraction before deep reading.",
+    "Filtering multiple candidate entities using restrictive constraints (exact dates, unique actions) to isolate the primary subject.",
+    "Skipping extended reasoning traces for straightforward trivia matches to maintain speed and conciseness."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate high performance when agents treat Jeopardy-style prompts as direct entity pointers, rapidly scan titles/snippets for matches, apply strict constraint filtering to discard tangential entities, and skip verbose reasoning for straightforward trivia. These patterns reinforce the existing skill's focus on conciseness and exact matching while providing actionable strategies for clue parsing and search prioritization.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase, enabling rapid extraction before reading full paragraphs."
+      },
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Jeopardy & Declarative Mapping**: Treat Jeopardy-style clues, declarative statements, and cloze fragments as direct pointers to a single target entity. Map descriptive attributes and constraints directly to the exact noun phrase in the context, ignoring conversational framing or trailing metadata."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "\n- **Constraint-Driven Filtering**: When multiple entities partially match a query, filter strictly by the most restrictive clue (e.g., exact dates, unique actions, or implicit references). Discard prominent but loosely matching items and prioritize the entity that uniquely satisfies all constraints simultaneously."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Perform a concise verification trace linking the question's core constraints to the extracted entity. Skip extended analysis for straightforward trivia matches to maintain speed and conciseness."
+      }
+    ]
+  },
+  "source_type": "success"
+}

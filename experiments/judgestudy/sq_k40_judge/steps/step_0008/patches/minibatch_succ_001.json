@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Parenthetical and trailing rhetorical clause filtering in declarative clues",
+    "Zero-derivation prioritization for straightforward trivia retrieval",
+    "Flexible article omission aligned with F1 evaluation metrics"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate three behaviors: (1) safely ignoring parenthetical asides and trailing rhetorical questions in clues, treating them as non-constraint flavor text; (2) skipping step-by-step reasoning entirely for clear-cut declarative/Jeopardy prompts; and (3) confidently omitting leading articles ('a', 'the') without penalizing F1 scores, resolving the tension between canonical phrasing and evaluation tolerance.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Parenthetical & Rhetorical Clause Filtering**: Ignore parenthetical asides, trailing rhetorical questions, or conversational interjections embedded within the clue. Treat them as flavor text and do not let them interfere with constraint extraction or entity selection."
+      },
+      {
+        "op": "replace",
+        "target": "- **Minimal Reasoning**: Skip verbose derivations for straightforward retrieval tasks. If step-by-step reasoning is performed, place it outside the answer tags and keep it brief.",
+        "content": "- **Zero-Derivation Priority**: For straightforward trivia and declarative clues, skip step-by-step reasoning entirely. Map the clue directly to the target entity and output the answer immediately. Reserve reasoning only for ambiguous or multi-hop queries."
+      },
+      {
+        "op": "insert_after",
+        "target": "Gold Alignment & Morphological Precision",
+        "content": "- **Article Omission Tolerance**: For F1-based evaluation, safely omit leading indefinite or definite articles (e.g., \"a\", \"the\") unless the clue's syntax strictly requires them for grammatical completion. Prioritize the core lexical item and canonical spelling over strict article preservation."
+      }
+    ]
+  },
+  "source_type": "success"
+}

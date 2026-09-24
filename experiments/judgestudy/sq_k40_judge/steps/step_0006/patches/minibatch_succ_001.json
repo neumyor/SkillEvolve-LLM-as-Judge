@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Demonstrative clues require using accompanying descriptive clauses as active filtering constraints rather than ignoring them.",
+    "Fragmented and Jeopardy-style prompts function as implicit sentence completions; the answer must fill the missing grammatical slot without mirroring the prompt's framing.",
+    "Multi-attribute clues demand cross-document constraint intersection to isolate the single entity satisfying all conditions simultaneously."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently resolved demonstrative clues ('this man', 'this dance') by treating the descriptive clauses as strict filtering constraints, contradicting the current skill's instruction to 'ignore' them. Additionally, agents successfully treated fragmented prompts as implicit sentence completions, filling the exact grammatical slot. Finally, they reliably intersected constraints across multiple document snippets to eliminate partial matches. These patterns address recurring failures in demonstrative resolution, syntactic mirroring, and multi-constraint disambiguation.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as the primary query anchors. Map them directly to the concrete entity described in the context, ignoring intervening descriptive clauses.",
+        "content": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as primary query anchors. Crucially, treat the accompanying descriptive clauses as *active filtering constraints*, not noise. Use them to narrow down candidates and discard entities that fail the specific attributes mentioned."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.",
+        "content": "\n- **Fragment-to-Slot Completion**: Parse incomplete prompts and Jeopardy-style clues as implicit sentence completions. Identify the missing grammatical slot (subject, object, predicate) and extract only the term that logically and factually completes the thought. Do not output the prompt's subject or repeat its framing."
+      },
+      {
+        "op": "replace",
+        "target": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts, cross-reference every constraint from the clue against candidate passages. Ignore duplicated entries and discard any entity that matches only some attributes or belongs to a different category.",
+        "content": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. When a clue contains multiple independent attributes, actively cross-reference across *multiple* document snippets to intersect constraints. Discard candidates that satisfy only a subset of conditions or belong to a different category."
+      }
+    ]
+  },
+  "source_type": "success"
+}

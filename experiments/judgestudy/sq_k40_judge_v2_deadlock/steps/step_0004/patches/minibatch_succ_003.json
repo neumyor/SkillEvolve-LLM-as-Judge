@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treat truncated, definition-style, or Jeopardy-like prompts as direct queries for a specific entity rather than full questions.",
+    "Output only the exact word or short phrase requested, strictly avoiding conversational filler, full sentences, or explanatory clauses inside answer tags.",
+    "Match grammatical number, capitalization, and specificity precisely to the expected answer, defaulting to surnames or shortest recognized identifiers when appropriate.",
+    "Use strict `<answer>...</answer>` tagging with minimal external reasoning, ensuring the extracted entity directly satisfies the clue's constraints."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories feature Jeopardy-style or truncated clues requiring exact entity extraction. Agents consistently mapped descriptive fragments to precise entities, maintained strict conciseness, and avoided adding filler or explanations inside the answer tags. Encoding these patterns ensures reliable handling of trivia, fill-in-the-blank, and definition-based questions while preserving formatting discipline.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat descriptive, fragmented, or definition-style prompts (common in trivia/Jeopardy) as direct queries for a specific named entity. Match key descriptors directly to candidates in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n\n## Precision Extraction Rules\n- **Exact Match Priority**: For truncated clues, fill-in-the-blanks, or trivia questions, output *only* the precise word, short phrase, or entity requested. Never add descriptions, parenthetical translations, explanatory clauses, or conversational filler inside the answer tags.\n- **Grammatical & Specificity Alignment**: Strictly match the exact number (singular/plural), capitalization, and specificity of the target. Default to surnames or shortest widely recognized identifiers unless a full name is requested. Preserve exact capitalization and hyphenation.\n- **Abstract vs. Concrete Targeting**: When a question describes a function, category, property, or role, extract the abstract category or functional term. Do not answer with a list of concrete instances unless explicitly asked.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the gold standard format (typically a single entity or short phrase).\n- **Concise Output**: Limit answers to a few words or a short phrase. Omit restatements of the question or introductory phrases.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

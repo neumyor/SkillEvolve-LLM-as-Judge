@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Recognize Jeopardy-style trivia clues (statements or definitions requiring a specific entity, term, or phrase)",
+    "Cross-reference multiple context documents to isolate the exact match for the clue's descriptors",
+    "Maintain strict conciseness: output only the core answer inside <answer> tags, avoiding full sentences or explanations"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories use Jeopardy-style trivia clues. Agents succeed by treating these as direct entity/term searches, filtering noisy multi-document contexts to find exact matches, and strictly adhering to the concise <answer> tag format without extra text.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Strategy\n- **Identify Clue Format**: Questions are typically Jeopardy-style trivia clues (statements or definitions missing a key term/entity). Map descriptive phrases directly to candidate answers.\n- **Context Cross-Referencing**: Scan all provided `[DOC]` snippets for keywords from the clue. Prioritize passages that explicitly link the clue's descriptors to a single answer.\n- **Strict Conciseness**: Provide only the core answer (name, term, or phrase) inside `<answer>...</answer>` tags. Do not include full sentences, explanations, or conversational filler inside the tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

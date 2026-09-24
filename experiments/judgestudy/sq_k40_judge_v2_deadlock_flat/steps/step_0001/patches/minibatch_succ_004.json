@@ -1,0 +1,18 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Direct extraction of defined terms from context passages",
+    "Semantic disambiguation of closely related terminology using precise qualifiers",
+    "Strict adherence to concise output formatting constraints"
+  ],
+  "patch": {
+    "reasoning": "The trajectory successfully identifies 'Apogee' by matching the exact definition in the context while distinguishing it from similar terms like 'Perigee' and 'Aphelion'. Encoding these extraction and disambiguation strategies will create a robust baseline for definition-based QA tasks across domains.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Core QA Principles\n- **Direct Term Extraction**: For definition-style questions, locate the exact sentence or phrase in the context that defines the target concept and extract the corresponding term.\n- **Precision Disambiguation**: Carefully align question qualifiers (e.g., direction, object, magnitude) with context terms. Note morphological clues (e.g., *apo-* vs *peri-*, *-gee* vs *-helion*) and verify the specific entity referenced.\n- **Concise Formatting**: Output only the extracted term or short phrase inside the designated tags. Omit full sentences, reasoning steps, or question repetition.\n- **Context Exclusivity**: Rely solely on the provided passages. Cross-reference multiple documents if needed, but prioritize the most direct definition."
+      }
+    ]
+  },
+  "source_type": "success"
+}

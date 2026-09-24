@@ -1,0 +1,33 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Hand-constraint management for multi-object tasks: Agents place the first object at the destination immediately to free their hands for searching and retrieving the second object.",
+    "Strategic backtracking: Agents remember locations of visible but temporarily inaccessible items and return to them later, rather than strictly avoiding revisits.",
+    "Appliance state verification: Agents explicitly check and open closed appliances (microwave, fridge, cabinets) before attempting to interact, store, or transform items, and close them upon completion."
+  ],
+  "patch": {
+    "reasoning": "Analysis of the batch reveals three critical efficiency patterns not fully emphasized in the current skill: (1) explicit hand-management for 'Pick Two' tasks to avoid navigation bottlenecks, (2) strategic backtracking to known item locations instead of rigidly avoiding revisits, and (3) mandatory appliance state checks (open/close) which caused failures in similar tasks when ignored. Encoding these will improve robustness and step-efficiency.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.",
+        "content": "5. **Direct delivery & hand management**: For single-object tasks, navigate straight to the target receptacle and place it. For 'Pick Two' tasks, place the first object at the destination immediately to free your hands for searching and retrieving the second object."
+      },
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration with strategic backtracking**: Search surfaces and containers methodically. Open closed containers before judging them empty. Track known item locations; if you encounter a reachable item but cannot take it yet, remember its location and return to it later. Avoid aimless wandering, but do not fear backtracking to previously visited spots to retrieve known items."
+      },
+      {
+        "op": "append",
+        "content": "\n9. **Appliance state management**: Always verify the state of appliances (microwave, fridge, cabinets) before interacting. Open closed appliances to access contents or perform transformations (heat/cool), and close them upon completion unless the task specifies otherwise."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Common Mistakes to Avoid",
+        "content": "- **Neglecting appliance states**: Attempting to use or store items in closed appliances causes errors. Always open microwaves, fridges, and cabinets before interacting.\n- **Hoarding the first object in multi-object tasks**: Holding onto the first required item while searching for the second wastes steps. Place the first item at the destination as soon as possible to free your hands."
+      }
+    ]
+  },
+  "source_type": "success"
+}

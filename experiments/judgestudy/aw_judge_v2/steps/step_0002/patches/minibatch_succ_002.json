@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Semantic location prioritization based on object category",
+    "Explicit handling of appliance open/close states before interaction",
+    "Decoupled navigation for Examine-in-Light tasks (object and lamp often on different surfaces)",
+    "Strict adherence to admissible actions while maintaining held-object state awareness"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals consistent success through semantic prioritization (searching high-probability locations first), explicit appliance state management (opening microwaves/fridges before use), and adaptive navigation when task components (object vs. lamp) are separated. These patterns are currently implicit or partially covered; reinforcing them will reduce search inefficiency and prevent state-related errors.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## General Principles",
+        "content": "**Semantic Prioritization**: When searching for an object, prioritize locations based on its category (e.g., food/produce in fridge, cutlery in drawers, lamps on desks/dressers, decorative items on shelves/tables). This drastically reduces unnecessary exploration.\n\n**Appliance State Management**: Microwaves and fridges start closed and must be opened (`open <appliance>`) before placing objects inside or initiating heating/cooling. Sinks and countertops are always accessible and do not require opening actions."
+      },
+      {
+        "op": "replace",
+        "target": "| Examine in Light | Examine object X under desklamp | Find X -> take X -> find desklamp -> use desklamp |",
+        "content": "| Examine in Light | Examine object X under desklamp | Find X -> take X -> locate desklamp (may be on different surface) -> navigate to desklamp -> use desklamp |"
+      },
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge, microwave) before judging them empty. If a likely location yields nothing, pivot to the next highest-probability surface type rather than looping."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Action loops**: Repeatedly toggling or examining the same object wastes steps. Move on to new locations instead.",
+        "content": "- **Ignoring appliance states**: Attempting to heat/cool without opening the microwave or fridge first. Always verify and open appliances before interaction.\n- **Assuming co-location**: Expecting the target object and desklamp to be on the same surface. Be prepared to navigate between separate locations while holding the object."
+      }
+    ]
+  },
+  "source_type": "success"
+}

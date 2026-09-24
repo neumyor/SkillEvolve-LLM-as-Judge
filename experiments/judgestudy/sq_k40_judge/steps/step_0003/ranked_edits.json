@@ -1,0 +1,42 @@
+{
+  "reasoning": "Prioritized failure-driven edits for syntactic slot alignment, modifier handling, and morphological matching per guideline #1. Preserved success-driven enhancements for implicit reference resolution, declarative parsing, constraint verification, type priming, multi-constraint synthesis, and artifact stripping. Deduplicated morphological alignment rules by retaining the higher-priority failure version and removing the overlapping success bullet per guideline #2. Maintained original support counts and source types. Edits are ordered to reflect document structure while respecting priority rules. [optimizer-ranked: selected 4/10 edits]",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Implicit Reference Resolution**: Map demonstratives like \"this [noun]\" directly to the concrete entity described in the context.",
+      "content": "\n- **Declarative Clue Parsing**: Treat declarative statements, descriptive fragments, and incomplete prompts identically to interrogative questions. Identify the grammatical slot or subject being described and treat it as a direct request for the missing entity.\n- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Ignore trailing metadata (e.g., question numbers) and focus solely on the semantic gap.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+      "content": "\n- **Multi-Constraint Synthesis**: When a clue provides multiple independent attributes (e.g., date, role, location, party, quantity), intersect these constraints to isolate the single matching entity. Discard candidates that satisfy only a subset of conditions.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer.",
+      "content": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer. Ensure zero-leakage by stripping any leading labels, reasoning fragments, trailing punctuation, or prompt artifacts before closing the tag.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Implicit Reference Resolution**: Map demonstratives like \"this [noun]\" directly to the concrete entity described in the context.",
+      "content": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as the primary query anchors. Map them directly to the concrete entity described in the context, ignoring intervening descriptive clauses.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [1] addresses a widespread failure pattern where models struggle with non-interrogative inputs (declaratives, fragments, metadata), establishing a universal prompt-normalization principle. Edit [5] introduces a concrete intersection strategy for multi-attribute clues, directly fixing the most common error in complex trivia/reasoning tasks. Edit [9] targets a pervasive formatting failure (reasoning or artifact leakage into `<answer>` tags) with explicit, actionable sanitization steps critical for system integration. Edit [0] strengthens core context grounding by clarifying how to anchor on demonstratives/pronouns while bypassing intervening noise, preventing reference misattribution. Together, they cover prompt normalization, constraint logic, output integrity, and reference resolution with high generality, complementarity, and actionability.",
+    "selected_indices": [
+      1,
+      5,
+      9,
+      0
+    ]
+  }
+}

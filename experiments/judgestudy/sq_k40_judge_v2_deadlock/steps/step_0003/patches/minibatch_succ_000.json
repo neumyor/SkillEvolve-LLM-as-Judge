@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treat descriptive, fragmented, or definition-style prompts as direct queries for specific named entities",
+    "Verify contextual constraints (dates, attributes, actions) to confirm entity matches before answering",
+    "Extract only the exact entity name without paraphrasing, expanding, or adding conversational filler",
+    "Wrap final answers strictly in <answer> tags with minimal surrounding reasoning"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories are Jeopardy-style or trivia questions where the prompt acts as a definition or clue. Success consistently relied on mapping these clues directly to named entities, cross-referencing explicit contextual constraints, and outputting only the exact entity name in strict tags. Encoding this focused workflow will prevent over-explanation and ensure precise entity extraction across similar tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Trivia & Jeopardy-Style QA Strategy\n- **Clue-to-Entity Mapping**: Treat descriptive, fragmented, or definition-style prompts as direct queries for a specific named entity. Match key descriptors directly to candidates in the context.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. Verify constraints like dates, locations, or specific attributes mentioned in the prompt.\n- **Exact Entity Extraction**: Output only the precise entity name (person, place, thing, or concept). Do not paraphrase, expand abbreviations, or add descriptive clauses unless explicitly requested.\n- **Concise Formatting**: Always wrap the final answer in `<answer>...</answer>` tags. Keep reasoning outside the tags and limit the final answer to a few words or a short phrase."
+      }
+    ]
+  },
+  "source_type": "success"
+}

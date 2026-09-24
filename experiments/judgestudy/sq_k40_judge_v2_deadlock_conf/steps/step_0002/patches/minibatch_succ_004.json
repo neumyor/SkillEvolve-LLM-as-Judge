@@ -1,0 +1,19 @@
+{
+  "batch_size": 2,
+  "success_patterns": [
+    "Interpreting incomplete sentences, quotes, or Jeopardy-style clues to identify the missing entity.",
+    "Returning exact, unexpanded single-word or short-phrase answers without descriptors or filler.",
+    "Strictly isolating the final answer in <answer>...</answer> tags while keeping reasoning separate."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories demonstrate that trivia/clue-style questions require precise entity extraction without expansion. Previous attempts failed when agents unnecessarily added descriptors to single-word answers. Encoding strict conciseness, clue interpretation, and tag isolation will prevent these failures and align with the observed success pattern.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Core Principles\n- **Clue Interpretation**: Questions often appear as incomplete sentences, quotes, or Jeopardy-style clues. Identify the specific missing entity, name, or term that completes the clue.\n- **Exact & Concise Output**: Return exactly the target word or phrase. Do not add descriptors, titles, or explanations (e.g., use 'Pascal' not 'Blaise Pascal', 'Rumsfeld' not 'Donald Rumsfeld'). Single-word answers must remain single words.\n- **Direct Context Matching**: Prioritize exact matches or strongly implied terms from the provided `[DOC]`/`[PAR]` blocks. Cross-check overlapping snippets to confirm the correct entity. Avoid hallucination or substitution.\n- **Strict Formatting**: Always enclose the final answer within `<answer>...</answer>` tags. Keep any step-by-step reasoning outside the tags. Do not repeat the question or include conversational filler.\n\n## Execution Strategy\n1. **Parse the Clue**: Isolate key identifiers (names, roles, locations, quoted strings) in the question.\n2. **Scan & Verify**: Locate these identifiers in the context. If multiple documents mention similar terms, use contextual details (dates, roles, specific phrases) to pinpoint the exact match.\n3. **Extract & Format**: Pull the precise answer span. Validate it against the gold standard expectation (exact match, minimal length). Output strictly inside `<answer>...</answer>`."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating demonstratives like 'this', 'one of these', or 'the latter' as direct fill-in-the-blank pointers to the answer slot rather than resolving them to external categories.",
+    "Mapping comma-separated lists of co-occurring entities (characters, items, names) directly to their shared parent entity, work, or category."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories feature Jeopardy-style clues with implicit blanks ('this', 'one of these') or lists of related terms pointing to a single target. While the skill covers generic placeholders and reverse clues, it lacks explicit guidance on treating 'this' as the answer slot itself and on resolving entity lists to their parent category. Encoding these patterns will prevent over-resolution and improve list-based trivia accuracy.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Resolving Implicit References**:",
+        "content": "\n- **Implicit Target Placeholders**: When clues use demonstratives like \"this,\" \"one of these,\" or \"the latter\" as direct blanks (e.g., \"finish of this,\" \"incorporated into this empire\"), treat them as immediate pointers to the answer slot. Do not resolve them to external categories; instead, scan for the exact noun or term that completes the phrase in the context."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Verbatim Context Lifting**:",
+        "content": "\n- **List-to-Parent Mapping**: When the question presents a comma-separated list of related proper nouns, characters, or items, infer that the target is their shared parent entity, creative work, or category. Match the list against document titles or summary sentences that group these items together to extract the unifying answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,24 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Treating trailing demonstratives ('this', 'that') and cut-off phrases as direct fill-in-the-blank cues rather than descriptive noise.",
+    "Distinguishing between quote/lyric completion tasks and subject-resolution tasks based on prompt structure.",
+    "Mapping generic container descriptors ('part of the tree', 'cheek cosmetic') to precise target entities using contextual verification."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handled prompts ending in trailing demonstratives or cut-off phrases by treating them as direct blanks, avoiding the common failure mode of mirroring the preceding category. They also correctly distinguished between queries asking for a quote's subject versus completing a verbatim excerpt. Finally, they mapped broad functional descriptors to precise canonical terms using context, preventing over-specification or generic outputs.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, and song lyrics as direct queries for their underlying subject or concept. Strip attribution cues (e.g., 'According to...', 'It's the cry of') and resolve the semantic gap to the specific entity or idea being described.",
+        "content": "- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, and song lyrics as direct queries for their underlying subject or concept. Strip attribution cues (e.g., 'According to...', 'It's the cry of') and resolve the semantic gap to the specific entity or idea being described. **Exception**: If the prompt is a verbatim excerpt ending mid-sentence or with a trailing pronoun (e.g., '...and this'), treat it as a direct text-completion task rather than a subject query."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Demonstrative-Category Anchoring**: When clues use phrases like 'this film series', 'one of these bombs', or 'the Denver type of this', treat the demonstrative + category noun as a direct pointer to the target class. Isolate the specific instance within that class that satisfies the unique constraints provided.",
+        "content": "- **Trailing Demonstrative & Cut-off Handling**: When prompts end abruptly or trail off with a demonstrative ('this', 'that', 'these'), treat the trailing word as a direct placeholder for the missing answer. Ignore preceding descriptive clauses as context and focus exclusively on filling the final blank.\n- **Generic Descriptor Mapping**: When clues use broad or functional descriptors (e.g., 'this part of the tree', 'this cheek cosmetic'), cross-reference with the context to map the descriptor to its precise anatomical, technical, or canonical term (e.g., 'leaves', 'blush'). Do not output the generic descriptor itself."
+      }
+    ]
+  },
+  "source_type": "success"
+}

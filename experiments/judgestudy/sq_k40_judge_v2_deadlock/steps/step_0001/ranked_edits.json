@@ -1,0 +1,19 @@
+{
+  "reasoning": "Failure-driven patches take strict priority and address specific trivia/Jeopardy-style failures requiring exact lexical matches. Their four extraction rules are preserved verbatim. Success-driven patches cover broader QA workflows (tag formatting, multi-document scanning, explicit link verification, clue mapping, and minimal reasoning) that are not addressed by the failure patches. Overlapping concepts around conciseness and exact phrasing are resolved by retaining the stricter failure version for trivia/exact-match scenarios, while preserving the success version's structural and strategic guidance. Metadata (support_count, source_type) is carried forward per original group.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+      "content": "## Answer Extraction Rules (Priority for Trivia & Exact Matches)\n- **Exact Match Priority**: For trivia, Jeopardy-style, or fill-in-the-blank questions, output the *exact* word or short phrase requested. Do not paraphrase or add descriptive clauses.\n- **Avoid Expansions & Full Names**: If the expected answer is a single letter, abbreviation, or surname, output only that. Do not expand \"C\" to \"Vitamin C\" or \"Genet\" to \"Jean Genet\" unless the question explicitly asks for the full name.\n- **Direct Entity Response**: When a question asks for a person, band, place, or object, provide only the entity name. Do not answer with \"Yes/No\", descriptions (e.g., \"a tribute band\"), or full sentences.\n- **Partial Query Handling**: For fragmented questions (e.g., lyrics, titles, or incomplete statements), infer the missing keyword directly from the context and output it concisely.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Partial Query Handling**: For fragmented questions (e.g., lyrics, titles, or incomplete statements), infer the missing keyword directly from the context and output it concisely.",
+      "content": "\n## Core QA Principles & Strategy\n- **Concise Formatting**: Keep answers strictly within `<answer>...</answer>` tags. Limit to a few words or a short phrase. Do not repeat the question or include conversational filler.\n- **Clue-to-Context Mapping**: Treat descriptive or incomplete-sentence questions as clues. Match key descriptors directly to named entities in the context.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through all `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n- **Handle Quotes & Paraphrases**: If the question contains a partial quote or translated phrase, locate its counterpart in the context to identify the target answer.\n- **Strict Conciseness**: Once the target information is identified, extract only the precise entity, name, or short phrase. Omit full sentences, conversational filler, or restatements of the question.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

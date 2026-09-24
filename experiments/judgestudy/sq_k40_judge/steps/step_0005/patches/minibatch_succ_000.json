@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Parenthetical and preamble stripping: Agents consistently ignore speaker tags, category headers, or parenthetical introductions before parsing the core clue.",
+    "Definition-to-term mapping: For descriptive or Jeopardy-style clues, agents directly extract the defined term rather than paraphrasing or explaining.",
+    "Multi-word proper noun preservation: Agents correctly retain canonical multi-word titles or names (e.g., 'The King and I', 'Punxsutawney Phil') without over-stripping."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate three behaviors: ignoring non-clue metadata (parentheticals/speaker tags), directly mapping descriptive clues to their defined terms, and preserving canonical multi-word proper nouns. These patterns address recent failures involving overly descriptive outputs, syntactic mismatches, and over-stripping of necessary modifiers.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Ignore trailing metadata (e.g., question numbers) and focus solely on the semantic gap.",
+        "content": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.",
+        "content": "\n- **Definition-to-Term Mapping**: When a clue provides a definition, description, or attribute set, extract the exact term being defined. Do not paraphrase, explain, or generate synonyms; return the precise lexical item matching the clue's target."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses.",
+        "content": "\n- **Multi-Word Proper Noun Preservation**: Retain canonical multi-word titles, names, or phrases (e.g., \"The King and I\", \"Punxsutawney Phil\") when they constitute the complete entity. Only strip non-essential adjectives or descriptors if the gold answer is strictly minimal."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,41 @@
+{
+  "reasoning": "Prioritized failure-driven patches per guidelines. Applied failure edits to Principles 2 and 3, and inserted corrective sub-principles 4b and 5b. Omitted success replacements for Principles 2, 4, and 5 due to direct overlap and explicit priority rule favoring failure versions. Preserved success modification to the first common mistake bullet and appended its additional principles (9-14) as they address distinct navigation, appliance management, and heuristic search patterns not covered by failure patches. Integrated failure's Loop Recovery Protocol and supplementary mistake bullets into their respective sections. All edits retain original support counts and source types. [optimizer-ranked: selected 4/8 edits]",
+  "edits": [
+    {
+      "op": "append",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+      "content": "\n9. **Open before interact/place**: Always open closed containers (cabinets, drawers, fridge) or appliances (microwave) before placing objects inside or performing state changes (clean, heat, cool). Do not attempt to place or transform while the receptacle is closed.\n10. **Sequential placement for multi-object tasks**: When tasked with moving multiple items, place the first acquired item at the target receptacle immediately. This frees your inventory/hands to retrieve and transport the remaining items without unnecessary backtracking.\n11. **Verify state with inventory**: During long searches or if unsure about your current load, use the `inventory` action to confirm whether you are holding the target object before navigating elsewhere.\n12. **Close appliances after use**: After heating, cooling, or cleaning with an appliance (microwave, fridge, sink), close it to clear the workspace and prevent blocking future interactions.\n13. **Prioritize transformation appliances**: When searching for food or perishables, check the fridge or microwave early in the episode. These locations often store the target item and are required later for the transformation step, saving travel time.\n14. **Use object priors**: Guide your initial search by targeting locations where the object type is commonly found (e.g., sponges near sinks, knives on counters, CDs on desks, statues in drawers) to minimize random exploration.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Action loops**: Repeatedly toggling or examining the same object wastes steps. Move on to new locations instead.",
+      "content": "\n- **Fixating on one furniture type**: Cycling through only drawers or only shelves ignores other high-probability locations. Alternate between containers and surfaces.\n- **Object identity confusion**: Picking up a 'pot' when asked for a 'pan' (or vice versa) wastes steps. Always verify the exact object name in observations and admissible actions before interacting.\n- **Redundant appliance cycling**: Do not return to appliances multiple times for the same object unless explicitly instructed. Track internal state flags for transformations.\n- **Silent failure recovery**: When placement yields no result, do not immediately navigate away. Verify inventory possession and receptacle openness at the location before leaving.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n## Loop Recovery Protocol\nWhen systematic searching yields no results or you detect a loop:\n1. **Check Inventory**: Run `inventory` to confirm what you are holding. If holding the goal object, go directly to the destination.\n2. **Switch Category**: If you have exhausted Containers, pivot entirely to Surfaces (and vice versa).\n3. **Verify Admissible Actions**: Only choose actions explicitly listed. Do not assume object names; match exact strings (e.g., 'pan' vs 'pot').\n4. **Break Cycles**: If you return to a previously checked location, force a move to an unvisited location immediately.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+      "content": "2. **Systematic exploration**: Categorize locations into Containers (drawers, cabinets, fridge) and Surfaces (countertops, tables, shelves, dressers). Check every Container and Surface in the room exactly once before any revisit. Always open closed containers before judging them empty.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit 7 addresses foundational agent failures (container states, inventory verification, object priors) with high systematic impact across all task types. Edit 6 targets pervasive execution errors (object identity, furniture fixation, silent failures) with strong, actionable guidance and the highest support score. Edit 4 fills a critical gap by providing a structured fallback protocol for loop detection and recovery, preventing infinite search cycles. Edit 0 refines the core search strategy by explicitly distinguishing containers from surfaces, significantly improving exploration efficiency. Together, they comprehensively upgrade the skill's robustness, generality, and actionability without significant redundancy.",
+    "selected_indices": [
+      7,
+      6,
+      4,
+      0
+    ]
+  }
+}

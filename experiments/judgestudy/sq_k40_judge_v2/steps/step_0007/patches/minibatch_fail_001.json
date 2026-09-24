@@ -1,0 +1,21 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Agents interpret standalone quotes, slogans, or titles as requests for their category/type rather than the referenced entity."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent answered with the category ('campaign slogan') instead of the historical figure ('William Henry Harrison') because the question was just a famous phrase. A targeted rule is needed to force resolution of standalone quotes/slogans to their primary referent.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Famous Phrase & Slogan Mapping**: If the question is a standalone quote, slogan, title, or lyric, resolve it to the primary subject, creator, or historical figure it references. Explicitly avoid answering with the category, genre, or format (e.g., return the person's name, not 'slogan' or 'song')."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

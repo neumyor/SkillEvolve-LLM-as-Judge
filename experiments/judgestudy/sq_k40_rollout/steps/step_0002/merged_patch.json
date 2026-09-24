@@ -1,0 +1,59 @@
+{
+  "reasoning": "Applied Group 2's higher-consensus replacements and insertions for Jeopardy parsing, placeholder resolution, fragment handling, and justification standardization. Per priority rules, replaced 'Be Strictly Concise' with Group 1's 'Strict Name & Entity Formatting', then preserved Group 2's 'Verbatim Extraction Priority' as a complementary addition. Added Group 1's failure-driven rules for excluding clue modifiers/puns and prioritizing functional terms over instances, as they address critical parsing gaps not covered by success patches. All edits retain their original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions may appear as incomplete sentences or factual statements rather than direct interrogatives. Treat these as fill-in-the-blank or identification queries. Never interpret statement-based clues as True/False questions; always identify the missing entity or term. When context contains multiple related terms, select the one that precisely completes the clue or matches the specific trivia fact, avoiding broad generalizations.",
+      "content": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions may appear as incomplete sentences or factual statements rather than direct interrogatives. Treat these as fill-in-the-blank or identification queries. Never interpret statement-based clues as True/False questions; always identify the missing entity or term. When context contains multiple related terms, select the one that precisely completes the clue or matches the specific trivia fact, avoiding broad generalizations.",
+      "content": "\n- **Resolve Placeholders & Figurative Terms**: Questions frequently use placeholders ('this [entity]', '& this [entity]'), quoted metaphors/puns, or standalone noun phrases to point to the answer. Treat these as direct identifiers and map them to the specific named entity in the context, ignoring the literal phrasing of the pointer itself.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+      "content": "\n- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+      "content": "- **Standardized Justification**: Precede the final tag with a single-sentence reasoning step using a consistent template: \"Based on the context, [brief evidence] identifies [answer].\" This ensures traceability and aligns with successful response patterns.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+      "content": "- **Strict Name & Entity Formatting**: Match the exact expected trivia term. Use full formal names (including titles/ranks) when the clue implies historical or formal identification. Otherwise, default to last names or bare entities. Never append descriptive labels, adjectives, or qualifiers to the answer. Provide only the direct answer without repeating the question or including reasoning inside the tags.",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+      "content": "\n- **Verbatim Extraction Priority**: To prevent overly descriptive outputs, extract the target term exactly as it appears in the context. Do not paraphrase, expand, or add conversational qualifiers. Preserve original capitalization and formatting when possible to maximize exact-match probability.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "- **Exclude Clue Modifiers & Puns**: Words enclosed in quotes, capitalized unusually, or used playfully in the question are clue devices, not part of the answer. Strip them out before extracting the final term.",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "- **Prioritize Functional Terms Over Instances**: When a question describes a category, property, or function (e.g., \"An astringent...\", \"A dessert...\"), answer with the functional or categorical term itself, not a specific example mentioned in the context.",
+      "support_count": 4,
+      "source_type": "failure"
+    }
+  ]
+}

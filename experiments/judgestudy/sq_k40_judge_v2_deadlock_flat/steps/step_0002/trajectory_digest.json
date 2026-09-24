@@ -1,0 +1,34 @@
+{
+  "step": 2,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 6,
+  "failure_patterns": [
+    {
+      "pattern": "rule_missing: Skill lacks rules for Jeopardy-style clues, definitions, and trivia prompts, causing agents to output full names, plurals, or specific examples instead of the exact target term.",
+      "count": 6,
+      "task_ids": [
+        "0d6855b36a0a49229d38e4a376b6ee09",
+        "8cde5fd949c8425a8a651fb64249411b",
+        "f8a442980c55415b82527160422a2688",
+        "a842c4623d4845f0b0169730dcb1863c",
+        "4abb5ee3b7194c7fa389906773b7c2ce",
+        "ae698acda1784f6eb6a946e081c43526"
+      ]
+    }
+  ],
+  "score_before": 0.7,
+  "score_after": 0.7,
+  "rejected_edits": [
+    {
+      "op": "append",
+      "content": "## Handling Clues, Definitions, and Trivia\nWhen the question is a descriptive clue, definition, or trivia statement (often lacking a direct question word):\n- Identify the core concept or entity being defined. Output ONLY the precise target term. Do not add descriptors, categories, or explanatory clauses.\n- Match expected granularity strictly: if the clue implies a surname, abbreviation, or single word, provide only that (e.g., `Brutus` not `Marcus Junius Brutus`, `Arthur` not `Chester A. Arthur`).\n- Prefer the general category or term over specific examples found in the text (e.g., answer `Anti-perspirant` for a description of sweat-reducing agents, not `Witch hazel`).\n- Maintain grammatical number: if the clue uses singular phrasing (\"this is the term\"), output the singular form (`an insulator` not `Insulators`).\n- Strictly enforce all noun/adjective constraints in the prompt (e.g., \"fruit crop\" excludes non-fruits like coffee).\n- If multiple candidates appear in the context, select the primary/most direct match and omit alternatives or parenthetical additions.\n- Treat declarative statements as identification prompts, not True/False questions. Keep the final answer strictly concise.",
+      "target": ""
+    },
+    {
+      "op": "replace",
+      "content": "## Core Principles\n- **Pointer & Implicit Target Resolution**: Map demonstratives (\"this...\", \"that...\") and descriptive clauses directly to their canonical entities in the provided text.\n\n## Execution Workflow\n1. **Parse & Identify**: Strip away narrative framing. Identify core descriptors, constraints, and implicit target slots. Recognize trivia-style or fragmented prompts as requests for a specific entity.\n2. **Scan & Match**: Locate exact keywords or semantic equivalents in the context. Cross-reference aliases, nicknames, or colloquialisms with explicit definitions in the passages.\n3. **Extract & Verify**: Pull the exact entity. Ensure it matches the implied granularity. If multiple sources appear, use overlapping information to lock the exact target term before formatting.\n4. **Format Output**: Provide brief step-by-step reasoning outside tags. Place the final, concise answer strictly inside `<answer>...</answer>` tags.",
+      "target": "(No learned rules yet. Rules will be added through the reflection process.)"
+    }
+  ]
+}

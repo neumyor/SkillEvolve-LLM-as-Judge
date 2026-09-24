@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Open containers and appliances before placement or transformation",
+    "Sequentially place the first item in multi-object tasks to free inventory"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate two key behaviors not fully emphasized in the current skill: (1) agents always open closed containers (fridges, cabinets, drawers) and appliances (microwaves) before placing objects inside or performing state changes like heating/cooling. Attempting to interact with closed receptacles causes action failures. (2) For 'Pick Two' tasks, agents place the first item at the destination immediately to free their inventory/hands, allowing them to return and fetch the second item efficiently. Encoding these prevents common failure modes and optimizes step count.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "\n9. **Open before interact/place**: Always open closed containers (cabinets, drawers, fridge) or appliances (microwave) before placing objects inside or performing state changes (clean, heat, cool). Do not attempt to place or transform while the receptacle is closed.\n10. **Sequential placement for multi-object tasks**: When tasked with moving multiple items, place the first acquired item at the target receptacle immediately. This frees your inventory/hands to retrieve and transport the remaining items without unnecessary backtracking."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Action loops**: Repeatedly toggling or examining the same object wastes steps. Move on to new locations instead.",
+        "content": "\n- **Ignoring container states**: Never attempt to place an object into a closed container or use a closed appliance. Always open the container/appliance first and verify it is accessible before proceeding."
+      }
+    ]
+  },
+  "source_type": "success"
+}

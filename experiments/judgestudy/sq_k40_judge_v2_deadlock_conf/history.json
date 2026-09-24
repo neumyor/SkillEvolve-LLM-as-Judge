@@ -1,0 +1,306 @@
+[
+  {
+    "step": 1,
+    "epoch": 1,
+    "step_in_epoch": 0,
+    "timing": {
+      "rollout_s": 25.1,
+      "reflect_s": 30.2,
+      "aggregate_s": 42.1,
+      "select_s": 0.0,
+      "update_s": 0.0,
+      "evaluate_s": 18.0
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 57042,
+        "completion_tokens": 15690
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 6653,
+        "completion_tokens": 3171
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 3329,
+        "completion_tokens": 6232
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 47960,
+        "completion_tokens": 27340
+      }
+    },
+    "rollout_hard": 0.825,
+    "rollout_soft": 0.870833,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1043,
+        "n_envs": 40,
+        "hard": 0.825,
+        "soft": 0.8708333333333333,
+        "n_failure_patches": 1,
+        "n_success_patches": 5
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 1,
+    "n_success_patches": 5,
+    "n_edits_merged": 2,
+    "n_edits_ranked": 2,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      7,
+      7
+    ],
+    "candidate_hash": "aea1a5fea6eaa89b",
+    "candidate_skill_len": 1602,
+    "edit_apply_summary": {
+      "total": 2,
+      "applied": 2,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "medium",
+    "judge_reason": "The candidate introduces explicit constraints against verbosity and guessing that directly map to the 5 observed failures (e.g., predicting 'Jean Genet' instead of 'Genet', or 'U2 tribute band' instead of 'U2'). As the current skill is an empty placeholder below the consolidation floor, the size increase is permissible, and the new rules provide actionable guidance likely to reduce these specific error modes.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 911,
+    "judge_usage": {
+      "prompt_tokens": 6653,
+      "completion_tokens": 3171,
+      "total_tokens": 9824
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Over-extraction and imprecise answer formatting (adding descriptors/titles or misinterpreting short clues as open-ended queries)",
+    "judge_evidence_count": 5,
+    "judge_counter_evidence_count": 0,
+    "judge_expected_window_delta": "improve",
+    "judge_falsifier": "If the strict minimal output and exact match rules cause the agent to incorrectly truncate or reject valid multi-word gold answers or contextually necessary descriptors in future tasks.",
+    "judge_rule_override": "v2: confidence=medium below required 'high'",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.825,
+    "candidate_gate_score": 0.745,
+    "action": "reject",
+    "current_score": 0.745,
+    "best_score": 0.745,
+    "best_step": 0,
+    "current_origin": "initial_skill",
+    "best_origin": "initial_skill",
+    "skill_len": 104,
+    "wall_time_s": 115.5
+  },
+  {
+    "step": 2,
+    "epoch": 1,
+    "step_in_epoch": 1,
+    "timing": {
+      "rollout_s": 17.0,
+      "reflect_s": 43.8,
+      "aggregate_s": 48.7,
+      "select_s": 0.0,
+      "update_s": 0.0,
+      "evaluate_s": 37.7
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 62058,
+        "completion_tokens": 20395
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 6682,
+        "completion_tokens": 4131
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 3570,
+        "completion_tokens": 5346
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 48630,
+        "completion_tokens": 24689
+      }
+    },
+    "rollout_hard": 0.85,
+    "rollout_soft": 0.9325,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1044,
+        "n_envs": 40,
+        "hard": 0.85,
+        "soft": 0.9324999999999999,
+        "n_failure_patches": 1,
+        "n_success_patches": 5
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 1,
+    "n_success_patches": 5,
+    "n_edits_merged": 1,
+    "n_edits_ranked": 1,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      6
+    ],
+    "candidate_hash": "c8b2fef602a6031d",
+    "candidate_skill_len": 2090,
+    "edit_apply_summary": {
+      "total": 1,
+      "applied": 1,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "medium",
+    "judge_reason": "The candidate explicitly codifies minimal-span extraction and name granularity rules that directly address the 5 independent over-extraction failures in the window. While a prior attempt targeted this mechanism, the new evidence of repeated failures combined with highly specific, actionable constraints justifies acceptance. Growth is unconstrained, and the rules are unlikely to harm existing successes.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 912,
+    "judge_usage": {
+      "prompt_tokens": 6682,
+      "completion_tokens": 4131,
+      "total_tokens": 10813
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Over-extraction of answer spans (adding titles, full names, or descriptors when minimal/core terms are expected)",
+    "judge_evidence_count": 5,
+    "judge_counter_evidence_count": 15,
+    "judge_expected_window_delta": "improve",
+    "judge_falsifier": "Future windows show persistent over-extraction failures on clue-based questions despite these explicit rules, or the strict minimal-span constraint causes incorrect truncation of necessary multi-word answers.",
+    "judge_rule_override": "v2: confidence=medium below required 'high'",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.85,
+    "candidate_gate_score": 0.745,
+    "action": "reject",
+    "current_score": 0.745,
+    "best_score": 0.745,
+    "best_step": 0,
+    "current_origin": "initial_skill",
+    "best_origin": "initial_skill",
+    "skill_len": 104,
+    "wall_time_s": 147.1
+  },
+  {
+    "step": 3,
+    "epoch": 1,
+    "step_in_epoch": 2,
+    "timing": {
+      "rollout_s": 61.2,
+      "reflect_s": 35.7,
+      "aggregate_s": 69.0,
+      "select_s": 0.0,
+      "update_s": 0.0,
+      "evaluate_s": 39.5
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 66294,
+        "completion_tokens": 20260
+      },
+      "judge_gate": {
+        "calls": 1,
+        "prompt_tokens": 6872,
+        "completion_tokens": 3947
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 5006,
+        "completion_tokens": 9506
+      },
+      "rollout": {
+        "calls": 40,
+        "prompt_tokens": 48230,
+        "completion_tokens": 29831
+      }
+    },
+    "rollout_hard": 0.775,
+    "rollout_soft": 0.827976,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1045,
+        "n_envs": 40,
+        "hard": 0.775,
+        "soft": 0.8279761904761905,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 1,
+    "n_edits_ranked": 1,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8
+    ],
+    "candidate_hash": "cde6f40a7c5a7784",
+    "candidate_skill_len": 2961,
+    "edit_apply_summary": {
+      "total": 1,
+      "applied": 1,
+      "skipped": 0,
+      "errors": 0
+    },
+    "gate_metric": "hard",
+    "gate_kind": "judge",
+    "judge_prompt_variant": "v2",
+    "judge_verdict": "ACCEPT",
+    "judge_confidence": "medium",
+    "judge_reason": "All 9 failures in the window directly exhibit the addressed mechanisms, including format misinterpretation, over-extraction, granularity mismatches, and target confusion. The candidate's rules explicitly correct these patterns without contradicting the successful tasks. Given the unconstrained growth allowance and dense, independent evidence, this candidate is highly likely to improve performance.",
+    "judge_parse_failed": false,
+    "judge_calls": 1,
+    "judge_error": "",
+    "judge_response_chars": 827,
+    "judge_usage": {
+      "prompt_tokens": 6872,
+      "completion_tokens": 3947,
+      "total_tokens": 10819
+    },
+    "judge_evidence_cards": 24,
+    "judge_evidence_total": 40,
+    "judge_defect_mechanism": "Imprecise answer extraction and format misinterpretation",
+    "judge_evidence_count": 9,
+    "judge_counter_evidence_count": 16,
+    "judge_expected_window_delta": "improve",
+    "judge_falsifier": "A drop in success rate on tasks where the gold answer is a valid paraphrase or requires slight contextual expansion, indicating the strict verbatim/minimal-span rules are overly rigid.",
+    "judge_rule_override": "v2: confidence=medium below required 'high'",
+    "judge_accepted": false,
+    "rollout_hard_after": 0.775,
+    "candidate_gate_score": 0.745,
+    "action": "reject",
+    "current_score": 0.745,
+    "best_score": 0.745,
+    "best_step": 0,
+    "current_origin": "initial_skill",
+    "best_origin": "initial_skill",
+    "skill_len": 104,
+    "wall_time_s": 205.5
+  }
+]

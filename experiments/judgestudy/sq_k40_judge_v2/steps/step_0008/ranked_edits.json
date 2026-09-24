@@ -1,0 +1,41 @@
+{
+  "reasoning": "Prioritized failure-driven patches for 'Trivia/Fragment Handling' and 'Exact Term Preference', overriding overlapping success edits per priority guidelines. Preserved success-driven updates for 'Reference Resolution', Step 3 workflow refinement, and added 'Title & Snippet Prioritization'. All edits maintain original support counts and source types. No protected sections were targeted. [optimizer-ranked: selected 4/6 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "- **Reference & Placeholder Resolution**: When questions contain demonstratives, possessives, standalone placeholders (\"this\", \"that\", \"one of these\"), or descriptive modifiers, explicitly map them to the primary subject entity or head noun in the context. Extract the core entity itself, not its attributes, locations, or associated works, unless the question explicitly asks for those specifics.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "\n- **Modifier & Suffix Management**: Preserve essential compound terms, geographic pairings, and formal titles when they function as a single recognized entity. For nicknames, monikers, or short identifiers, extract only the distinctive core term and strip generic organizational suffixes (e.g., 'Party', 'Club', 'Group') or non-essential descriptive qualifiers unless strictly part of the official name or explicitly requested.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "- **Exact Term & Variant Selection**: Prioritize the exact term found in the context that best matches the question's implied form. When multiple variants exist (e.g., nicknames vs. formal names, original language vs. English translation), select the one that aligns with the question's grammatical slot or standard reference. Do not default to the most prominent or verbose variant.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+      "content": "\n- **Title & Snippet Prioritization**: For factual and trivia queries, scan document titles (`[TLE]`) and opening paragraphs first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full passages.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [4] addresses the most pervasive QA failure: confusing an entity with its attributes or placeholders. Expanding Reference Resolution to explicitly map demonstratives and modifiers to the core entity fundamentally improves accuracy. Edit [2] fills a critical gap in extraction rules by standardizing entity boundaries through suffix/modifier management, preventing noisy outputs. Edit [1] systematizes variant handling (nicknames, translations), eliminating a common source of exact-match failures. Edit [5] optimizes the retrieval phase with a high-yield heuristic for factual queries, complementing the extraction rules. Together, these four edits target systemic entity identification, normalization, and search strategies, offering the highest general impact and actionability.",
+    "selected_indices": [
+      4,
+      2,
+      1,
+      5
+    ]
+  }
+}

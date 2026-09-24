@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Alias, Historical & Semantic Pointer Resolution",
+    "Convergent Evidence Prioritization"
+  ],
+  "patch": {
+    "reasoning": "Across all 8 successful trajectories, agents consistently resolved non-literal clues (historical references, former names, pop-culture aliases, semantic variants) by mapping them directly to canonical entities. Additionally, they heavily leveraged cross-document convergence to validate candidates over isolated mentions. Expanding the existing pointer and corroboration rules to explicitly cover these behaviors will significantly improve robustness without introducing new structural overhead.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+        "content": "- **Alias, Historical & Semantic Pointer Resolution**: Clues frequently use former names, historical references, literary allusions, pop-culture aliases, or semantic variants (e.g., 'Kevin Sorbo', 'Saratoga Chips', 'queer old dean') to point to an answer. Treat these as direct semantic identifiers. Scan the context for explicit mappings, glossary-style definitions, or explanatory bridges that link the pointer to the canonical entity. Discard the literal phrasing of the pointer and output only the exact canonical term."
+      },
+      {
+        "op": "replace",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "- **Convergent Evidence Prioritization**: When multiple `[DOC]` blocks independently mention or corroborate the same candidate entity, treat this convergence as high-confidence validation. Prioritize entities supported by cross-document agreement over isolated mentions or metadata-heavy titles lacking paragraph-level confirmation."
+      }
+    ]
+  },
+  "source_type": "success"
+}

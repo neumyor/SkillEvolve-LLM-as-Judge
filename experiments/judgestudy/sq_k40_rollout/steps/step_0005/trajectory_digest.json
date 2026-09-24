@@ -1,0 +1,47 @@
+{
+  "step": 5,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 9,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Model inconsistently balances conciseness vs verbatim extraction, leading to over-specification (adding surnames, 'power', '-Superior') or under-specification (dropping 'magazine').",
+      "count": 9,
+      "task_ids": [
+        "178c1b2e8450497a8fa6b0d853b885ab",
+        "1368fa832f564bf9b2cd4df9fdb4d356",
+        "303fa164ac2e4484af9b7a70ebcc9ef5",
+        "bc63eb4bd9234e4583a6c12cb3851cef",
+        "4c64770f574c499392b07f182a75c72c",
+        "24e447c6f2564bfcab303c390cb606dd",
+        "80437ec671f24947ba2ee4c4c40957b7",
+        "3c064caf2f694852a0d26e639caefa01",
+        "34f2d76dceb14a998d726e820be90c5e"
+      ]
+    }
+  ],
+  "score_before": 0.785,
+  "score_after": 0.755,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "- **Title-First & Semantic Verification**: While `[TLE]` markers are high-signal, never assume the title is the answer. Verify that the title's entity semantically matches the clue's description. If the clue defines a concept, synonym, or relationship found in the paragraph text, prefer the text-defined answer over the document title. Cross-check the candidate against the clue's core constraints before finalizing.",
+      "target": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Filter Contextual Noise & Metadata**: Actively ignore boilerplate, dates, URLs, platform labels (e.g., \"Wikipedia\", \"IMDb\", \"Privacy Policy\"), and navigational text in `[TLE]` and `[PAR]` blocks. Focus scanning exclusively on semantic sentences containing named entities and factual claims. Before extracting, verify that the candidate span satisfies every distinct constraint in the question. Actively ignore narrative wrappers, introductory phrases, and irrelevant surrounding documents that do not contribute to constraint satisfaction.",
+      "target": "- **Leverage Structural Tags**: Use `[DOC]`, `[TLE]`, and `[PAR]` markers to segment and scan the context efficiently."
+    },
+    {
+      "op": "replace",
+      "content": "- **Mandatory Single-Sentence Verification**: Always precede the final answer with exactly one sentence of reasoning using a fixed template: 'The context explicitly states/describes [Evidence], directly satisfying the question's constraint about [Clue].' Explicitly quote or reference the exact context span that satisfies each constraint. This forces verifiable grounding, eliminates filler, and strictly prevents reliance on external knowledge.",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful."
+    },
+    {
+      "op": "replace",
+      "content": "- **Span Granularity & Canonical Form**: Extract the exact context span that matches the clue's required granularity. Do not artificially shorten, expand, or swap modifiers unless explicitly instructed. If the clue targets a system/category, extract the system name; if it targets a specific instance, extract the instance. Prioritize the shortest unambiguous identifier that directly satisfies the clue's constraints, avoiding redundant titles or generic descriptors unless they are part of the official short name.",
+      "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\")."
+    }
+  ]
+}

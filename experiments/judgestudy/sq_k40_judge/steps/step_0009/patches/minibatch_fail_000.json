@@ -1,0 +1,30 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Agents consistently over-specify answers by appending category nouns, prepositional phrases, or middle names instead of returning the bare canonical form."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 1,
+      "description": "Agent resolves a famous anecdote/pun clue to the linguistic term ('Spoonerism') instead of the intended target phrase ('Dear old queen')."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Agent infers a relational descriptor ('Sisters') instead of the geographic/organizational container ('Monaco') for a list of related entities."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals a systematic tendency to over-specify answers by appending category words, prepositions, or middle names, and occasionally resolving anecdotal clues to the abstract term rather than the specific referent. These edits reinforce bare canonical extraction, clarify target-phrase resolution for puns/anecdotes, and prioritize geographic/organizational containers over relational terms.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Bare Canonical Preference**: For trivia and Jeopardy-style clues, aggressively strip category nouns, prepositional phrases, and middle names from extracted entities. If the category is implied or redundant (e.g., \"mint\", \"company\", \"mountains\", \"kings\"), output only the core proper noun or short phrase (e.g., \"Denver\" not \"Denver Mint\", \"Hallmark\" not \"Hallmark Cards\", \"Spain\" not \"Kings of Spain\"). Preserve necessary definite articles only if they are integral to the canonical name (e.g., \"the Adirondacks\").\n- **Target Phrase & Anecdote Resolution**: When a clue references a famous misquote, pun, or historical anecdote, resolve the query to the *intended phrase* or *actual entity* being referenced, not the linguistic term or abstract category (e.g., output \"Dear old queen\" not \"Spoonerism\"). Verify the semantic gap points to the specific referent before extracting.\n- **Geographic/Organizational Container Priority**: When processing lists of related entities, prioritize geographic, political, or corporate containers over relational descriptors (e.g., output \"Monaco\" not \"Sisters\" for royal family members). Cross-reference context to identify the overarching location or organization."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

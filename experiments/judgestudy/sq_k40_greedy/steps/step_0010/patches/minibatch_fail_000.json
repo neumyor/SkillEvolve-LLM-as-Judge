@@ -1,0 +1,51 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Agents append contextual categories or descriptors (e.g., \"market\", \"city in Germany\") instead of extracting the core entity."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Agents strip essential canonical name components (e.g., \"Lake\", definite articles) or mismatch required plurality/articles."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 2,
+      "description": "Agents resolve demonstrative clues (\"these businesses\") to associated organizations or broad categories instead of the exact target term."
+    },
+    {
+      "failure_type": "rule_wrong",
+      "count": 1,
+      "description": "Agents default to prominent or frequent entities despite failing explicit co-occurring constraints (year, location, role)."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals systematic issues where agents over-specify answers by appending contextual categories, strip necessary canonical prefixes/articles, misinterpret demonstrative pointers as requests for associated organizations, and override strict constraints with prominence bias. These four targeted edits enforce precise lexical matching, preserve integral name components, clarify demonstrative resolution, and harden constraint verification to eliminate these recurring failure modes.",
+    "edits": [
+      {
+        "op": "append",
+        "target": "## Answer Precision and Conciseness",
+        "content": "\n- **No Appended Categories or Descriptors**: Never append contextual categories, roles, or descriptors (e.g., \"market\", \"city\", \"group\", \"Scouts\") to the answer unless they are strictly part of the recognized canonical name. If the question asks for a specific entity or term, output only that term. Avoid descriptive phrases like \"capital cities\" or \"city in Germany\"; resolve directly to the proper noun or specific attribute requested."
+      },
+      {
+        "op": "replace",
+        "target": "- **Head-Noun Extraction from Compound Terms**: When the context presents a compound phrase or title (e.g., \"Egg White Denver Omelet\", \"McCormick & Company\", \"Henry V\"), extract the core head-noun or primary identifier (e.g., \"Omelet\", \"McCormick\", \"Henry V\") unless the full compound is the recognized canonical name. Avoid outputting unnecessary modifiers, adjectives, or conjunctions that do not change the entity's identity.",
+        "content": "- **Head-Noun Extraction from Compound Terms**: When the context presents a compound phrase or title (e.g., \"Egg White Denver Omelet\", \"McCormick & Company\", \"Henry V\"), extract the core head-noun or primary identifier (e.g., \"Omelet\", \"McCormick\", \"Henry V\") unless the full compound is the recognized canonical name. **Preserve integral geographical, honorific, or institutional prefixes** (e.g., \"Lake\", \"Mount\", \"St.\", \"University\") when they are essential to the canonical name (e.g., \"Lake Superior\", not \"Superior\"). Do not strip definite articles (e.g., \"the\") if they are part of the standard reference. Avoid outputting unnecessary modifiers, adjectives, or conjunctions that do not change the entity's identity."
+      },
+      {
+        "op": "append",
+        "target": "- **Target Dimension Verification**: Before finalizing, explicitly verify the exact dimension requested (e.g., location, person, original phrase, specific term). Never substitute related concepts such as relationships (\"Sisters\"), phenomena (\"Spoonerism\"), or categories. If the clue describes a place or entity via attributes, output the place/entity itself, not the descriptor or relational link.",
+        "content": "\n- **Resolving \"this/these [Category]\" Clues**: When a question uses demonstratives like \"this nation,\" \"these businesses,\" or \"one of these,\" the target is often the *specific category or term* being described, not the associated organization or broader group. If the clue points to a type (e.g., \"these Chinese businesses\"), extract the exact noun used in the context for that type (e.g., \"laundries\"), rather than the proper name of the alliance or movement. Match the demonstrative directly to the missing word or category in the source material."
+      },
+      {
+        "op": "replace",
+        "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords.",
+        "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. **Explicitly reject candidates that rely on frequency or general prominence.** If a candidate matches keywords but fails any single constraint (e.g., wrong birth year, wrong location), discard it immediately. Always cross-reference the requested entity type and categorical properties against the candidate pool."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

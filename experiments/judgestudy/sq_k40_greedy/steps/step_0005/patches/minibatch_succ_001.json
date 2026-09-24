@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Handling parenthetical introductions and stage directions in Jeopardy clues",
+    "Parsing full-sentence descriptive statements to identify the target subject",
+    "Prioritizing numerical and temporal anchors as high-value disambiguation filters"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently feature Jeopardy-style clues that open with parenthetical host intros, use complete declarative sentences to query for a subject, and rely heavily on specific numbers or dates as primary disambiguation tools. These structural patterns are not explicitly codified in the current skill, which could cause unnecessary parsing overhead or missed constraints. Encoding them streamlines anchor extraction and enforces stricter filtering logic.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **\"this [Category]\" Placeholders**: Jeopardy-style questions routinely replace the target entity with demonstrative placeholders like \"this nation,\" \"this state,\" or \"this group.\" Treat these as direct blanks to be filled by the specific entity described, rather than resolving them as complex relational pointers.",
+        "content": "\n- **Parenthetical Introductions & Stage Directions**: Clues frequently begin with host intros, location tags, or meta-commentary enclosed in parentheses (e.g., \"(Jimmy of the Clue Crew...)\"). Treat these as metadata to be ignored. Focus strictly on the declarative clause immediately following the parenthesis to locate the target subject."
+      },
+      {
+        "op": "insert_after",
+        "target": "Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.",
+        "content": "\n- **Full-Sentence Descriptive Clues**: When the question is a complete declarative sentence describing an attribute, event, or relationship (e.g., \"Rubber is an ingredient in this type of chewing gum\"), treat the entire sentence as a filter for the subject. Identify the grammatical subject or the entity modified by \"this [category]\" that satisfies the stated fact."
+      },
+      {
+        "op": "replace",
+        "target": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat clusters of proper nouns or facts in the clue as a logical AND filter; prioritize candidates that satisfy the maximum number of these anchors.",
+        "content": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a logical AND filter across all stated constraints; prioritize candidates that satisfy the maximum intersection of these anchors."
+      }
+    ]
+  },
+  "source_type": "success"
+}

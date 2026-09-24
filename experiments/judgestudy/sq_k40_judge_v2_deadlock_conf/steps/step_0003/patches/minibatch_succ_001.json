@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Recognize Jeopardy/Trivia clue format and treat questions as prompts to identify the missing entity or term.",
+    "Map core identifiers from the question directly to verbatim or near-verbatim spans in the context.",
+    "Extract the absolute shortest text span that answers the clue, avoiding descriptors, titles, or conversational filler.",
+    "Strictly enclose final answers in <answer> tags, keeping reasoning outside."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories correctly handle Jeopardy-style clue questions by extracting exact, minimal spans directly from the context. Previous failures showed over-expansion and poor clue interpretation. Encoding these patterns will enforce precise extraction and proper handling of trivia formats.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Clue & Fragment Interpretation\n- **Jeopardy/Trivia Format**: Questions often appear as definitions, descriptions, or sentence fragments (e.g., \"It's the...\", \"Name of...\", \"This unit...\"). Treat them as prompts to identify the specific entity, term, or concept that completes the statement.\n- **Ignore Conversational Framing**: Strip away introductory phrases. Focus on the core factual query.\n\n## Search & Extraction Strategy\n- **Identifier Focus**: Extract core keywords (names, locations, dates, unique phrases) from the question. Map these directly to the `[DOC]`/`[PAR]` blocks.\n- **Direct Span Retrieval**: Scan context for verbatim or near-verbatim matches to the clue. Prioritize passages where the question phrasing appears alongside its answer.\n- **Cross-Snippet Validation**: When multiple passages discuss the same topic, cross-reference details to ensure consistency. Resolve contradictions by favoring explicit statements over implied ones.\n- **Grounding Constraint**: Only extract answers explicitly stated or strongly implied in the provided context. Avoid external knowledge substitution or guessing.\n\n## Answer Precision & Format Rules\n- **Minimal Span Extraction**: Extract the shortest text span that directly answers the question. Never append descriptive nouns, roles, or adjectives (e.g., use 'Triathlon' not 'Olympic triathlon', 'Man-hour' not 'Industrial man-hour').\n- **Name Granularity**: Match the name format implied by the question. If the clue references a surname or first name alone, return that alone. Include honorifics only if standardly attached in the context.\n- **Category vs. Example**: Do not substitute a specific example mentioned in the text for a general category (or vice versa) unless explicitly asked. Stick to the exact term targeted by the clue.\n- **Tag Enforcement**: Place all final answers strictly within `<answer>...</answer>` tags. Omit reasoning, greetings, or filler inside the tags. Provide step-by-step reasoning outside the tags if helpful."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,28 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Opening closed receptacles before placing objects",
+    "Carrying target objects while searching for appliances",
+    "Using object-type priors to guide initial search locations"
+  ],
+  "patch": {
+    "reasoning": "Across the batch, successful agents consistently opened closed containers (drawers) before attempting to place items inside (Trajectories 2, 5), carried the target object directly to appliances without setting it down to save steps (Trajectories 3, 6), and leveraged common-sense priors about object locations (e.g., sponges near sinks, knives on counters, CDs on desks) to accelerate systematic search (Trajectories 1, 2, 3, 5, 6). These patterns address common failure modes like failed placement actions, unnecessary backtracking, and inefficient blind exploration.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty or attempting to place objects inside."
+      },
+      {
+        "op": "replace",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination. Keep the object in hand while navigating to the appliance; do not set it down prematurely."
+      },
+      {
+        "op": "append",
+        "content": "9. **Use object priors**: Guide your initial search by targeting locations where the object type is commonly found (e.g., sponges near sinks, knives on counters, CDs on desks, statues in drawers) to minimize random exploration."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,96 @@
+{
+  "reasoning": "Priority applied to failure-driven patches correcting critical loop triggers (state verification, rigid location cycling, termination confusion, and premature synonym rejection). These replace their respective base-skill sections. Success-driven patches address distinct operational gaps: appliance closure management, pre-delivery inventory checks, structured sequential scanning, destination-driven prioritization, pickup failure interpretation, proactive container opening, surface-first search strategy, refined multi-object workflow, and clear separation of transformation vs. placement actions. No overlapping points require deduplication; all success insights are preserved alongside the higher-priority failure corrections.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "6. **Trust Transformation & Proceed**: After a successful `heat`, `cool`, or `clean` action, trust the outcome immediately. Do not use `examine` or `inventory` to re-verify the object's state, as this often triggers infinite loops. Proceed directly to the next sub-goal (usually delivery) without delay.",
+      "content": "6. **Strict State Trust Post-Transformation**: After `heat`, `cool`, or `clean`, the object's state changes instantly. Do NOT use `examine` or `inventory` to verify temperature/cleanliness. Observations frequently return generic labels (e.g., \"normal cup\") regardless of actual state. Blindly trusting the action success prevents infinite verification loops. Proceed directly to delivery.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Location Exhaustion Rule**: If you visit a container or surface twice and find it empty, mark it as permanently searched. Immediately navigate to a completely different, unvisited location or room. Never repeat the same search pattern more than once.",
+      "content": "- **Dynamic Location Exhaustion**: Mark any container or surface as permanently searched after checking it once. If you visit three consecutive locations and find them empty, or if admissible actions suggest a target location (`take [obj] from [loc]`), immediately pivot to that location. Never cycle through previously checked empty spots; prioritize unvisited zones or follow environmental probes.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Success Termination Protocol**: Once the final placement action succeeds (observation confirms movement to target), the task is complete. Cease all further actions. Do not perform `look`, `inventory`, or `examine` after successful completion unless the goal explicitly requires tracking multiple distinct items.",
+      "content": "- **Success Termination Protocol**: Once the final placement action succeeds (observation confirms movement to target), the task is complete. Cease all further actions. Do not attempt `stop` or `done()` repeatedly if the environment does not immediately exit; the successful observation text is sufficient confirmation. Avoid restarting the workflow based on neutral terminal responses.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Object Synonymy**: If the exact goal object is missing after thorough searching, accept functionally equivalent items commonly used in the environment (e.g., treat `pot` as `pan`, `cup` as `mug`, `bowl` as `plate`) to prevent infinite search loops.",
+      "content": "- **Object Synonymy Application**: If the exact goal object is missing after checking 2-3 high-probability locations, immediately accept functionally equivalent items (e.g., `pot` as `pan`, `cup` as `mug`, `bowl` as `plate`). Do not discard synonyms to continue blind searching unless a perfect match is found elsewhere. Acquiring a synonym saves critical steps and prevents navigation loops.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "4. **Manage Appliance States**: Always open closed appliances/containers before interacting. For heating or cleaning, prioritize performing the transformation while **holding the object** at the open appliance. Ensure doors are open for placement interactions.",
+      "content": "4. **Manage Appliance States**: Always open closed appliances/containers before interacting. For heating or cleaning, prioritize performing the transformation while **holding the object** at the open appliance. **Immediately close the appliance** after a successful `heat`, `cool`, or `clean` action to reset the environment state. Ensure doors are open for placement interactions.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "8. **Track Progress & Proactive Checks**: Maintain an internal count of remaining objectives. Use `inventory` immediately after picking up or transforming objects to confirm holdings and states before navigating. Adjust search strategy early if the expected item is missing.",
+      "content": "8. **Pre-Delivery Verification**: Before navigating to the final receptacle, execute a single `inventory` call to confirm you are holding the transformed object and that your hands are clear of irrelevant items. Resolve any discrepancies immediately to avoid failed placements or state mismatches.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "10. **Prioritize Search by Category**: Focus initial searches on high-probability locations based on object type (e.g., food on dining tables/counters/fridges, kitchenware on countertops/sinks, electronics on desks/shelves) to minimize blind exploration.",
+      "content": "10. **Structured Sequential Scanning**: When a target is not immediately visible, iterate through available surfaces and containers in a logical sequence (e.g., countertop 1 → 2 → 3, or fridge → counter → table). Avoid random jumps. If a zone yields nothing, pivot to a completely different room or category rather than re-scanning.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "10. **Structured Sequential Scanning**: When a target is not immediately visible, iterate through available surfaces and containers in a logical sequence (e.g., countertop 1 → 2 → 3, or fridge → counter → table). Avoid random jumps. If a zone yields nothing, pivot to a completely different room or category rather than re-scanning.",
+      "content": "11. **Destination-Driven Search**: If the task requires transforming an object in a specific appliance (e.g., fridge for cooling, microwave for heating), prioritize checking that appliance first during initial search. It serves as both a likely storage location and the required transformation site, saving navigation steps.\n12. **Proactive Container Opening**: When navigating to any potential storage location (cabinet, drawer, fridge, microwave), immediately attempt to open it if closed. Do not wait for the system to prompt you or rely solely on admissible actions; proactive opening accelerates discovery.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "3. **Co-located Efficiency**: If the target object and the required appliance (e.g., desklamp, sink, fridge) are on the same surface, perform actions sequentially at that location without navigating away.",
+      "content": "- **Interpret Pickup Failure Signals**: If attempting to `take [object]` returns `'Nothing happens'`, your inventory is full. Do not retry or drop items randomly. Immediately navigate to the target receptacle and place the held object there to free your hands for subsequent items.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "1. **Track Visited Locations**: Explicitly state which containers/surfaces have been checked in your thinking. Do not move to a location unless it is unvisited or contains a known target object.",
+      "content": "- **Prioritize Closed Container Inspection**: When searching, actively prioritize opening and inspecting closed containers (drawers, cabinets, fridges) that are visible or listed in admissible actions. They frequently hide target objects and significantly reduce blind surface scanning time.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Verify Before Shuttling**: Check your inventory and object states (e.g., temperature, cleanliness) with a single `examine` or `inventory` call. Only travel between appliances and destinations when the current sub-goal is fully satisfied. Avoid oscillating between locations without advancing the task.",
+      "content": "- **Surface-First Search Strategy**: During initial object searches, prioritize inspecting open surfaces (countertops, tables, shelves) before delving into closed containers (drawers, cabinets, fridges). Surfaces typically yield faster results and reduce unnecessary opening/closing overhead. Only check deep containers if surface searches fail or the task context strongly implies storage.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Sequential Multi-Object Workflow**: For tasks requiring multiple items, always transport the first acquired item directly to the destination receptacle and place it before searching for the second. Never attempt to hold multiple objects or search for the second item while carrying the first, as this blocks inventory and wastes steps. After placing the first item, scan your immediate surroundings for the remainder before departing.",
+      "content": "- **Sequential Multi-Object Workflow**: For tasks requiring multiple items, always transport the first acquired item directly to the *exact same* destination receptacle and place it before searching for the second. Never attempt to hold multiple objects or split items across different containers. After placing the first item, clear your inventory and resume searching specifically for the remaining quantity.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "- **Placement vs. Transformation Semantics**: Use `move [object] to [receptacle]` exclusively for final placement, regardless of whether the object was previously heated, cooled, or cleaned. Reserve `heat`, `cool`, and `clean` actions strictly for the transformation step at the appliance. Confusing these leads to redundant or failed interactions.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

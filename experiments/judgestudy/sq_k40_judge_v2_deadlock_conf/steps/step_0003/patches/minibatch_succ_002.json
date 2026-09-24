@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Recognizes trivia/Jeopardy-style clues ('this plant', 'this state') as direct entity identification prompts.",
+    "Synthesizes information across multiple snippets when questions reference multiple entities or events.",
+    "Extracts minimal, exact text spans without appending unnecessary descriptors or conversational filler.",
+    "Strictly separates reasoning from the final answer using <answer> tags."
+  ],
+  "patch": {
+    "reasoning": "The batch consists entirely of Jeopardy/trivia-style questions requiring precise entity identification. Successful agents consistently parse clue fragments, cross-reference multiple snippets to find common links (e.g., shared species), and output minimal exact spans. These patterns are absent in the empty skill and directly address the core task mechanics.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Clue & Fragment Interpretation\n- **Trivia/Jeopardy Format**: Questions often appear as incomplete sentences or clues ending with \"this [noun]\" (e.g., \"this plant\", \"this state\"). Treat them as direct requests to identify the specific entity that completes the statement.\n- **Strip Conversational Framing**: Ignore introductory fluff. Focus on the core factual query and key identifiers (names, dates, locations, unique phrases).\n\n## Search & Synthesis Strategy\n- **Identifier Mapping**: Map keywords from the question directly to `[DOC]` titles or `[PAR]` content. Prioritize verbatim or near-verbatim matches.\n- **Cross-Snippet Linking**: When a question references multiple items, events, or attributes, scan all provided snippets to find the common thread or connecting entity. Synthesize findings rather than relying on a single passage.\n- **Grounding Constraint**: Only extract answers explicitly stated or strongly implied in the context. Do not substitute similar concepts or guess.\n\n## Answer Precision & Format\n- **Minimal Span Extraction**: Return the shortest text span that directly answers the question. Do not append descriptive nouns, roles, or adjectives unless required for clarity.\n- **Tag Enforcement**: Provide step-by-step reasoning outside the tags. Place the final answer strictly within `<answer>...</answer>` tags. No filler or repetition inside the tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,20 @@
+{
+  "batch_size": 3,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Agents consistently over-specify answers by extracting long descriptive phrases, categories, or full clauses instead of the precise, minimal core entity requested by short/fragment questions."
+    }
+  ],
+  "patch": {
+    "reasoning": "All three failures involve agents returning verbose descriptive phrases, categories, or full biographical clauses ('president of Vietnam from 1997 to 2006', 'Nordic countries', 'Speech balloon') when the gold answers require a single, minimal core entity ('Vietnam', 'Sweden', 'a balloon'). The existing conciseness rules are insufficiently enforced for fragmentary or keyword-only queries. A targeted rule enforcing minimal entity extraction and stripping of non-essential modifiers will correct this systematic over-specification.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Minimal Entity Enforcement**: For short, fragmentary, or keyword-only questions, extract only the single core entity or exact term. Strip all descriptive clauses, temporal markers, titles, and categories. If the context provides a long phrase, reduce it to the precise noun requested. Never output multi-word descriptions unless they form a fixed proper name."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

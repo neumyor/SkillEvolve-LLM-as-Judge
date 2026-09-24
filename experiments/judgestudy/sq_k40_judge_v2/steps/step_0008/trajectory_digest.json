@@ -1,0 +1,47 @@
+{
+  "step": 8,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 9,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents over-specify answers by appending non-essential modifiers, subtitles, or location suffixes to core entities.",
+      "count": 9,
+      "task_ids": [
+        "ffbdd2a32ba64dd580da86cd611bc5cc",
+        "763c2e8903734a32ad04d027be42eee0",
+        "1a936c9b0fd7482abd4b090e9c16ecf4",
+        "0b7ffa4435c041b58e0517deb8b6303c",
+        "56ac9a3893af46c9938c0e356255b880",
+        "4800beb1d45f4c07b41e608bf9c2b579",
+        "d98417a0052c446b9cbec27592b0716b",
+        "25ac1e9f9a9a44f39f0517e01c9b09e2",
+        "a4375645235745baac2b0253713ff424"
+      ]
+    }
+  ],
+  "score_before": 0.73,
+  "score_after": 0.73,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "- **Reference & Placeholder Resolution**: When questions contain demonstratives, possessives, standalone placeholders (\"this\", \"that\", \"one of these\"), or descriptive modifiers, explicitly map them to the primary subject entity or head noun in the context. Extract the core entity itself, not its attributes, locations, or associated works, unless the question explicitly asks for those specifics.",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer."
+    },
+    {
+      "op": "append",
+      "content": "\n- **Modifier & Suffix Management**: Preserve essential compound terms, geographic pairings, and formal titles when they function as a single recognized entity. For nicknames, monikers, or short identifiers, extract only the distinctive core term and strip generic organizational suffixes (e.g., 'Party', 'Club', 'Group') or non-essential descriptive qualifiers unless strictly part of the official name or explicitly requested.",
+      "target": ""
+    },
+    {
+      "op": "replace",
+      "content": "- **Exact Term & Variant Selection**: Prioritize the exact term found in the context that best matches the question's implied form. When multiple variants exist (e.g., nicknames vs. formal names, original language vs. English translation), select the one that aligns with the question's grammatical slot or standard reference. Do not default to the most prominent or verbose variant.",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Title & Snippet Prioritization**: For factual and trivia queries, scan document titles (`[TLE]`) and opening paragraphs first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full passages.",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages."
+    }
+  ]
+}

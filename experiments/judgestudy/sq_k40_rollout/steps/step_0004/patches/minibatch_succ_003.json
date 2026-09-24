@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Explicit Constraint Mapping in Reasoning",
+    "Handling Standalone & Fragmentary Trivia Clues",
+    "Strict Verbatim Extraction with Grammatical Preservation",
+    "Synthesizing Cross-Document Convergence"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories consistently use explicit constraint mapping in their reasoning steps to bridge the question's clues to the extracted evidence. They also effectively handle fragmentary or standalone trivia prompts, maintain strict verbatim extraction despite grammatical shifts in the question, and synthesize multi-document convergence. Encoding these patterns will reinforce the agents' ability to parse incomplete Jeopardy-style clues and guarantee exact-match accuracy.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "- **Handle Fragments, Ellipses & Standalone Clues**: Questions frequently appear as truncated phrases, standalone titles/dates, or cut-off syntax. Strip non-semantic noise and isolate the core identifying constraints. Treat descriptive phrases, appositives, or standalone pointers (e.g., 'this South American capital', 'Rachel, Rachel (1968)') as direct anchors to locate candidate entities."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+        "content": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span."
+      },
+      {
+        "op": "replace",
+        "target": "- **Verbatim Extraction Priority**: To prevent overly descriptive outputs, extract the target term exactly as it appears in the context. Do not paraphrase, expand, or add conversational qualifiers. Preserve original capitalization and formatting when possible to maximize exact-match probability.",
+        "content": "- **Strict Verbatim Extraction**: Extract the answer exactly as it appears in the context, preserving original capitalization, punctuation, and phrasing. Do not alter plurality, strip necessary modifiers, or adapt the term to fit the question's grammar. Prioritize the exact context span over stylistic normalization."
+      },
+      {
+        "op": "append",
+        "content": "- **Cross-Reference Convergence**: When multiple documents address the same clue, synthesize findings to confirm the answer. Explicitly note convergence in the reasoning step to boost confidence before finalizing the extraction."
+      }
+    ]
+  },
+  "source_type": "success"
+}

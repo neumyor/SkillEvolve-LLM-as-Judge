@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Strict adherence to <answer>...</answer> tags with only the core entity or short phrase inside.",
+    "Prioritizing exact entity extraction over full-sentence explanations.",
+    "Using distinctive phrases or quotes from the question to rapidly locate matching information in noisy, multi-document contexts.",
+    "Cross-referencing multiple context documents to verify factual consistency before answering."
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories successfully answered short-form factual/Jeopardy-style questions by extracting precise entities and wrapping them in <answer> tags. The context was consistently noisy with multiple documents, requiring efficient scanning and cross-verification. Encoding these patterns will ensure consistent formatting, reduce verbosity, and improve retrieval accuracy in future batches.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Format Compliance**: Always conclude with the final answer inside `<answer>...</answer>` tags. Keep the content strictly to the requested entity or short phrase. Do not repeat the question or add conversational filler.\n- **Entity-First Extraction**: Prioritize identifying the exact named entity (person, place, organization, title) that satisfies the query. \n- **Signal Scanning**: When the question contains distinctive phrases, quotes, or specific dates/names, use them as anchors to quickly locate the relevant passage in the context.\n- **Multi-Document Verification**: If multiple `[DOC]` passages address the question, cross-check them for consistency. Prefer the most direct or explicitly stated match.\n\n## Execution Workflow\n1. Scan the question for key entities, dates, or quoted phrases.\n2. Search the context for matching signals. Ignore irrelevant or tangential documents.\n3. Provide a brief step-by-step reasoning trace to justify the selection.\n4. Output the final answer concisely inside `<answer>...</answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

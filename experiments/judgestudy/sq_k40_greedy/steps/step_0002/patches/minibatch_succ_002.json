@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Resolving implicit references and demonstratives (e.g., 'this city's Sabres', 'in this play') to canonical entities.",
+    "Simultaneous multi-constraint verification (combining numbers, dates, and roles) to isolate targets in dense contexts.",
+    "Navigating metadata-heavy or list-like passages by prioritizing exact keyword alignment over semantic parsing."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently show agents resolving implicit references ('this city', 'in this play') and combining multiple specific constraints (dates, stats, roles) to pinpoint answers amidst noisy, metadata-rich contexts. These behaviors are critical for Jeopardy-style trivia but lack explicit guidance in the current skill.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Handling Statement or Fragment Questions",
+        "content": "\n## Resolving Implicit References\nTrivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.\n"
+      },
+      {
+        "op": "replace",
+        "target": "- **Constraint Verification**: Cross-check the extracted entity against specific constraints in the question (e.g., years, roles, locations) using the context to ensure accuracy.",
+        "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, and locations) to isolate the correct entity. When keywords overlap across candidates, prioritize the intersection of all stated constraints."
+      },
+      {
+        "op": "append",
+        "content": "\n## Navigating Metadata & List-Like Contexts\nPassages often resemble glossaries, stat sheets, word lists, or archival records. In these formats, skip narrative fluff and scan directly for exact keyword matches to the question's unique identifiers. Prioritize lines where the clue's key terms appear in close proximity to the target entity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,20 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "rule_missing",
+      "count": 7,
+      "description": "Agent fails to handle Jeopardy-style trivia clues, providing descriptive phrases, full names, or true/false answers instead of the exact target entity/term."
+    }
+  ],
+  "patch": {
+    "reasoning": "All 7 failures involve Jeopardy-style or trivia clues where the agent misinterprets the prompt format, over-specifies answers (full names vs surnames, 'Vitamin C' vs 'C'), or provides descriptive/contextual phrases instead of the precise target entity. Adding explicit rules for trivia/Jeopardy handling and strict entity extraction will align predictions with gold answers.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Handling Trivia & Jeopardy-Style Clues\nWhen the question is a trivia clue, statement, or phrase (often lacking a direct question word):\n- Identify the specific target entity or term being defined.\n- Output ONLY the core entity or exact term. Do not add descriptors or categories (e.g., answer `U2`, not `a U2 tribute band`).\n- Match the expected granularity: if the clue implies a surname, abbreviation, or single word, provide only that (e.g., `Genet` not `Jean Genet`, `C` not `Vitamin C`).\n- Treat declarative statements as identification prompts, not True/False questions.\n- Keep the final answer strictly concise—no explanations, filler words, or contextual framing."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

@@ -1,0 +1,18 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Precise lexical extraction over compound expansion",
+    "Strict morphological and number alignment with gold/clue"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectory demonstrates exact token matching ('Rainbow' vs 'Rainbow Serpent') and strict adherence to minimal phrasing. Historical step failures highlight recurring issues with over-descriptive outputs and incorrect pluralization. Encoding explicit rules for morphological alignment and resisting compound expansion directly addresses these failure modes while reinforcing existing gold-alignment principles without redundancy.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Avoid converting declarative clues into Yes/No answers.",
+        "content": "- **Morphological & Number Alignment**: Strictly match the singular/plural form of the expected answer. If the clue or gold answer implies a singular concept, extract the singular form; do not default to pluralized context mentions.\n- **Direct Token Matching over Compound Expansion**: When a clue targets a simple term embedded within a compound phrase in the context (e.g., extracting \"Rainbow\" from \"Rainbow Serpent\"), prioritize the exact lexical token that fills the query slot rather than expanding to the full named entity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

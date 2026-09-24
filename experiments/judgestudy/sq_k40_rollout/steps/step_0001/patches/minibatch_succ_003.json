@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Interpreting clue-style/Jeopardy-format questions as descriptive queries",
+    "Resolving demonstrative references ('this X', 'his Y') to context entities",
+    "Extracting concise entity names/phrases directly from matching passages",
+    "Corroborating answers across multiple context documents when applicable"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories feature Jeopardy-style or trivia questions phrased as descriptive clues. Successful agents consistently resolve demonstrative references ('this settlement', 'his discovery'), map descriptive keywords to entities in the context, extract concise answers, and verify across multiple passages. These patterns are not yet covered and should be formalized to guide future reasoning.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Answering Principles\n\n### 1. Clue-Based Question Interpretation\nTreat questions as descriptive clues rather than direct interrogatives. Identify key descriptors (e.g., \"insect name\", \"cookie-crumb crust\", \"reduced deaths from surgical infections\") and map them to candidate entities in the context.\n\n### 2. Demonstrative & Possessive Resolution\nQuestions frequently use vague references like \"this settlement\", \"his discovery\", or \"this newspaper\". Scan the context to find the specific entity that satisfies the description. Prioritize explicit matches over assumptions.\n\n### 3. Concise Entity Extraction\nOnce the target entity is identified, extract only the precise name or short phrase. Do not include full sentences, explanations, or conversational filler inside the `<answer>` tags.\n\n### 4. Multi-Passage Corroboration\nWhen the context contains multiple documents, cross-reference them to confirm the answer. If several passages point to the same entity or fact, use this convergence to increase confidence before finalizing the response."
+      }
+    ]
+  },
+  "source_type": "success"
+}

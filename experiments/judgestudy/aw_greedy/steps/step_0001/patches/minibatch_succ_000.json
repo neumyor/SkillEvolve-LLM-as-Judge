@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Appliance state management (open before interact, close after)",
+    "Object-category heuristic search prioritization",
+    "Explicit inventory verification during complex tasks"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate three operational refinements not fully captured in the current skill: (1) explicitly opening/closing appliances like microwaves and fridges before and after interactions, (2) leveraging object-type heuristics to select optimal starting search locations, and (3) using the `inventory` command to verify state when progress stalls. Encoding these will reduce trial-and-error and improve navigation efficiency.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "\n9. **Manage appliance states**: Always open closed appliances (microwave, fridge) before interacting, and close them afterward to secure the environment.\n10. **Apply object-type heuristics**: Prioritize high-probability starting locations based on object category (e.g., food items in fridge/countertops/dining tables, cutlery in drawers/cabinets, small items on desks/shelves).\n11. **Verify state with inventory**: If progress stalls or object status is unclear, use `inventory` to confirm held items and guide next steps."
+      }
+    ]
+  },
+  "source_type": "success"
+}

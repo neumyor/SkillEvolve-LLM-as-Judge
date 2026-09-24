@@ -1,0 +1,33 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Placeholder & Cloze Resolution",
+    "Head Noun/Core Entity Extraction",
+    "Minimalist Single-Sentence Verification"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories feature Jeopardy-style or cloze questions using standalone placeholders ('this', 'one of these'). Agents consistently resolved these to the exact core entity/head noun without over-specifying, and kept reasoning traces to a single sentence linking the clue to the fact. Encoding these patterns will reduce verbosity and improve precision for fragmentary queries.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "\n- **Placeholder & Cloze Resolution**: When questions use standalone placeholders like \"this\", \"that\", or \"one of these\", treat them as direct fill-in-the-blank slots. Map the surrounding descriptive clause directly to the core noun or entity in the context, ignoring conversational framing."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Head Noun Priority**: When the context contains compound terms or descriptive phrases, isolate the primary entity or head noun requested by the clue. Do not default to adjacent objects, locations, or descriptive modifiers unless they form the official name."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a single-sentence verification trace that explicitly links the question's core descriptor to the extracted entity, confirming context alignment. Skip extended analysis for straightforward matches."
+      },
+      {
+        "op": "append",
+        "content": "- **Implicit Subject Mapping**: For questions using generic pointers or declarative statements, treat the entire phrase as a direct definition request. Extract the exact core entity or category named in the context, ignoring non-semantic tokens or trailing clue markers."
+      }
+    ]
+  },
+  "source_type": "success"
+}

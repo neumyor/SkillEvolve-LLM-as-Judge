@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Sequential numerical search of containers/surfaces",
+    "Inventory verification when stalled or uncertain",
+    "Immediate placement of first item in multi-object tasks"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals three consistent, high-value behaviors not fully captured in the current skill: (1) agents systematically search numbered locations in ascending order to prevent random wandering; (2) agents use the `inventory` action as a diagnostic checkpoint when progress stalls or state is ambiguous; and (3) for 'Pick Two' tasks, agents immediately place the first found item at the destination to free inventory space for the second item. Encoding these patterns will improve search efficiency, state awareness, and task completion speed.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## General Principles",
+        "content": "- **Sequential location search**: Visit numbered containers and surfaces in ascending order (e.g., shelf 1 → shelf 2 → shelf 3) rather than jumping randomly. This ensures thorough coverage without unnecessary backtracking.\n"
+      },
+      {
+        "op": "insert_after",
+        "target": "Avoid loops: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+        "content": "- **Inventory checkpoints**: If you are unsure whether you are holding the target object, or if your admissible actions seem limited, execute `inventory` to verify your current state before deciding the next move.\n"
+      },
+      {
+        "op": "replace",
+        "target": "Track progress: Maintain an internal count of how many objects still need to be found and placed. Only stop searching when the count reaches zero.",
+        "content": "Track progress: Maintain an internal count of how many objects still need to be found and placed. For multi-object tasks, place the first acquired item at the destination immediately to free inventory, then continue searching for the remainder."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,43 @@
+{
+  "step": 4,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 5,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents over-specify answers by appending non-essential suffixes or descriptors (e.g., 'Jr.', 'Desert') to core entity names.",
+      "count": 5,
+      "task_ids": [
+        "8f78cc704744414b85fb4c2337882174",
+        "39ae35ba57974073895c183e2c4b0cda",
+        "bcaec7a9860240a187552622a73d38fc",
+        "7f8fafb69c89438fa2d458434ed4ebe9",
+        "28ce80cc4e9440b8bae1ec4a2c94c4c4"
+      ]
+    }
+  ],
+  "score_before": 0.73,
+  "score_after": 0.73,
+  "rejected_edits": [
+    {
+      "op": "append",
+      "content": "- **Proper Noun Pruning**: Strip non-essential descriptive suffixes or generic descriptors (e.g., 'Jr.', 'Sr.', 'Desert', 'River', 'Base') unless they are strictly part of the official title or explicitly requested. Default to the shortest, most direct entity name found in the context (e.g., 'Sahara' over 'Sahara Desert', 'Shepard' over 'Alan B. Shepard, Jr.') to avoid over-specification.\n- **Constraint-Driven Selection**: When multiple entities partially match a query, filter strictly by the most restrictive clue (e.g., exact dates, unique actions, or implicit references like 'seen here'). Discard prominent but loosely matching items. Prioritize the entity that uniquely satisfies all constraints simultaneously.",
+      "target": ""
+    },
+    {
+      "op": "replace",
+      "content": "3. Perform a single-sentence verification trace linking the question's core descriptor to the extracted entity. Skip extended analysis for straightforward trivia queries to maintain conciseness.",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context."
+    },
+    {
+      "op": "replace",
+      "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, cloze blanks, and declarative statements as direct fill-in-the-blank requests. Map descriptive attributes directly to the exact subject entity in the context, ignoring conversational framing, trailing punctuation, or metadata.",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase, allowing rapid extraction before reading full paragraphs.",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages."
+    }
+  ]
+}

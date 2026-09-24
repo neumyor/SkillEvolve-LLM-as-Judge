@@ -1,0 +1,48 @@
+{
+  "step": 5,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 10,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents select descriptive attributes, genres, or mediums instead of the core subject entity in Jeopardy-style/cloze questions.",
+      "count": 10,
+      "task_ids": [
+        "24e447c6f2564bfcab303c390cb606dd",
+        "1368fa832f564bf9b2cd4df9fdb4d356",
+        "bc63eb4bd9234e4583a6c12cb3851cef",
+        "178c1b2e8450497a8fa6b0d853b885ab",
+        "7e6a92097b984d0b9bf6307dca097b02",
+        "3c064caf2f694852a0d26e639caefa01",
+        "699d0ee09cef409cb640078bb31baa00",
+        "80437ec671f24947ba2ee4c4c40957b7",
+        "a234f47261f14ab9aed867375bddc652",
+        "34f2d76dceb14a998d726e820be90c5e"
+      ]
+    }
+  ],
+  "score_before": 0.73,
+  "score_after": 0.73,
+  "rejected_edits": [
+    {
+      "op": "insert_after",
+      "content": "\n- **Constraint-Driven Filtering**: When contexts contain mixed snippets, tangential details, or multiple candidate entities, explicitly ignore loosely matching items. Anchor strictly to the entity that satisfies the most restrictive clues (e.g., exact dates, unique actions) simultaneously.",
+      "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Subject Over Attribute Mapping**: For Jeopardy-style fragments or cloze blanks, identify the core subject entity being described, not its attributes, genres, titles, or mediums. If the clue describes a property (e.g., \"made of rubber\", \"based on a play\"), extract the primary noun/category (e.g., \"bubble gum\", \"Romeo and Juliet\") rather than descriptive adjectives or related concepts.\n- **Entity Form & Name Fidelity**: Match the exact grammatical form and length of the expected entity. Avoid truncating essential modifiers or compound terms (e.g., keep \"Forbes magazine\" if that is the standard reference). Do not over-expand to verbose formal names unless explicitly required. Anchor to the shortest, most direct entity name that uniquely satisfies the query.",
+      "target": "- **Zero Reasoning in Tags**: Perform all analysis and step-by-step thinking before the `<answer>` tag. The content inside the tags must be the final answer only."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, prioritize scanning document titles (`[TLE]`) and opening snippets first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full paragraphs.",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages."
+    },
+    {
+      "op": "replace",
+      "content": "3. Provide a concise, single-sentence verification trace linking the question's core descriptors to the extracted entity. Skip extended analysis or multi-step breakdowns for straightforward trivia matches to maintain speed and conciseness.",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context."
+    }
+  ]
+}

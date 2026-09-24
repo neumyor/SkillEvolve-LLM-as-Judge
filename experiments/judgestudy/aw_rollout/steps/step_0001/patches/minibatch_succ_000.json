@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Check inventory when target is not immediately visible",
+    "Open containers/appliances before inspecting or using them",
+    "Consolidate multi-object placement in a single receptacle"
+  ],
+  "patch": {
+    "reasoning": "Analysis of 8 successful trajectories reveals three recurring efficient behaviors not fully emphasized in the current skill: (1) agents frequently check their inventory when a target object isn't visible upon arrival, preventing wasted search time; (2) agents consistently open closed containers and appliances before judging them empty or attempting transformations; (3) for 'Pick Two' tasks, agents successfully consolidate by placing the first item, then retrieving the second and depositing it into the same receptacle, minimizing backtracking.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "\n9. **Verify holdings**: If the target object is not visible in your current observation, check your inventory (`inventory`) before continuing to search elsewhere.\n10. **Open before inspecting**: Always open closed containers (drawers, cabinets, fridge) and appliances (microwave) before concluding they are empty or unusable.\n11. **Consolidate multi-item placement**: For tasks requiring multiple objects, place the first item in the target receptacle, then fetch the remaining items and deposit them into the *same* receptacle to avoid unnecessary movement."
+      }
+    ]
+  },
+  "source_type": "success"
+}

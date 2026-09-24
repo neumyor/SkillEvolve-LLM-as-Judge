@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Interpreting trivia/Jeopardy-style clues to identify target entity types and constraints",
+    "Using keyword anchoring to rapidly scan dense document snippets for exact matches",
+    "Prioritizing context-based verification while using internal knowledge as a fallback",
+    "Maintaining minimalist, exact-term extraction strictly within answer tags"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories demonstrate a consistent pattern of treating questions as precise trivia clues, rapidly scanning dense context snippets via keyword anchoring, and extracting exact terms without conversational filler. Encoding this retrieval strategy and verification workflow will standardize high-precision performance across similar factoid tasks.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n## Retrieval & Reasoning Strategy\n- **Clue Interpretation**: Questions are typically trivia prompts or Jeopardy-style clues. Parse them to identify the target entity type (e.g., person, title, place, concept) and any restrictive constraints (dates, roles, descriptors).\n- **Keyword Anchoring**: Rapidly scan `[DOC]` and `[PAR]` blocks by matching unique anchors from the question (proper nouns, years, numbers, or distinctive phrases) to locate the exact supporting snippet.\n- **Context-First Verification**: Prioritize explicit matches in the provided context. Use internal knowledge only as a secondary validation step if the context implies an answer but lacks the exact term.\n- **Minimalist Output**: Extract only the precise term or short phrase requested. Strip conversational filler, synonyms, or full-sentence explanations. Strictly wrap the result in `<answer>...</answer>`."
+      }
+    ]
+  },
+  "source_type": "success"
+}

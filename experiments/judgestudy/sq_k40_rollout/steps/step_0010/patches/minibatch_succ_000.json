@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Explicit Slot Targeting & Partial Extraction: Questions frequently request a specific sub-component of a broader entity (e.g., 'First name of...', 'Duchess of [it]'). Parse the syntactic gap to extract exactly that component rather than the full entity.",
+    "Verbatim Quote & Phrase Completion: Clues often embed direct lyrics, famous sayings, or quoted descriptions. Treat these as fill-in-the-blank prompts and scan for the exact matching continuation in the text.",
+    "Triangulation Across Fragmented Documents: Search contexts split information across multiple [DOC] blocks. Use one document to identify candidates and another to verify attributes, cross-referencing snippets to confirm the answer."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate three key behaviors: (1) extracting partial spans when the question explicitly targets a sub-component (e.g., first name, title suffix), (2) completing verbatim quotes or famous phrases found in the context, and (3) triangulating fragmented information across multiple search documents. These patterns address specific failure modes in previous steps where models over-specified answers or ignored partial-slot requests.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+        "content": "\n- **Explicit Slot Targeting & Partial Extraction**: Questions frequently request a specific sub-component of a broader entity (e.g., 'First name of...', 'Duchess of [it]', 'to this color'). Parse the syntactic gap in the question to determine exactly which part of the entity to extract. Output only the targeted span, even if it is a fragment of a longer name or title found in the context."
+      },
+      {
+        "op": "replace",
+        "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+        "content": "- **Quote & Phrase Completion**: Clues frequently embed direct lyrics, famous sayings, or verbatim descriptions (e.g., 'The object of my affection...', 'Nature's most labor-intensive fruit'). Treat these as fill-in-the-blank prompts. Scan the context for the exact matching phrase or continuation, and output the precise words that complete the quote or description."
+      },
+      {
+        "op": "replace",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "- **Triangulation Across Fragmented Documents**: Search contexts frequently split information across multiple `[DOC]` blocks. Use one document to identify candidate entities and another to verify attributes, dates, or relationships. Cross-referencing disparate snippets prevents hallucination and confirms the exact answer span."
+      }
+    ]
+  },
+  "source_type": "success"
+}

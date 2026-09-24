@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Recognizes Jeopardy-style clue format (declarative statements querying a specific entity)",
+    "Prioritizes direct keyword matching and entity extraction from context snippets over complex reasoning",
+    "Maintains strict conciseness in the final answer, outputting only the target entity/name",
+    "Efficiently scans document titles and paragraphs for exact matches to clue keywords"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories involve Jeopardy-style trivia questions phrased as declarative clues. Success relied on recognizing this format, quickly scanning context snippets for exact keyword matches, extracting the precise entity, and outputting it concisely without extra explanation. Encoding these patterns will improve efficiency and accuracy for similar trivia/QA tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Recognize Clue-Based Formats**: Questions are often phrased as declarative clues (e.g., Jeopardy style) rather than direct interrogatives. Treat the statement as a query seeking a specific entity, person, place, or work.\n- **Direct Keyword Matching**: Prioritize scanning document titles and snippets for exact or near-exact keyword matches to the clue. Complex reasoning is rarely needed; accurate entity extraction is sufficient.\n- **Concise Output**: Always return only the precise target entity or phrase inside `<answer>...</answer>` tags. Avoid restating the question or adding explanatory text.\n- **Snippet-First Scanning**: When presented with multiple `[DOC]` passages, quickly evaluate titles and opening sentences to locate the relevant fact before reading deeply."
+      }
+    ]
+  },
+  "source_type": "success"
+}

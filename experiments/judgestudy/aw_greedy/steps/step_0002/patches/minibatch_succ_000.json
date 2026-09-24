@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Explicit post-appliance state verification and re-processing",
+    "Clearing inventory when holding non-target objects",
+    "Avoiding blocking inventory states during search"
+  ],
+  "patch": {
+    "reasoning": "Trajectories consistently show agents verifying object states after appliance interactions (T6), clearing inventory when picking up wrong items (T3), and using the inventory command to track progress or holdings (T5, T7). These patterns improve robustness against state mismatches and inventory blocking.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "5. **Verify transformation state**: Before final placement, confirm the object's state matches the goal (e.g., 'hot', 'cold', 'clean'). If the state is incorrect, return to the appliance to re-process rather than placing a mismatched item.",
+        "content": "5. **Verify transformation state**: After using an appliance, explicitly check the object's state (e.g., via `examine`). If the state does not match the goal, return to the appliance to re-process immediately. Do not assume the transformation succeeded on the first try."
+      },
+      {
+        "op": "insert_after",
+        "target": "4. **Manage appliance states**: Always open closed appliances (microwave, fridge, sink) before attempting to heat, cool, clean, or place items. Ensure doors are open for placement interactions.",
+        "content": "4.5. **Clear inventory for non-target items**: If you accidentally pick up an object that isn't the goal, place it down at your current location to free your inventory before resuming the search. Never hold multiple irrelevant items while searching."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Holding non-target objects**: Failing to place down incorrectly picked items blocks further search. Always clear your hands if the held object doesn't match the goal."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Strict open-close-retrieve loop for enclosed appliances",
+    "Proactive state verification using inventory calls",
+    "Exact object name confirmation upon pickup to prevent misidentification"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the batch reveals that successful agents consistently handle enclosed appliances with a strict open-move-close-interact-open-retrieve sequence, rather than skipping steps. Additionally, agents frequently use `inventory` to debug state when stuck or confused, and carefully verify object names upon pickup to avoid placing incorrect items. These patterns address gaps in the current skill's simplified appliance instructions and lack of state-checking guidance.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> heat X -> go to Y -> put X |\n| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> cool X -> go to Y -> put X |",
+        "content": "| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> open -> move X in -> close -> heat X -> open -> take X -> go to Y -> put X |\n| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> open -> move X in -> close -> cool X -> open -> take X -> go to Y -> put X |"
+      },
+      {
+        "op": "insert_after",
+        "target": "7. **Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+        "content": "\n8. **Appliance Workflow**: Enclosed appliances require a strict sequence: `open` -> `move object in` -> `close` -> `interact` -> `open` -> `take object`. Bypassing open/close steps will block execution. If `interact` is unavailable, check if retrieval is needed first.\n9. **Inventory Checks**: Call `inventory` whenever you are unsure what you hold or if expected actions are missing. It verifies your state and prevents misplaced items.\n10. **Name Verification**: Immediately confirm an object's exact name upon pickup. Do not assume similar items (e.g., 'pen' vs 'pencil') satisfy the goal until verified."
+      }
+    ]
+  },
+  "source_type": "success"
+}

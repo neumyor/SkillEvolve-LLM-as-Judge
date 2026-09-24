@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Keyword-driven scanning across multiple [DOC] blocks to locate exact matches for trivia questions.",
+    "Direct mapping of descriptive clues (e.g., 'late Led Zeppelin drummer', 'farthest point') to specific entities in the text.",
+    "Strict adherence to concise, single-entity answers inside <answer> tags without explanatory text."
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories involve trivia/factoid questions where the answer is explicitly stated in one of the provided document passages. Success relies on rapid keyword scanning, interpreting clue-style phrasing, and extracting only the precise entity requested. Encoding this pattern will help the agent efficiently handle similar factual retrieval tasks without overcomplicating the response.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n## Trivia & Factoid Question Strategy\n- **Scan for Keywords**: Quickly iterate through all `[DOC]` passages looking for exact keyword matches or synonyms related to the question.\n- **Map Descriptive Clues**: Treat phrases like \"this Shakespeare title\" or \"late Led Zeppelin drummer\" as direct pointers to entities in the text. Locate the descriptor and extract the associated noun/entity.\n- **Extract Precisely**: Return only the exact name, term, or short phrase requested. Do not include full sentences, explanations, or filler words inside the `<answer>` tags.\n- **Handle Quotes/Paraphrases**: If the question contains a partial quote or translated phrase, find its counterpart in the context to identify the target answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

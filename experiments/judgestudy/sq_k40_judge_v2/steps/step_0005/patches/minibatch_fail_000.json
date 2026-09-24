@@ -1,0 +1,26 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 5,
+      "description": "Agents select descriptive attributes, genres, or mediums instead of the core subject entity in Jeopardy-style/cloze questions."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Agents inconsistently handle proper noun lengths, over-expanding to full formal names or truncating essential compound modifiers."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals two systematic extraction failures: (1) misidentifying the core subject in favor of descriptive attributes, genres, or mediums in Jeopardy-style/cloze questions, and (2) inconsistent handling of proper noun lengths (over-expanding to full names or under-truncating compound terms). These two targeted rules will force the agent to prioritize the core subject noun and strictly align the extracted term's length and form with the expected answer.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Zero Reasoning in Tags**: Perform all analysis and step-by-step thinking before the `<answer>` tag. The content inside the tags must be the final answer only.",
+        "content": "\n- **Subject Over Attribute Mapping**: For Jeopardy-style fragments or cloze blanks, identify the core subject entity being described, not its attributes, genres, titles, or mediums. If the clue describes a property (e.g., \"made of rubber\", \"based on a play\"), extract the primary noun/category (e.g., \"bubble gum\", \"Romeo and Juliet\") rather than descriptive adjectives or related concepts.\n- **Entity Form & Name Fidelity**: Match the exact grammatical form and length of the expected entity. Do not expand proper nouns to full formal names (e.g., use \"Napoleon\" not \"Napoleon Bonaparte\") unless the clue demands it. Conversely, do not truncate essential modifiers or compound terms (e.g., keep \"Forbes magazine\" if that is the standard reference). Anchor to the shortest, most direct entity name that uniquely satisfies the query."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

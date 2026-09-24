@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Prioritize direct appliance commands (e.g., heat/cool X with Y) when holding the object, bypassing unnecessary open/close cycles.",
+    "Immediately verify object state via inventory after any transformation or appliance interaction before navigating to the next step.",
+    "Maintain strict container/appliance closure discipline: always close doors/drawers immediately after inspection or retrieval to prevent environment state drift."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate that direct appliance commands are more efficient than full toggle workflows, provided they are followed by immediate state verification. Additionally, agents that strictly close containers/appliances after use avoid state mismatches, and those that flexibly navigate to the desklamp before fetching the object handle 'Examine in Light' tasks more robustly.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "**Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Always close appliances** immediately after interaction and retrieval to maintain environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance. **Fallback Rule**: If the direct command succeeds but the object's state does not update (verify via `examine`), or if subsequent placement/interaction fails, immediately switch to the full enclosed appliance workflow (`open` -> `move in` -> `close` -> `heat/cool` -> `open` -> `take`). Do not persist with direct commands if they do not advance the task state.",
+        "content": "**Appliance & Receptacle Workflow**: Prioritize direct commands (`heat/cool/clean <object> with <appliance>`) when holding the object near the target appliance. This bypasses unnecessary door-toggling. **Mandatory Verification**: Immediately execute `inventory` after any direct appliance command to confirm the object's state has updated and you are still holding it. Only fall back to the full enclosed workflow (`open` -> `move in` -> `close` -> `heat/cool` -> `open` -> `take`) if the direct command fails or state verification indicates no progress. Always verify receptacles are open before placing items. **Close Discipline**: Immediately close all appliances and containers after interaction or retrieval to maintain environment state and prevent cross-contamination of states."
+      },
+      {
+        "op": "replace",
+        "target": "| Examine in Light | Examine object X under desklamp | Find X -> take X -> find desklamp -> use desklamp |",
+        "content": "| Examine in Light | Examine object X under desklamp | Locate desklamp -> go to desk -> take X (if not already held) -> go to desk -> use desklamp |"
+      },
+      {
+        "op": "insert_after",
+        "target": "16. **Transformation Location Mapping**: Strictly associate task verbs with their required locations. `clean` must be performed at a `sinkbasin`; `heat` requires a `microwave` or `stoveburner`; `cool` requires a `fridge`. Placing an item in a fridge cools it but does *not* clean it. Never assume a transformation at one location satisfies a requirement for another. If the task specifies `clean`, navigate to the sink regardless of other transformations completed.",
+        "content": "17. **Post-Action State Confirmation**: After completing a sub-goal (especially transformations or placements), briefly pause to verify the environment state matches expectations. If `done()` is available, call it only after confirming the final condition. If actions seem blocked or unexpected, run `inventory` or `look` to reassess rather than guessing. Trust explicit state changes over assumptions."
+      }
+    ]
+  },
+  "source_type": "success"
+}

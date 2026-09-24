@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Strict extraction of exact entity terms without appending question-derived adjectives",
+    "Resolving vague demonstratives ('this X') to specific named entities via constraint matching",
+    "Cross-referencing multiple documents to validate trivia facts before answering"
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates highly reliable handling of Jeopardy-style trivia, where agents successfully isolate the missing entity slot, resolve vague pointers ('this substance', 'this state'), and extract exact terms without appending descriptive adjectives from the question. These behaviors directly counteract the recurring answer-bloat failures from previous steps and should be explicitly reinforced in the formatting and answering principles.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+        "content": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. **Crucially, strip any adjectives or descriptors borrowed from the question itself.** Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\")."
+      },
+      {
+        "op": "replace",
+        "target": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like \"this settlement\" or \"his discovery\". Scan the context to find the specific entity that satisfies the description. Prioritize explicit matches over assumptions.",
+        "content": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like 'this settlement', 'this state', or 'this group of muscles'. Treat these as direct identifiers pointing to a specific named entity. Scan the context to find the entity that satisfies all descriptive constraints, and **output only the resolved entity name, discarding the pointer phrase itself**."
+      }
+    ]
+  },
+  "source_type": "success"
+}

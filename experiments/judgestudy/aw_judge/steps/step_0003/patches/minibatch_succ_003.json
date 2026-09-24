@@ -1,0 +1,25 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Proactive destination receptacle opening to avoid return trips",
+    "Strategic use of `look` to refresh spatial awareness during searches",
+    "Prioritizing direct appliance commands over full open/move/close cycles",
+    "Mandatory inventory verification immediately after appliance interactions"
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates consistent efficiency gains by opening destination containers early to avoid return trips, using `look` to update observations when targets are hidden, preferring direct appliance commands when holding objects, and strictly verifying inventory after transformations. These patterns reduce navigation overhead and prevent state-loss errors.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "1. **Decompose the task**: Parse the goal into ordered sub-goals (locate, acquire, transform, deliver). Complete each before moving to the next.",
+        "content": "\n11. **Proactive Receptacle Opening**: If the task requires placing an item into a closed container (e.g., fridge, drawer, cabinet), open it early in the workflow. Keeping it open during intermediate steps (like heating or cleaning) saves navigation steps and prevents state mismatches upon return."
+      },
+      {
+        "op": "insert_after",
+        "target": "2. **Semantic & Systematic Exploration**: Begin searches at **semantically likely locations**",
+        "content": "\n12. **Strategic `look` Usage**: When an expected object is not visible in the current observation or admissible actions, execute `look` to refresh your spatial awareness. This reveals nearby items or confirms room layout without consuming navigation steps, effectively breaking search deadlocks."
+      }
+    ]
+  },
+  "source_type": "success"
+}

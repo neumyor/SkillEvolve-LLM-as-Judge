@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating truncated, declarative, or statement-style prompts as direct fill-in-the-blank requests rather than conversational queries.",
+    "Successfully filtering out highly repetitive or noisy scraped contexts (e.g., flashcard dumps, repeated snippets) to isolate the single defining mention.",
+    "Strictly extracting minimal entities, stripping non-essential modifiers, titles, or contextual descriptors to match gold answer brevity."
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories involve trivia/Jeopardy-style incomplete prompts and highly repetitive contexts. Agents succeeded by treating prompts as direct fill-in-the-blank requests, ignoring duplicated snippets to find the core definition, and stripping non-essential modifiers to output minimal entities. These patterns reinforce existing principles but need explicit guidance on handling declarative truncation, noisy repetition, and modifier stripping to prevent over-descriptive outputs.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches or defining phrases. When multiple passages restate the same fact, quickly identify the clearest, most direct mention and treat it as ground truth. Ignore tangential details.",
+        "content": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts (e.g., scraped lists, flashcard dumps, repeated snippets), ignore duplicated passages and isolate the single mention that directly defines or completes the query."
+      },
+      {
+        "op": "insert_after",
+        "target": "- Avoid converting declarative clues into Yes/No answers.",
+        "content": "\n- Treat truncated, statement-style, or incomplete prompts as direct fill-in-the-blank requests. Identify the missing subject, object, or key term rather than summarizing the context or generating full sentences."
+      },
+      {
+        "op": "replace",
+        "target": "- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler.",
+        "content": "- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. Strip non-essential modifiers, titles, or contextual descriptors unless required for disambiguation. The content inside tags must be the exact entity or a very short phrase matching the expected brevity. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Preservation of canonical punctuation, articles, and multi-word structures in proper names",
+    "Resolution of foreign terms, nicknames, and cultural aliases to canonical English equivalents",
+    "Direct extraction from document titles/snippets for flashcard-style clues"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently preserved standard punctuation, articles, and structural markers in answers (e.g., 'Winnie-the-Pooh', 'The Red Badge of Courage', 'Anchorage, Alaska') despite aggressive stripping heuristics in prior steps. They also successfully mapped foreign terms, nicknames, and mythological references to their canonical English identifiers without over-analyzing. These patterns address persistent failure modes around over-stripping and literal string matching.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. Prioritize the shortest canonical identifier that satisfies all constraints (e.g., \"Roanoke\" not \"Roanoke Island\", \"Sirius\" not \"Sirius Satellite Radio\", \"George Bush\" not \"George H. W. Bush\").",
+        "content": "- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. **Preserve canonical punctuation, articles, and structural markers** (e.g., hyphens in \"Winnie-the-Pooh\", definite articles in \"The Red Badge of Courage\", state qualifiers in \"Anchorage, Alaska\") when they constitute the standard proper name. Prioritize the shortest canonical identifier that satisfies all constraints."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Handling Statement or Fragment Questions",
+        "content": "\n- **Alias & Cross-Lingual Resolution**: Trivia questions frequently use foreign terms, nicknames, mythological figures, or translated phrases as direct pointers (e.g., \"lambi\" → Conch, \"Clio\" → History, \"Soyuz\" → Union). Treat these as semantic anchors rather than literal strings. Map them immediately to their standard English/canonical equivalents found in the context, bypassing strict keyword matching."
+      }
+    ]
+  },
+  "source_type": "success"
+}

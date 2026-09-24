@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Explicit option filtering for closed-set trivia questions",
+    "Rhyming and pop-culture reference mapping",
+    "Precision anchor filtering using dates and measurements"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate three underspecified patterns: handling explicit multiple-choice options without guessing, resolving rhyming/pop-culture clues by mapping to canonical entities, and using precise numerical/temporal anchors to filter candidates. Encoding these will reduce hesitation and prevent over-generation in trivia formats.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Keyword Spotting & Mapping**: Quickly scan document titles and paragraphs for exact keywords, dates, and unique proper nouns from the question to locate the answer span efficiently.",
+        "content": "\n- **Precision Anchor Filtering**: Use specific numbers, years, or measurements in the question as strict filters. Eliminate any candidate that does not perfectly align with these quantitative or temporal anchors before finalizing the answer."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "\n- **Explicit Option Filtering**: When questions present a closed set of candidates (e.g., 'Of A, B, or C'), evaluate each option against the contextual constraints rather than guessing. Select the exact match that satisfies all criteria."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Rhyming & Pop-Culture Reference Mapping**: Clues frequently employ rhyming couplets, song lyrics, or indirect references to media titles. Treat these as direct pointers to the canonical entity, ignoring the literal poetic or stylistic framing."
+      }
+    ]
+  },
+  "source_type": "success"
+}

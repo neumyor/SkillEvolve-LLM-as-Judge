@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Mapping clue syntax to target entity category",
+    "Constraint-driven disambiguation of distractor entities",
+    "Strict separation of brief reasoning from minimal answer tags"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handle Jeopardy-style and definition prompts by mapping the clue's grammatical structure to a target entity category, filtering out distractors using exact constraint matches, and outputting only the minimal entity. Reinforcing these patterns directly addresses the epoch's primary failure mode (overly descriptive answers and misinterpreted clue types).",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Trivia & Clue Extraction Rules",
+        "content": "\n- **Clue Syntax Mapping**: Identify the grammatical role requested by the clue (e.g., subject, predicate, object) to determine the expected answer type (person, place, thing, word). Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to guide extraction."
+      },
+      {
+        "op": "replace",
+        "target": "- **Verification**: Cross-reference candidate answers against explicit mentions and question constraints (dates, names, descriptors) before finalizing.",
+        "content": "- **Constraint-Driven Verification**: Prioritize exact matches for numerical, temporal, or proper-noun constraints embedded in the clue. Discard candidates that satisfy the general topic but fail specific quantitative or categorical filters."
+      }
+    ]
+  },
+  "source_type": "success"
+}

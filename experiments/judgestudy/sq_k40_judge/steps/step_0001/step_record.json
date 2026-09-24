@@ -1,0 +1,92 @@
+{
+  "step": 1,
+  "epoch": 1,
+  "step_in_epoch": 0,
+  "timing": {
+    "rollout_s": 22.2,
+    "reflect_s": 36.3,
+    "aggregate_s": 62.2,
+    "select_s": 0.0,
+    "update_s": 0.0,
+    "evaluate_s": 32.7
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 56873,
+      "completion_tokens": 17872
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 5957,
+      "completion_tokens": 2711
+    },
+    "merge": {
+      "calls": 2,
+      "prompt_tokens": 3276,
+      "completion_tokens": 7128
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 47960,
+      "completion_tokens": 25300
+    }
+  },
+  "rollout_hard": 0.825,
+  "rollout_soft": 0.870833,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1043,
+      "n_envs": 40,
+      "hard": 0.825,
+      "soft": 0.8708333333333333,
+      "n_failure_patches": 1,
+      "n_success_patches": 5
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 1,
+  "n_success_patches": 5,
+  "n_edits_merged": 1,
+  "n_edits_ranked": 1,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    7
+  ],
+  "candidate_hash": "9fcddb7419ffcbaf",
+  "candidate_skill_len": 2111,
+  "edit_apply_summary": {
+    "total": 1,
+    "applied": 1,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_verdict": "ACCEPT",
+  "judge_confidence": "high",
+  "judge_reason": "The candidate introduces explicit rules for minimal entity extraction and fragment resolution that directly address the observed failures, such as over-specifying names and misinterpreting short clues. These rules generalize the failure patterns without contradicting the successful cases, making it a strictly better, non-fitted skill definition.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 404,
+  "judge_usage": {
+    "prompt_tokens": 5957,
+    "completion_tokens": 2711,
+    "total_tokens": 8668
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "candidate_gate_score": 0.72,
+  "action": "accept_new_best",
+  "current_score": 0.72,
+  "best_score": 0.72,
+  "best_step": 1,
+  "current_origin": "step_0001",
+  "best_origin": "step_0001",
+  "skill_len": 2111,
+  "wall_time_s": 153.4
+}

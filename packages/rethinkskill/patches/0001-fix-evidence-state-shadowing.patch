@@ -1,0 +1,20 @@
+--- a/src/rethinkskill/evidence/evolution.py
++++ b/src/rethinkskill/evidence/evolution.py
+@@ -325,7 +325,7 @@
+     return (attempted, completed, valid)
+ 
+ 
+-def gate_state(value: object, *, label: str) -> GateState:
++def parse_gate_state(value: object, *, label: str) -> GateState:
+     record = mapping(value, label=label)
+     expected = {
+         "current_hard",
+@@ -829,7 +829,7 @@
+             expected_state = decision.state
+         if row.get("action") != expected_action:
+             invalid(f"evolution round {round_no} gate action does not replay")
+-        observed_state = gate_state(
++        observed_state = parse_gate_state(
+             row.get("gate_state"), label=f"evolution round {round_no} gate state"
+         )
+         if gate_public(observed_state) != gate_public(expected_state):

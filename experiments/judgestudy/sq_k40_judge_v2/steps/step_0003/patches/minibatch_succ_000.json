@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Cloze/Jeopardy-style direct definition mapping",
+    "Precise reference resolution to primary subjects",
+    "Verbatim extraction of contextual terms"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories demonstrate a consistent pattern of treating Jeopardy-style or fragment questions as direct definition/cloze requests. Agents successfully mapped descriptive clauses ('It's the...', 'This [noun]...') to exact subject terms in the text, resolving generic pointers ('this man', 'this state') to specific proper nouns without over-specifying or adding filler. Encoding this mapping strategy and primary subject isolation will reinforce the existing 'Trivia/Fragment Handling' and 'Reference Resolution' rules, ensuring robust performance on clue-based queries while preventing tangential extraction errors.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "\n- **Cloze & Definition Mapping**: Treat Jeopardy-style or fragment questions (e.g., \"It's the...\", \"This [noun]...\") as direct definition requests. Locate the exact sentence matching the clue and extract the subject term verbatim.\n- **Primary Subject Isolation**: When multiple entities are mentioned, isolate the one that directly satisfies the question's descriptor. Ignore tangential examples, historical anecdotes, or secondary mentions to prevent over-specification."
+      }
+    ]
+  },
+  "source_type": "success"
+}

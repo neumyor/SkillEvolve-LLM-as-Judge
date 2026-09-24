@@ -1,0 +1,52 @@
+_base_: default.yaml
+
+# Judge gate on ALFWorld. Same data split as the ALFWorld gate comparison and
+# the same paper calibration (official 39/18/134, batch_size 40 => one update
+# per epoch, 4 epochs), so this run is only comparable to runs that use these
+# settings.
+#
+# --gate_mode chooses the condition; everything else is shared:
+#   rollout → held-out regression test on valid_seen (the paper gate)
+#   judge   → an LLM reads the patch + the train window's evidence
+#   greedy  → accept every candidate (no gate)
+#
+# valid_seen is only 18 games, which is the reason this comparison is worth
+# running at all: an 18-game regression test has a standard error of roughly
+# 11 points, so it can barely discriminate.
+
+train:
+  train_size: 0            # 0 = use the whole registered split (39)
+  accumulation: 1
+
+gradient:
+  minibatch_size: 8
+  merge_batch_size: 8
+
+optimizer:
+  learning_rate: 4
+  lr_scheduler: constant
+  min_learning_rate: 2
+
+evaluation:
+  gate_mode: judge
+  sel_env_num: 0
+  test_env_num: 0
+
+judge:
+  max_completion_tokens: 4096
+  retries: 2
+  max_evidence_cards: 24
+  evidence_card_chars: 1200
+
+env:
+  name: alfworld
+  skill_init: skillopt/envs/alfworld/skills/initial.md
+  split_mode: split_dir
+  split_dir: data/alfworld_path_split
+  data_path: ""
+  split_output_dir: ""
+  max_steps: 50
+  max_completion_tokens: 16384
+  workers: 12
+  max_api_workers: 12
+  limit: 0

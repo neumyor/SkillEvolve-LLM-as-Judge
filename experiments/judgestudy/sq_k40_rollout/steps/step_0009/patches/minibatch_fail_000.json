@@ -1,0 +1,31 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 5,
+      "description": "Model over-specifies answers by extracting full formal names, corporate suffixes, middle initials, or geographic descriptors instead of the canonical short form."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 2,
+      "description": "Model misinterprets comma-separated or ampersand-linked entity pairs as requests for relationships/roles rather than shared locations or categories."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals two systematic failures: (1) consistent over-extraction of formal names, corporate suffixes, and geographic descriptors when a shorter canonical form is expected, and (2) misinterpreting paired-entity clues (e.g., 'X, Y') as asking for interpersonal relationships instead of shared attributes/locations. The proposed edits directly address these by enforcing name normalization/suffix-stripping and adding a specific rule for resolving shared attributes in entity lists.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+        "content": "\n- **Shared Attribute Resolution for Paired Entities**: Questions frequently list two or more entities separated by commas or ampersands (e.g., 'X, Y' or 'X & Y'). Do not answer with their interpersonal relationship or job titles. Instead, identify the shared location, nationality, organization, or defining category that links them. Scan the context for the common entity or label associated with both listed items."
+      },
+      {
+        "op": "replace",
+        "target": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+        "content": "- **Granularity-First Extraction & Name Normalization**: Prioritize the exact phrase length and structure implied by the clue. For companies, persons, and places, aggressively strip non-essential formal suffixes, corporate designations (e.g., 'Inc.', 'Cards', 'Corp.'), middle initials, and geographic descriptors (e.g., 'Mountains', 'Island') unless the clue explicitly requires them. Favor the core proper noun or widely recognized short form over the full contextual span. Normalize articles and plurality to match the question's syntax. Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

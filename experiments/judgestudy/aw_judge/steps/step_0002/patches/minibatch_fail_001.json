@@ -1,0 +1,40 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "action_loop",
+      "count": 1,
+      "description": "Agent repeatedly picks up, cools, and places the same object due to over-verification and uncertainty about state completion."
+    },
+    {
+      "failure_type": "premature_stop",
+      "count": 1,
+      "description": "Agent fails to terminate correctly, calling done() prematurely or ignoring successful placement, leading to step exhaustion."
+    }
+  ],
+  "patch": {
+    "reasoning": "The trajectory shows a systematic loop where the agent doubts whether the cooling transformation succeeded, causing it to re-pickup, re-cool, and re-place the object. It also struggles with the `done()` command. These edits simplify the cooling workflow, enforce decisive termination upon placement, warn against over-verification loops, and clarify `done()` fallback behavior to prevent step exhaustion.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> open -> move X in -> close -> cool X -> open -> take X -> go to Y -> put X |",
+        "content": "| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> cool X with fridge -> go to Y -> put X in/on Y |"
+      },
+      {
+        "op": "append",
+        "content": "**Decisive Termination**: Upon successfully placing the transformed object at the destination, call `done()` immediately. Do not re-pickup, inspect, or re-process the object to \"verify\" state changes. Internal transformations (cooling/heating/cleaning) are confirmed by the action success message."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Premature termination**: Do not stop the episode until all goal conditions are verified as met.",
+        "content": "- **Over-verification loops**: Do not pick up a placed object to \"check\" if it was cooled/heated/cleaned. Trust the action feedback. Re-handling the object wastes steps and often leads to infinite loops."
+      },
+      {
+        "op": "replace",
+        "target": "**Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "**Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions. If `done()` is not listed or returns \"Nothing happens,\" consider the task complete once the final placement action succeeds."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

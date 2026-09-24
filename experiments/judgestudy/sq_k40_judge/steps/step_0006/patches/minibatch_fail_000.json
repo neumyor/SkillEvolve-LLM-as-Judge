@@ -1,0 +1,40 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Agents incorrectly expand, contract, or alter canonical trivia answers (titles, articles, plurals, descriptors) instead of matching the exact expected phrasing."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 1,
+      "description": "Agent mirrors the quoted work's title instead of resolving the implicit query target (author/creator) for literary clues."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Agent fails to verify semantic category constraints (e.g., selecting a base when the clue specifies an acid)."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals systematic failures in matching canonical trivia phrasing (articles, titles, plurals, descriptors), resolving implicit targets for quotes/literature, and verifying semantic category constraints. The proposed edits reinforce exact canonical matching, clarify quote-to-author resolution, and add a semantic type verification step to prevent category mismatches.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Canonical Phrasing & Granularity Alignment**: Strictly match the canonical trivia answer's length and form. Do not arbitrarily expand names (e.g., output \"Boss\" not \"Boss Tweed\", \"Napoleon\" not \"Napoleon Bonaparte\") or contract them unless the clue dictates otherwise. Distinguish between descriptive modifiers and integral parts of a proper noun or compound name; retain established multi-word entity names exactly as they appear in the context (e.g., \"Forbes magazine\"), but strip purely descriptive terms when the core concept suffices. For fill-in-the-blank clues presenting partial names, extract the full canonical entity name, not just the missing word.",
+        "content": "- **Canonical Phrasing & Granularity Alignment**: Prioritize exact canonical string matching over heuristic expansion or contraction. Trivia and Jeopardy answers often require specific articles, honorifics, titles, or full names (e.g., \"Sir Isaac Newton\", \"the Amazon\", \"a eucalyptus tree\") that must be preserved exactly. Do not strip titles, articles, or generic descriptors (like \"River\" or \"Speech\") unless explicitly instructed by the clue. Conversely, do not append explanatory modifiers or default to full names if the canonical answer is a surname or short phrase. Match the exact capitalization, plurality, and phrasing of the expected answer."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+        "content": "- **Quote & Literary Reference Resolution**: When the clue is a famous quote, poem line, or song lyric, the implied query target is almost always the creator/author/composer, not the title or subject matter mentioned in the quote. Explicitly map literary/artistic references to their originators. Discard the quoted work's title or subject if it merely serves as the anchor for the attribution query."
+      },
+      {
+        "op": "append",
+        "content": "- **Semantic Category Constraint Verification**: Cross-check the clue's explicit categorical keywords (e.g., \"acid\", \"tree\", \"artist\", \"river\") against candidate entities. If a clue specifies a type (e.g., \"caustic acid\"), discard candidates that belong to a different category (e.g., \"caustic soda\"/base) even if they share other attributes. Ensure the selected entity strictly satisfies the semantic type requested by the prompt."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

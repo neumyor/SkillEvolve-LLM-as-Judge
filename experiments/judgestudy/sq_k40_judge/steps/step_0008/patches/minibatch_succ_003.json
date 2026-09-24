@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating declarative trivia statements, including proverbs, quotes, and idioms, as direct fill-in-the-blank queries for their underlying subject.",
+    "Resolving demonstrative-category phrases (e.g., 'this film series', 'one of these bombs') as direct pointers to the target class, then isolating the specific instance matching the clue.",
+    "Stripping attribution markers and metadata prefixes to isolate the core factual constraint before extraction."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handle Jeopardy-style declarative clues, proverbs/quotes, and demonstrative-category anchors by treating them as direct semantic gaps rather than literal statements. Reinforcing these patterns will prevent agents from mirroring prompts, over-literalizing quotes, or failing to resolve category pointers.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.",
+        "content": "\n- **Proverb, Quote & Idiom Resolution**: Treat famous quotes, proverbs, idioms, and song lyrics as direct queries for their underlying subject or concept. Strip attribution cues (e.g., 'According to...', 'It's the cry of') and resolve the semantic gap to the specific entity or idea being described.\n\n- **Demonstrative-Category Anchoring**: When clues use phrases like 'this film series', 'one of these bombs', or 'the Denver type of this', treat the demonstrative + category noun as a direct pointer to the target class. Isolate the specific instance within that class that satisfies the unique constraints provided."
+      },
+      {
+        "op": "replace",
+        "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+        "content": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements, scene descriptions, date/location fragments, and proverbs into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any attribution markers, parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap."
+      }
+    ]
+  },
+  "source_type": "success"
+}

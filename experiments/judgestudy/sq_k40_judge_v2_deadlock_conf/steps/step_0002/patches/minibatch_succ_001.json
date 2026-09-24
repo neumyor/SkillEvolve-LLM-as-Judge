@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Interpreting trivia/crossword-style clues to isolate target entities",
+    "Extracting exact answer spans without expansion or conversational filler",
+    "Cross-validating overlapping document snippets to resolve ambiguities",
+    "Strict adherence to <answer>...</answer> formatting for final outputs"
+  ],
+  "patch": {
+    "reasoning": "The batch consists entirely of trivia-style questions requiring precise entity extraction from overlapping Wikipedia/document snippets. Encoding rules for clue parsing, exact span matching, cross-snippet verification, and strict formatting will generalize this success pattern to future tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Clue Interpretation & Parsing\n- **Recognize Trivia Formats**: Questions are often phrased as crossword clues, Jeopardy prompts, or sentence fragments. Identify the target entity type (person, place, thing, term) and the key constraints.\n- **Isolate Identifiers**: Extract unique keywords, dates, roles, or quoted phrases. Map these directly to the `[DOC]`/`[PAR]` blocks.\n\n## Extraction & Verification\n- **Exact Span Matching**: Locate the precise answer string in the context. Prioritize verbatim matches or direct paraphrases. Do not expand single-word answers into titles or descriptions.\n- **Cross-Snippet Validation**: When multiple passages discuss the same topic, cross-reference details to ensure consistency. Resolve contradictions by favoring explicit statements over implied ones.\n- **Grounding Constraint**: Only extract answers explicitly stated or strongly implied in the provided context. Avoid external knowledge substitution.\n\n## Output Formatting\n- Enclose the final answer strictly within `<answer>...</answer>` tags.\n- Keep the answer concise (typically a few words or a short phrase). Do not repeat the question or include conversational filler inside the tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Placeholder-to-Hypernym Resolution: Successfully mapping vague clue placeholders ('these', 'this group', 'species of') to the precise category or hypernym in the context.",
+    "Grammatical Number Precision: Correctly preserving plural forms when the clue or gold answer indicates a category or group (e.g., 'Bears', 'Hamstrings').",
+    "Zero-Leakage Tag Enforcement: Strictly isolating the raw entity inside answer tags, preventing any reasoning, labels, or conversational filler from leaking into the final output."
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates consistent success in resolving vague Jeopardy-style placeholders to specific hypernyms, maintaining correct plural/singular agreement for categories, and enforcing strict boundary conditions within answer tags. These patterns are not explicitly detailed in the current skill and represent high-value generalizations for trivia/retrieval tasks.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Trivia & Clue Extraction Rules",
+        "content": "- **Placeholder-to-Hypernym Resolution**: When clues use vague placeholders like \"these\", \"this group\", or \"species of\", map them directly to the specific category or hypernym identified in the context (e.g., \"Bears\", \"Hamstrings\"). Do not list examples or repeat the placeholder.\n- **Grammatical Number Precision**: Strictly align the singular/plural form of the extracted entity with the clue's implication and the gold answer. Preserve necessary plurals for categories or groups (e.g., output \"Hamstrings\" not \"Hamstring\")."
+      },
+      {
+        "op": "replace",
+        "target": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer.",
+        "content": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer.\n- **Zero-Leakage Tag Enforcement**: Ensure the content inside `<answer>...</answer>` contains *only* the isolated entity. Strip any leading labels, reasoning fragments, or trailing punctuation before closing the tag."
+      }
+    ]
+  },
+  "source_type": "success"
+}

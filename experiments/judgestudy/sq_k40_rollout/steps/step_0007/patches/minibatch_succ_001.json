@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Mandatory Explicit Grounding: Successful agents always anchor their reasoning by explicitly quoting or closely paraphrasing the exact context span that contains the answer, eliminating reliance on external knowledge or implicit assumptions.",
+    "Definition & Equivalence Resolution: For trivia clues that act as definitions, synonyms, or colloquial labels, agents scan for explicit dictionary-style definitions or 'X is known as/called Y' structures in the text.",
+    "Noise Filtering via Cross-Doc Repetition: When contexts contain multiple noisy search snippets, agents prioritize answers that are repeatedly confirmed across different documents, ignoring isolated or boilerplate mentions."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate strict adherence to explicit textual evidence, avoiding external knowledge or assumptions. They frequently use definition-matching strategies for synonym/clue-based questions and leverage cross-document repetition to filter out noisy search results. These patterns directly address previous failure modes involving external knowledge, over-specification, and inconsistent grounding.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+        "content": "- **Mandatory Explicit Grounding**: Always precede the final answer with a single-sentence reasoning step that explicitly quotes or closely paraphrases the exact context span containing the answer. Do not rely on external knowledge or implicit assumptions; the evidence must be directly visible in the provided text."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+        "content": "\n- **Definition & Equivalence Resolution**: When clues function as definitions, synonyms, or colloquial labels (e.g., 'A short, witty saying', 'Americans refer to Emmentaler as this'), scan for explicit dictionary-style definitions, glossary entries, or 'X is known as/called Y' structures. Map the clue's descriptive phrase directly to the canonical term defined in the text."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Noise Filtering via Cross-Doc Repetition**: Search contexts often contain noisy, fragmented, or boilerplate snippets. Prioritize candidate answers that are explicitly repeated or corroborated across multiple independent `[DOC]` blocks. Disregard isolated mentions or metadata-heavy titles that lack semantic confirmation in the paragraph text."
+      }
+    ]
+  },
+  "source_type": "success"
+}

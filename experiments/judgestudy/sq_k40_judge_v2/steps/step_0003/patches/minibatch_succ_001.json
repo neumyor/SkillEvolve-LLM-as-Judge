@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating declarative Jeopardy-style clues as direct fill-in-the-blank prompts",
+    "Mapping precise definitions or metrics to terms across multiple documents",
+    "Using concise, single-sentence verification traces instead of extended reasoning"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle declarative clue sentences as direct entity requests, synthesize information across documents when questions provide precise metrics or definitions, and maintain highly concise verification traces. These patterns are not fully captured in the current skill and should be reinforced to prevent verbosity and improve accuracy on trivia-style queries.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and declarative statement prompts (e.g., 'It's the crime for which...', 'She's the subject of...') as direct fill-in-the-blank requests. Identify the target entity immediately without describing relationships or generating categories."
+      },
+      {
+        "op": "replace",
+        "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match.",
+        "content": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. When a question provides a precise definition, metric, or unique descriptor, actively map it to the corresponding term found across documents, even if the initial clue appears in a different passage."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a concise, single-sentence verification trace confirming the match. Skip extended analysis for straightforward trivia queries to prevent verbosity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

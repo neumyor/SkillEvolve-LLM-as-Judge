@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating Jeopardy/flashcard prompts as direct search queries: stripping grammatical wrappers and demonstratives to isolate core lexical anchors, then prioritizing exact/near-exact string matches in titles and snippets.",
+    "Extracting the adjacent canonical entity immediately upon finding a verbatim match, avoiding semantic over-analysis or multi-hop reasoning.",
+    "Converging all descriptive clauses onto a single entity within the same passage, ignoring distractors that satisfy only partial constraints."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories relied on treating trivia fragments as direct lookup tasks rather than complex reasoning problems. Agents successfully isolated core lexical anchors, matched them verbatim against titles/snippets, and extracted the adjacent canonical entity without over-analyzing. Reinforcing this 'snippet-first, direct-lookup' strategy will prevent over-reasoning and ensure rapid, accurate extraction for flashcard-style prompts.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n- **Search Query Mindset for Trivia Fragments**: Treat Jeopardy-style clues and flashcard prompts as direct search queries. Strip grammatical wrappers, demonstratives, and filler words to isolate core lexical anchors. Prioritize exact or near-exact string matches in document titles and snippets. Upon finding a match, extract the adjacent canonical entity immediately without semantic over-analysis or multi-hop reasoning."
+      },
+      {
+        "op": "replace",
+        "target": "- **Multi-Clause Description Mapping**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously.",
+        "content": "- **Multi-Clause Description Mapping**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity within the *same passage*; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously, and you must discard candidates that fail any single anchor."
+      }
+    ]
+  },
+  "source_type": "success"
+}

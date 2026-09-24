@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Precise action syntax: Use 'move <obj> to <loc>' for placement and 'heat/cool/clean <obj> with <appliance>' for transformations.",
+    "Search priority hierarchy: Prioritize enclosed containers (cabinets, drawers, fridge) over open surfaces (countertops, tables) when locating items.",
+    "Strict appliance closure: Always close appliances immediately after use/retrieval to prevent state penalties.",
+    "Verified termination: Confirm final placement via observation and inventory state before calling 'done()'."
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals consistent reliance on exact action syntax ('move ... to ...', 'heat/cool/clean ... with ...') rather than generic terms. Agents also follow a clear search priority (enclosed containers first) and strictly close appliances post-interaction. Finally, premature termination errors were avoided by verifying placement states. These patterns are critical for reliable execution and should be explicitly encoded.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "| Type | Goal | Key Steps |\n|------|------|-----------|\n| Pick & Place | Put object X in/on receptacle Y | Find X -> take X -> go to Y -> put X in/on Y |\n| Pick Two & Place | Put two instances of X in/on Y | Find X1 -> take -> place -> find X2 -> take -> place |\n| Examine in Light | Examine object X under desklamp | Find X -> take X -> find desklamp -> use desklamp |\n| Clean & Place | Clean object X and put in/on Y | Find X -> take X -> go to sink -> clean X -> go to Y -> put X |\n| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> open -> move X in -> close -> heat X -> open -> take X -> go to Y -> put X |\n| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> open -> move X in -> close -> cool X -> open -> take X -> go to Y -> put X |",
+        "content": "| Type | Goal | Key Steps |\n|------|------|-----------|\n| Pick & Place | Put object X in/on receptacle Y | Find X -> take X -> go to Y -> **move** X **to** Y |\n| Pick Two & Place | Put two instances of X in/on Y | Find X1 -> take -> place -> find X2 -> take -> place |\n| Examine in Light | Examine object X under desklamp | Find X -> take X -> find desklamp -> **use** desklamp |\n| Clean & Place | Clean object X and put in/on Y | Find X -> take X -> go to sink -> **clean X with sink** -> go to Y -> **move X to** Y |\n| Heat & Place | Heat object X and put in/on Y | Find X -> take X -> go to microwave -> open -> move X in -> close -> **heat X with microwave** -> open -> take X -> go to Y -> **move X to** Y |\n| Cool & Place | Cool object X and put in/on Y | Find X -> take X -> go to fridge -> open -> move X in -> close -> **cool X with fridge** -> open -> take X -> go to Y -> **move X to** Y |"
+      },
+      {
+        "op": "replace",
+        "target": "9. **Appliance & Receptacle Workflow**: Enclosed appliances and containers require a strict sequence: `open` -> `move object in` -> `close` -> `interact` -> `open` -> `take object`. Always verify receptacles are open before placing items. After interacting with an appliance, close it (`close <appliance>`) before navigating away.",
+        "content": "9. **Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Always close appliances** (`close <appliance>`) immediately after interaction and retrieval to maintain environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance."
+      },
+      {
+        "op": "insert_after",
+        "target": "2. **Systematic exploration**: Maintain a strict mental log of every container and surface you have already inspected. Once a container is opened and confirmed empty, or a surface is checked and found lacking the target, **do not revisit it** until all other unexplored locations have been exhausted. Prioritize moving to new, unvisited areas over returning to previously checked ones.",
+        "content": "\n**Search Priority Hierarchy**: When scanning for objects, prioritize enclosed storage (cabinets, drawers, fridge, microwave) before inspecting open surfaces (countertops, tables, shelves). Items are statistically more likely to be stored inside containers. Only check surfaces if all accessible containers are confirmed empty or if the item type is typically displayed openly (e.g., fresh produce, electronics)."
+      },
+      {
+        "op": "replace",
+        "target": "- **Premature termination**: Do not stop the episode until all goal conditions are verified as met.",
+        "content": "- **Premature termination**: Do not call `done()` until the final placement is visually confirmed by the observation (e.g., \"You move X to Y\") and the object is no longer listed in your inventory or available for pickup. Cross-check the goal conditions against the current room state before ending the episode."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Snippet & Title Leverage for Rapid Extraction",
+    "Distractor Filtering in Noisy Contexts",
+    "Concise Grounded Verification Traces",
+    "Cloze & Descriptive Mapping"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate four key behaviors: leveraging document titles and snippets for quick trivia answers, filtering out tangential/mixed snippets to focus on definitive matches, providing concise single-sentence verification traces instead of verbose step-by-step breakdowns, and treating Jeopardy-style fragments as direct fill-in-the-blank requests. These patterns address recurring verbosity and distraction issues while reinforcing efficient extraction.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase, allowing rapid extraction before reading full paragraphs."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match.",
+        "content": "\n- **Distractor Filtering**: When contexts contain mixed snippets, quiz pairs, or tangential details, explicitly ignore incorrect guesses or loosely matching items. Anchor strictly to definitive factual statements that satisfy all question constraints simultaneously."
+      },
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and declarative statement prompts (e.g., 'This [noun]...', 'It's the...') as direct fill-in-the-blank requests. Map descriptive attributes directly to the exact subject entity in the context, ignoring conversational framing or trailing metadata."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a concise, single-sentence verification trace that directly links the question's core descriptor to the extracted entity, confirming context alignment. Skip extended analysis for straightforward trivia queries to maintain conciseness."
+      }
+    ]
+  },
+  "source_type": "success"
+}

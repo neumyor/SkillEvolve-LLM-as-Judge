@@ -1,0 +1,21 @@
+{
+  "batch_size": 4,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 4,
+      "description": "Agents misinterpret declarative trivia clues as True/False prompts, append extraneous words or alter capitalization, and select context-prominent entities over the exact target constrained by the question."
+    }
+  ],
+  "patch": {
+    "reasoning": "All four failures stem from the agent failing to treat declarative trivia clues as direct entity queries, adding extraneous words or capitalization, and prioritizing context-prominent matches over the exact constraint in the question. A consolidated rule set addressing clue interpretation, exact-string matching, and constraint-based selection will correct these systemic errors.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Trivia & Clue-Based Extraction Rules\n- **Declarative Clue Handling**: Treat complete sentences or statements as direct queries for a missing entity. Do not answer with \"True/False\" or descriptions; extract the specific noun/title referenced.\n- **Exact String Matching**: Output the precise word or short phrase requested. Preserve exact capitalization, singular/plural form, and avoid adding filler words (e.g., \"power\", \"University\") unless they are part of the canonical name.\n- **Constraint Over Prominence**: When multiple entities in the context could fit a vague clue, select the one that strictly satisfies the unique constraint in the question. If the clue specifies a particular identifier (e.g., surname, specific campus), default to that exact form rather than the most prominent or modern equivalent.\n- **Minimal Reasoning**: Provide only a single sentence linking the clue to the extracted entity before the final answer. Keep `<answer>` tags strictly for the exact target string."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

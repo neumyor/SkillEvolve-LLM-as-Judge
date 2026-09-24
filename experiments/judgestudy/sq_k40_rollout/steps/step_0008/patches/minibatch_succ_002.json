@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Proverb, Saying & Quote Resolution",
+    "Etymological & Descriptive Definition Resolution"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handle trivia clues that function as proverbs, famous quotes, or etymological/functional definitions (e.g., 'Its mother is necessity', 'term for a cramp... originated in baseball'). Existing rules cover pop-culture pointers and hypernyms but lack explicit guidance for resolving archaic sayings, idiomatic origins, or dictionary-style descriptions to their canonical terms. Encoding these patterns ensures robust parsing of non-literal, definition-based, and historical clues common in trivia datasets.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+        "content": "\n- **Proverb, Saying & Quote Resolution**: When clues cite proverbs, idioms, or famous quotes (e.g., 'Its mother is necessity', 'Bear of Very Little Brain'), treat the entire saying as a single pointer to its subject or conclusion. Ignore archaic or metaphorical phrasing and map directly to the canonical term, concept, or character defined in the context."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+        "content": "\n- **Etymological & Descriptive Definition Resolution**: When clues describe the origin, history, or functional definition of a term (e.g., 'term for a cramp... originated in baseball'), scan for glossary-style entries, dictionary definitions, or explicit 'X refers to/called Y' structures. Extract the precise term being defined, prioritizing the head noun over descriptive clauses or origin stories."
+      }
+    ]
+  },
+  "source_type": "success"
+}

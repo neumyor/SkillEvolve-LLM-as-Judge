@@ -1,0 +1,41 @@
+{
+  "reasoning": "Applied failure-driven priority per guidelines. The failure patch on 'Demonstrative Blank Filling & Title Stripping' directly overlaps with success patches #1 ('this [Category]' Placeholders) and #5 (Strip Generic Suffixes & Modifiers); per deduplication rules, the failure versions were retained and the overlapping success edits were omitted. All other success patches address distinct, non-conflicting patterns (alias/cross-lingual resolution, list-to-parent mapping, head-noun extraction, snippet exact-match priority, implicit target placeholders, search-query mindset, and multi-clause filtering) and were preserved with their original support counts and source types. No edits target the protected slow-update section. [optimizer-ranked: selected 4/8 edits]",
+  "edits": [
+    {
+      "op": "append",
+      "content": "- **Demonstrative Blank Filling & Title Stripping**: When questions use phrases like \"this [category]\" or \"these [category]\", treat them as direct blanks. Do not default to the full document title or metadata string. Extract only the specific noun phrase that grammatically fills the blank. Aggressively strip trailing generic descriptors (e.g., \"Party\", \"Strip\", \"Flat\", \"Structure\", \"Island\") unless they are strictly part of the canonical proper name. Prioritize the exact phrasing found in the context's descriptive sentences over the catalog title.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. Prioritize the shortest canonical identifier that satisfies all constraints (e.g., \"Roanoke\" not \"Roanoke Island\", \"Sirius\" not \"Sirius Satellite Radio\", \"George Bush\" not \"George H. W. Bush\").",
+      "content": "\n- **Head-Noun Extraction from Compound Terms**: When the context presents a compound phrase or title (e.g., \"Egg White Denver Omelet\", \"McCormick & Company\", \"Henry V\"), extract the core head-noun or primary identifier (e.g., \"Omelet\", \"McCormick\", \"Henry V\") unless the full compound is the recognized canonical name. Avoid outputting unnecessary modifiers, adjectives, or conjunctions that do not change the entity's identity.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Handling Statement or Fragment Questions",
+      "content": "\n- **Alias & Cross-Lingual Resolution**: Trivia questions frequently use foreign terms, nicknames, mythological figures, or translated phrases as direct pointers (e.g., \"lambi\" → Conch, \"Clio\" → History, \"Soyuz\" → Union). Treat these as semantic anchors rather than literal strings. Map them immediately to their standard English/canonical equivalents found in the context, bypassing strict keyword matching.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+      "content": "- **Snippet/Title Exact Match Priority**: Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning document titles and snippets for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [0] tackles a pervasive failure mode where models return full metadata or document titles instead of the core entity, adding critical stripping and prioritization guidance. Edit [3] complements existing suffix-stripping rules by targeting compound terms and head-noun extraction, preventing overly verbose outputs. Edit [1] fills a distinct gap in handling aliases, nicknames, and cross-lingual pointers, which are highly frequent in trivia contexts. Edit [4] upgrades a retrieval heuristic to prioritize exact string matches over density metrics, reducing unnecessary semantic over-analysis and improving both accuracy and efficiency. Together, these four edits provide high-impact, actionable, and complementary improvements to answer precision and retrieval strategy.",
+    "selected_indices": [
+      0,
+      3,
+      1,
+      4
+    ]
+  }
+}

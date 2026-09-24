@@ -1,0 +1,28 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Strategic use of `inventory` to resolve holding/location ambiguity",
+    "Skipping unnecessary appliance closure post-transformation to minimize steps",
+    "Immediate verification and clearing of non-target objects upon pickup"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the batch reveals agents frequently benefit from explicit `inventory` checks when admissible actions are ambiguous, saving navigation steps. Additionally, successful agents consistently omit closing appliances (e.g., microwaves) after heating/cleaning, proceeding directly to the destination. Finally, immediate identity verification upon pickup prevents wasted trips with non-target items, reinforcing efficient inventory management.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n13. **Resolve Holding Ambiguity**: When observations or admissible actions conflict regarding what you are carrying, execute `inventory` immediately. Never assume your state; explicit verification prevents misdirected travel and wasted steps."
+      },
+      {
+        "op": "replace",
+        "target": "Ensure doors are open for placement interactions.",
+        "content": "Ensure doors are open for placement interactions. **Omit closing appliances** after transformations (heat/clean) unless explicitly required for the next step; proceed directly to the destination to conserve steps."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Common Mistakes to Avoid",
+        "content": "\n- **Delay clearing non-targets**: Picking up the wrong item blocks progress. Verify object identity instantly upon pickup; if it mismatches the goal, place it down immediately at your current location."
+      }
+    ]
+  },
+  "source_type": "success"
+}

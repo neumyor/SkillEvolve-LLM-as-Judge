@@ -1,0 +1,42 @@
+{
+  "reasoning": "All four failure-driven patches take priority and directly replace corresponding skill sections, addressing critical gaps in surname handling, reverse clues, constraint verification, and article/title preservation. Eight success-driven patches are preserved as they introduce distinct, non-conflicting strategies: overriding frequency heuristics, preventing generic suffix appending, resolving wordplay/riddles, enhancing lateral/multi-clue resolution, mapping noun-phrase fragments, enforcing literal/structural matching, leveraging proper noun anchoring, and preserving conjunctions as logical constraints. No deduplication was required as success edits complement rather than duplicate failure edits. Support counts and source types are carried forward. [optimizer-ranked: selected 4/12 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "content": "- **Direct Keyword Matching & Scanning**: Extract core anchor phrases by removing only non-informative punctuation and filler words. **Preserve conjunctions like \"&\" and \"and\"** as logical connectors that delineate separate mandatory constraints rather than stripping them. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a logical AND filter across all stated constraints; prioritize candidates that satisfy the maximum intersection of these anchors. Explicitly check the *requested entity type* in the question (e.g., \"this territory\", \"this sport\") against candidate matches to avoid answering with a related but incorrect entity (e.g., answering a university name when asked for a state/territory). When keywords overlap across candidates, prioritize the intersection of all stated constraints.",
+      "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+      "content": "Never default to frequency or prominence if it conflicts with explicit question constraints. Always prioritize the entity that satisfies the maximum intersection of stated filters, even if it appears less frequently in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Reverse Clues & Minimalist Prompts**: When the question is a single proper noun or extremely short phrase lacking an explicit interrogative, treat it as a reverse Jeopardy clue. Infer the implicit question dimension (typically location, category, or defining attribute) from the context's dominant associations, and answer that attribute instead of repeating the prompt.",
+      "content": "- **Reverse Clues & Minimalist Prompts**: When the question is a single proper noun, extremely short phrase, or famous quote/excerpt lacking an explicit interrogative, treat it as a reverse Jeopardy clue. For quotes, poems, or songs, the target is almost always the author, composer, or creator. For other fragments, infer the implicit dimension (location, category, or defining attribute) and answer that directly.",
+      "support_count": 8,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [9] ranks highest due to its massive systematic impact: it corrects a critical flaw in the core extraction step where stripping '&' destroys constraint boundaries, causing widespread parsing failures for multi-clue questions. Edit [2] follows by tightening the constraint verification process with a strict logical AND rule, directly preventing partial-match errors across diverse tasks. Edit [4] provides essential complementarity by overriding a common fallback heuristic (frequency/prominence) that frequently leads to incorrect answers when explicit constraints are unmet. Edit [1] fills a significant gap in reverse clue handling by explicitly directing the model to resolve quotes/media fragments to their creators/authors, addressing a high-frequency trivia pattern. Together, these four edits establish a robust, constraint-first pipeline that maximizes accuracy while remaining highly actionable and general.",
+    "selected_indices": [
+      9,
+      2,
+      4,
+      1
+    ]
+  }
+}

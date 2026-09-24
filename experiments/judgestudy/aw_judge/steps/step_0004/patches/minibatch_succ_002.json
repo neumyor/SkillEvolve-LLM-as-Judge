@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct Appliance Interaction Efficiency",
+    "Mandatory Post-Transformation State Verification",
+    "Prioritized Search Hierarchy (Surfaces > Open Storage > Closed Storage)",
+    "Immediate Pickup & Direct Navigation"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 successful trajectories reveals three critical reinforcement opportunities: (1) Direct appliance commands (`heat/cool/clean <obj> with <appliance>`) are consistently used as the primary, efficient method when holding objects, rather than defaulting to the verbose enclosed workflow. (2) Post-transformation state verification (`inventory`/`examine`) is repeatedly performed to confirm the object remains held and its state updated before navigation, preventing delivery failures. (3) Successful searches follow a strict hierarchy: checking visible/open surfaces first, then open storage, then closed storage, which minimizes backtracking and loops. These patterns are currently scattered or under-emphasized in the skill and warrant tightening.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "9. **Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Always close appliances** immediately after interaction and retrieval to maintain environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance. **Fallback Rule**: If the direct command succeeds but the object's state does not update (verify via `examine`), or if subsequent placement/interaction fails, immediately switch to the full enclosed appliance workflow (`open` -> `move in` -> `close` -> `heat/cool` -> `open` -> `take`). Do not persist with direct commands if they do not advance the task state.",
+        "content": "9. **Appliance & Receptacle Workflow**: **Prioritize Direct Commands**: When holding an object near a target appliance, always attempt the direct command first (e.g., `heat <object> with <appliance>`). This bypasses unnecessary open/close/move steps and is natively supported by most environments. **Fallback to Enclosed Workflow**: Only switch to the full sequence (`open` -> `move in` -> `close` -> `heat/cool` -> `open` -> `take`) if the direct command fails, throws an error, or does not visibly alter the object's state. **State Maintenance**: Always close appliances immediately after interaction/retrieval. Verify receptacles are open before placing items."
+      },
+      {
+        "op": "replace",
+        "target": "10. **State Verification & Precision**: Call `inventory` whenever unsure what you hold or if expected actions are missing. Immediately confirm an object's exact name upon pickup. When multiple instances exist, always use the full admissible action string (e.g., `take X from Y`).",
+        "content": "10. **Mandatory Post-Transformation Verification**: After any heating, cooling, or cleaning operation, **immediately execute `inventory` or `examine <object>`** before navigating. Appliances may drop items, fail to update states, or require explicit retrieval. Never assume a transformation succeeded or that you are still holding the object. Confirm both possession and state change at this checkpoint to prevent delivering unmodified or lost items."
+      },
+      {
+        "op": "replace",
+        "target": "2. **Semantic & Systematic Exploration**: Begin searches at **semantically likely locations** (e.g., cutlery in drawers, produce on countertops, bedding on beds, electronics on desks/dressers). Maintain a strict mental log of every container and surface inspected. Once a specific *type* of furniture (e.g., all drawers, all cabinets) is checked and consistently yields no results, mark that entire category as **exhausted**. Immediately pivot to a different furniture category or room zone. Never revisit an empty container or type while other unexplored options remain, **except** when cycling through an appliance's operational sequence. Prioritize moving to new, unvisited areas over returning to previously checked surfaces.",
+        "content": "2. **Semantic & Systematic Exploration**: Follow a strict **Search Hierarchy**: (1) Check visible/open surfaces first (countertops, tables, shelves), (2) Inspect open storage containers, (3) Open and check closed storage (drawers, cabinets, fridges). This order minimizes backtracking. Maintain a strict mental log of every inspected location. Once a specific *type* of furniture is exhausted, immediately pivot to a different category or room zone. Never revisit an empty container or type while other unexplored options remain, **except** when cycling through an appliance's operational sequence. Prioritize moving to new, unvisited areas over returning to previously checked surfaces."
+      },
+      {
+        "op": "replace",
+        "target": "- **Verify post-appliance state**: Immediately after using a transformation appliance (microwave, fridge, sink), execute `inventory` to confirm you are holding the transformed object before navigating to the final destination. Appliance interactions may auto-transfer items or require explicit retrieval.",
+        "content": "- **Skip post-appliance verification**: Assuming an object is transformed or still held after using a microwave, fridge, or sink. Always run `inventory` or `examine` immediately after transformation to confirm state changes and possession before navigating. Failure to verify leads to delivering unmodified items or getting stuck holding nothing."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Interpreting Jeopardy-style clues (fragmented sentences, definitions, 'It's...' phrasing) as direct entity queries.",
+    "Strict exact-match extraction for trivia, avoiding paraphrasing, expansions, or full sentences.",
+    "Keyword scanning and explicit link verification to map clue descriptors directly to named entities in the context.",
+    "Concise formatting: outputting only the precise entity inside <answer> tags without conversational filler."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories involve Jeopardy-style trivia questions phrased as clues or definitions. Agents consistently succeed by treating these as direct entity queries, scanning contexts for keyword overlaps, and extracting exact short phrases/names without paraphrasing or filler. Encoding these patterns ensures reliable handling of fragmented clues and enforces strict exact-match formatting.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Principles & Strategy\n- **Clue-to-Context Mapping**: Treat descriptive, fragmented, or definition-style prompts (e.g., \"It's the cry of...\", \"During his 20-year career...\") as direct queries for a specific entity. Match key descriptors directly to named entities in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through all `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n\n## Answer Extraction Rules (Priority for Trivia & Exact Matches)\n- **Exact Match Priority**: For trivia, Jeopardy-style, or fill-in-the-blank questions, output the *exact* word or short phrase requested. Do not paraphrase or add descriptive clauses.\n- **Avoid Expansions**: If the expected answer is a single letter, abbreviation, or surname, output only that. Do not expand abbreviations or add full names unless explicitly asked.\n- **Direct Entity Response**: When a question asks for a person, place, or object, provide only the entity name. Do not answer with \"Yes/No\", descriptions, or full sentences.\n- **Strict Conciseness**: Keep answers strictly within `<answer>...</answer>` tags. Limit to a few words or a short phrase. Omit conversational filler or restatements of the question."
+      }
+    ]
+  },
+  "source_type": "success"
+}

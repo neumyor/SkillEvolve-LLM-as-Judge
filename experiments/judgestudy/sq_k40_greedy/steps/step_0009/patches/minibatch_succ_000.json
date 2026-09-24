@@ -1,0 +1,22 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "High-confidence direct lookup when questions mirror context titles/snippets verbatim",
+    "Preservation of intact multi-word proper nouns, full names, and canonical titles despite aggressive stripping heuristics"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories succeeded by rapidly mapping highly constrained trivia fragments to exact context matches without over-analyzing. Crucially, they correctly preserved multi-word proper nouns and full names (e.g., 'Casimir Pulaski', 'In the Heat of the Night', 'Alice Cooper'), directly addressing historical failure modes where overly aggressive suffix/modifier stripping caused exact-match failures. Reinforcing canonical identifier integrity and explicit direct-lookup prioritization will stabilize performance across diverse trivia domains.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. Prioritize the shortest canonical identifier that satisfies all constraints (e.g., \"Roanoke\" not \"Roanoke Island\", \"Sirius\" not \"Sirius Satellite Radio\", \"George Bush\" not \"George H. W. Bush\").",
+        "content": "- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. **Preserve intact multi-word proper nouns, full names, and canonical titles** (e.g., \"In the Heat of the Night\", \"Casimir Pulaski\", \"Alice Cooper\") when they constitute the recognized entity identifier. Prioritize the shortest canonical identifier only when stripping clearly optional modifiers."
+      },
+      {
+        "op": "append",
+        "content": "\n\n## Rapid Trivia Resolution Heuristics\n- **Direct Lookup Priority**: When a question closely mirrors a document title, snippet, or definition sentence, treat it as a direct lookup request. Extract the answer verbatim from the matching passage without applying complex semantic transformations or over-analyzing.\n- **Fragment-to-Entity Mapping**: Treat statement fragments, reverse clues, and demonstrative placeholders as direct pointers to a single proper noun. Do not output descriptive phrases, categories, or partial clauses; resolve the pointer to the exact canonical entity name."
+      }
+    ]
+  },
+  "source_type": "success"
+}

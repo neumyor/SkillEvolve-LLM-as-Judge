@@ -1,0 +1,24 @@
+{
+  "batch_size": 3,
+  "success_patterns": [
+    "Direct entity extraction from clue-style or factual queries",
+    "Verbatim matching of explicit options or numerical values",
+    "Rapid context verification without extended reasoning"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate rapid identification of exact terms from clue-style or factual questions, including handling explicit multiple-choice formats. Reinforcing direct extraction and option-matching strategies will reduce verbosity and improve precision on similar trivia tasks.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Explicit Option & Numerical Matching**: When questions present discrete choices or numerical values, scan the context for the exact match. Select and output only the correct option verbatim, ignoring distractors or alternative values mentioned elsewhere."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Verify alignment: Confirm the extracted term precisely satisfies the question's descriptor and matches the context verbatim. Omit multi-step derivation for direct factual or trivia queries to maintain conciseness."
+      }
+    ]
+  },
+  "source_type": "success"
+}

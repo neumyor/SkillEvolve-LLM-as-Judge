@@ -1,0 +1,29 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Treating demonstrative placeholders (e.g., 'this nation', 'these animals') as direct fill-in-the-blank targets, ignoring the generic category noun itself.",
+    "Prioritizing exact verbatim matches of the question string in document titles and snippets to rapidly locate the source passage.",
+    "Stripping non-canonical generic descriptors (e.g., 'raft', 'network', 'group') from extracted answers while preserving acronyms, proper nouns, and official titles."
+  ],
+  "patch": {
+    "reasoning": "Across all 7 successful trajectories, agents consistently treated Jeopardy-style clues as direct blanks, ignored generic category nouns in the prompt (e.g., answering 'Sheep' instead of 'animals', 'SCTV' instead of 'network'), and relied on exact verbatim matches in titles/snippets to quickly isolate the correct passage. These patterns are highly generalizable to trivia QA and should be explicitly codified to prevent over-specification or misdirection by generic terms.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Resolving Implicit References**: Trivia questions frequently use demonstratives or relational pointers...",
+        "content": "\n- **Ignoring Generic Category Suffixes**: When a question ends with a broad category (e.g., \"these animals,\" \"this ethnic group,\" \"this comic network\"), treat the category word as a structural placeholder, not the target. Ignore it during extraction and focus solely on the specific proper noun, acronym, or term that fulfills the description."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Verbatim Context Lifting**: Trivia questions are often copied verbatim or near-verbatim from context sentences, titles, or flashcards. Prioritize scanning for exact or near-exact string matches in document titles and snippets before attempting semantic reasoning or keyword stripping.",
+        "content": "\n- **Exact String Anchor Priority**: If the full question or a significant clause matches a document title or snippet verbatim, treat that document as the definitive source. Extract the answer directly from the surrounding text without over-analyzing or searching elsewhere."
+      },
+      {
+        "op": "insert_after",
+        "target": "- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier.",
+        "content": "\n- **Canonical Name Extraction**: Strip non-canonical generic descriptors (e.g., \"raft,\" \"network,\" \"group,\" \"hit\") unless they are officially part of the name. Prioritize acronyms, proper nouns, and standalone titles that serve as the core identifier."
+      }
+    ]
+  },
+  "source_type": "success"
+}

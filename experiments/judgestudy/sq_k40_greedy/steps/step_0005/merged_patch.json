@@ -1,0 +1,89 @@
+{
+  "reasoning": "Successfully merged all 12 edits from both groups. Failure-driven patches were prioritized and preserved, specifically the aggressive modifier-stripping directive, partial name handling, and implicit slot filling rules. Success-driven patches were integrated to reinforce structural parsing, block-level scanning, constraint verification, and exact-string extraction protocols. No direct conflicts existed; overlapping targets were addressed sequentially without redundancy. All edits retain their original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "Answers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.",
+      "content": "Answers must be stripped to their core identifier. Aggressively remove titles, honorifics, surnames, and institutional suffixes (e.g., 'of Brunei', '-Superior', 'Bonaparte') unless strictly required for disambiguation. Preserve essential descriptors, species names, or qualifiers only if they form the canonical name or are required to distinguish the entity. Prioritize the shortest exact match to the clue's implied blank.",
+      "support_count": 2,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- If the context uses a surname, nickname, or single letter, prefer that form only if it is the primary identifier.",
+      "content": "\n- **Partial Names & Blanks**: When a question contains a partial name, blank, or underscore (e.g., '___ & Wagnalls'), always output the **full canonical entity name**, not just the missing fragment. Conversely, do not append generic descriptors (e.g., 'power', 'company') unless they are strictly part of the standard name; prioritize the exact shortest canonical form present in the context.",
+      "support_count": 2,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "Many questions are phrased as statements or incomplete phrases (common in trivia/Jeopardy). Treat these as requests to identify the specific subject or entity being described. Do not respond with \"True\"/\"False\", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+      "content": "\n- **Implicit Slot Filling**: When a prompt is a statement or fragment, never repeat the prompt itself. Infer the missing logical slot (e.g., person → country/work; film → original source). Scan the context for the exact term that satisfies the relational pointer or completes the thought, ignoring co-occurring but tangential entities.",
+      "support_count": 2,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Core Principles",
+      "content": "\n- **Conjunction (&) as Logical AND Filter**: When clues join descriptors, roles, or items with \"&\" or commas, treat each element as a mandatory constraint. The correct entity must satisfy *all* connected attributes simultaneously.\n- **Declarative & Fill-in-the-Blank Parsing**: Treat declarative statements and sentence fragments as implicit blanks. Identify the grammatical or conceptual slot being queried and extract the term that completes the thought, rather than answering with a generic category or explanation.\n- **Associative & Relational Bridging**: Clues often link the target to a known anchor via relationships (e.g., \"author of\", \"invented by\", \"located south of\"). Use the known anchor to locate the relevant passage, then resolve the relational pointer to the exact target entity described.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "Direct Keyword Matching & Scanning:",
+      "content": "\n- **Literal String Overlap Priority**: When the question contains phrases that exactly match document titles, snippets, or flashcard entries, treat this overlap as the primary retrieval signal. Extract the candidate answer from the same line or immediate metadata block before applying semantic reasoning or keyword stripping.",
+      "support_count": 6,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Snippet/Title Density Heuristic: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+      "content": "**Block-Level & Title Priority**: Trivia clues are frequently lifted directly from document titles, headers, or flashcard cards. **Always scan titles and first sentences/snippets first.** When a match is found, assume the answer resides in the same `[DOC]` block or adjacent metadata. Prioritize terms appearing in the title or opening line of that block, ignoring cross-document associations unless explicitly required.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat clusters of proper nouns or facts in the clue as a logical AND filter; prioritize candidates that satisfy the maximum number of these anchors.",
+      "content": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a logical AND filter across all stated constraints; prioritize candidates that satisfy the maximum intersection of these anchors.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Handling Statement or Fragment Questions",
+      "content": "\n- **Parenthetical Introductions & Stage Directions**: Clues frequently begin with host intros, location tags, or meta-commentary enclosed in parentheses (e.g., \"(Jimmy of the Clue Crew...)\"). Treat these as metadata to be ignored. Focus strictly on the declarative clause immediately following the parenthesis to locate the target subject.\n- **Full-Sentence Descriptive Clues**: When the question is a complete declarative sentence describing an attribute, event, or relationship (e.g., \"Rubber is an ingredient in this type of chewing gum\"), treat the entire sentence as a filter for the subject. Identify the grammatical subject or the entity modified by \"this [category]\" that satisfies the stated fact.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.",
+      "content": "When in doubt, default to the entity that shares the highest lexical overlap with the question's anchor phrases within the same document block, rather than relying on frequency counts or prominence heuristics.",
+      "support_count": 6,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Always prefer extracting the exact term or phrase from the context over generating or paraphrasing it. Trivia evaluation relies on exact string matches, so retain the context's original phrasing unless it contains unnecessary filler.",
+      "content": "Always extract the exact term or phrase from the context. Trivia evaluation relies on exact string matching; never normalize capitalization, remove leading articles (\"the\", \"a\"), or alter pluralization. Preserve the context's original casing and formatting exactly as presented.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.",
+      "content": "Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\", \"author of X\"). Do not treat these as missing words. Resolve the pointer to its canonical referent using contextual clues, then extract the exact entity being pointed to. If the pointer implies a role or attribute (e.g., \"inventor of\", \"located in\"), answer with the specific entity fulfilling that relationship.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "When a question contains multiple descriptors or roles joined by \"&\" or commas (e.g., \"late California governor & U.S. Chief Justice\"), treat each clause as a required filter. Locate the single entity in the context that satisfies the intersection of all clauses, ignoring tangential figures who may match only one descriptor.",
+      "content": "When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

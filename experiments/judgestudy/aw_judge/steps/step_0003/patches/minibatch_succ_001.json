@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Sequential checking of numbered containers",
+    "Immediate closure of containers after retrieval",
+    "Return-to-source for co-located multi-object tasks"
+  ],
+  "patch": {
+    "reasoning": "Analysis of 8 trajectories reveals consistent success in handling rooms with multiple numbered containers via sequential iteration, closing containers immediately after item retrieval to maintain state, and efficiently managing 'Pick Two' tasks by returning to the source surface when both items are co-located. These patterns reduce navigation overhead and prevent environmental state errors.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Prioritize moving to new, unvisited areas over returning to previously checked surfaces.",
+        "content": "When encountering multiple numbered containers of the same type (e.g., `drawer 1`–`N`, `cabinet 1`–`N`), systematically check them in numerical order until the target is found or the sequence is exhausted. Do not skip numbers or guess randomly."
+      },
+      {
+        "op": "replace",
+        "target": "**Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Always close appliances** immediately after interaction and retrieval to maintain environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance.",
+        "content": "**Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Immediately close any container or appliance** (fridge, microwave, drawer, cabinet) after retrieving an item and before navigating elsewhere to preserve environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance."
+      },
+      {
+        "op": "append",
+        "content": "\n11. **Co-located Multi-Object Handling**: For 'Pick Two' tasks, if both target instances are found on the same surface, take the first, navigate to the destination, place it, then return to the original surface to retrieve the second. This avoids unnecessary cross-room searches when items share a location.\n\n12. **Sequential Numbered Furniture Search**: When a room contains multiple numbered containers of the same type (e.g., `drawer 1`–`N`, `cabinet 1`–`N`), systematically iterate through them in numerical order until the target is found or the sequence is fully exhausted. Do not skip numbers or jump randomly unless a higher-probability surface is identified."
+      }
+    ]
+  },
+  "source_type": "success"
+}

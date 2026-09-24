@@ -1,0 +1,33 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Declarative Statement Resolution: Treating complete sentence clues as direct fill-in-the-blank prompts to identify the missing grammatical slot.",
+    "Multi-Word Canonical Preservation: Retaining full proper names, titles, and compound phrases instead of aggressively stripping them to head nouns.",
+    "Metadata Constraint Locking: Using explicit question constraints (dates, numbers, entities) to instantly filter and lock onto the correct document via titles/snippets before reading paragraphs.",
+    "Direct Lookup Pipeline: Executing a strict shallow-scan-verify-extract workflow that bypasses deep semantic reasoning when metadata and constraints align."
+  ],
+  "patch": {
+    "reasoning": "Across all 7 successful trajectories, agents consistently treated declarative trivia statements as direct fill-in-the-blank prompts, prioritized metadata constraint-locking to isolate the correct document, and preserved multi-word canonical names/titles rather than over-stripping them. These patterns directly address historical failure modes (over-stripping, distractor selection, ignoring constraints) and reinforce a highly efficient shallow-scan extraction workflow.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Declarative Statement Resolution**: Many trivia prompts are phrased as complete declarative sentences (e.g., \"This science of growing plants without soil was developed in the mid-19th century\"). Treat these as direct fill-in-the-blank prompts. Identify the grammatical slot being queried (subject, object, or modifier) and extract the exact term that completes the statement."
+      },
+      {
+        "op": "append",
+        "content": "- **Preserve Multi-Word Canonical Names**: When the target is a recognized proper name, title, organization, or phrase (e.g., \"Smithsonian Institution\", \"Raindrops Keep Fallin' On My Head\"), retain the full canonical phrasing. Do not apply aggressive head-noun stripping to compound terms that function as a single conceptual unit or official title."
+      },
+      {
+        "op": "insert_after",
+        "target": "**Crucially, always strip document title prefixes/suffixes and metadata artifacts (e.g., \"- Wikipedia\", \"Official Flag of\") to isolate the core entity requested by the clue.**",
+        "content": "\n\n- **Metadata Constraint Locking**: Before scanning paragraphs, cross-reference explicit constraints in the question (dates, numbers, specific named entities, locations) against `[TLE]` and `[PAR]` fields. Use these metadata anchors to instantly lock onto the correct document, preventing distractor selection from overlapping sources."
+      },
+      {
+        "op": "replace",
+        "target": "Execute a strict three-step search: (1) Scan `[TLE]` and `[PAR]` metadata for exact/near-exact matches; (2) Apply logical AND filters across all stated constraints to narrow candidates; (3) Extract the exact term only if it satisfies every constraint simultaneously. Do not read deeply until shallow scans fail.",
+        "content": "Execute a strict three-step pipeline: (1) **Lock Source via Metadata**: Cross-reference question constraints (dates, numbers, entities) against `[TLE]`/`[PAR]` to instantly isolate the definitive document; (2) **Verify & Extract**: Confirm the target term satisfies all constraints within that locked passage; (3) **Format Output**: Return the exact canonical term without semantic over-analysis. Skip deep paragraph reading if metadata alignment is confirmed."
+      }
+    ]
+  },
+  "source_type": "success"
+}

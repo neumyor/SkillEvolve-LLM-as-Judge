@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Title-First & Proximity Scanning: Agents prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks, as trivia contexts frequently embed answers directly in titles or co-occur within a few words of the question's constraints.",
+    "Co-occurrence Mapping: When questions are direct quotes or fragments from trivia datasets, the answer often appears in the immediate vicinity of the matching context snippet. Agents use unique phrasing as a literal search anchor to find the co-occurring answer span.",
+    "Exact Span Fidelity: Successful outputs preserve the exact string from the context, including original capitalization, punctuation, internal spacing, and necessary articles/conjunctions, avoiding heuristic 'clean-up' or modifier stripping."
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates consistent success through title-first scanning, proximity-based extraction, and strict preservation of exact spans (including punctuation and internal spacing). Previous failures stemmed from heuristic simplification, article manipulation, or ignoring high-signal title zones. These edits reinforce targeted scanning strategies and exact-fidelity extraction to prevent format mismatches and improve recall.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Keyword Spotting & Mapping**: Quickly scan document titles and paragraphs for exact keywords, dates, and unique proper nouns from the question to locate the answer span efficiently.",
+        "content": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "\n- **Co-occurrence Mapping**: When a question is a direct quote or fragment from a known trivia dataset, the answer often appears in the immediate vicinity (title or first paragraph) of the matching context snippet. Use the question's unique phrasing as a literal search anchor to find the co-occurring answer span."
+      },
+      {
+        "op": "replace",
+        "target": "- **Verbatim Extraction Priority**: To prevent overly descriptive outputs, extract the target term exactly as it appears in the context. Do not paraphrase, expand, or add conversational qualifiers. Preserve original capitalization and formatting when possible to maximize exact-match probability.",
+        "content": "- **Exact Span Fidelity**: Extract the answer exactly as it appears in the context. Preserve original capitalization, punctuation, internal spacing, and necessary articles/conjunctions (e.g., 'State & Revolution', 'Welcome Back, Kotter'). Do not strip modifiers, infer shorter aliases, or 'clean up' phrasing, as exact formatting often dictates scoring."
+      }
+    ]
+  },
+  "source_type": "success"
+}

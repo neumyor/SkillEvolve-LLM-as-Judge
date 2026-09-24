@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Title-Passage Triangulation for rapid candidate narrowing",
+    "Scare Quote & Metaphor Normalization in clue parsing",
+    "Acronym & Initialism Preservation for canonical answers"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently leverage document titles as high-signal candidate generators, normalize stylistic punctuation (scare quotes) to avoid parsing interference, and preserve acronyms as canonical forms. These patterns address recurring failure modes around noisy context filtering, over-expansion of abbreviations, and misinterpretation of stylized trivia phrasing.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+        "content": "\n- **Title-Passage Triangulation**: Prioritize document titles (`[TLE]`) as high-signal candidate generators for trivia queries. Use titles to rapidly narrow the search space, then verify constraints against the passage body (`[PAR]`) before finalizing the answer."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+        "content": "\n- **Scare Quote & Metaphor Normalization**: Strip quotation marks around terms in the clue (e.g., \"network\", \"soft-shell\") and treat them as standard categorical or descriptive filters. Do not let stylistic punctuation obscure the core semantic constraint."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.",
+        "content": "\n- **Acronym & Initialism Preservation**: If the canonical answer is an acronym or initialism (e.g., SCTV, NASA), output it exactly as such. Do not expand abbreviations into full phrases unless the clue explicitly demands it."
+      }
+    ]
+  },
+  "source_type": "success"
+}

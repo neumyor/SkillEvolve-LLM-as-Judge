@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Quoted Phrase & Title Anchoring: Treating quoted titles, idioms, or famous phrases in clues as topical anchors to locate the target entity, rather than literal strings to extract or complete.",
+    "Canonical Name Preservation: Retaining multi-word canonical names and official titles when they form the standard trivia answer, avoiding over-stripping of essential identity components.",
+    "Strict Grammatical Slot Validation: Ensuring the extracted entity precisely fills the grammatical role (person, place, concept, etc.) demanded by the clue's syntax, discarding factually related but syntactically mismatched candidates."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle quoted titles/idioms as topical anchors rather than literal targets, preserve canonical multi-word names when required by trivia standards, and strictly validate that the extracted entity matches the grammatical slot implied by the clue. These patterns address historical failure modes (over-stripping, syntactic mismatches) and reinforce robust extraction behavior across diverse clue formats.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+        "content": "- **Quoted Phrase & Title Anchoring**: When clues contain quoted titles, idioms, or famous phrases (e.g., \"corrida de toros\", \"Brief History of Time\"), treat them as topical anchors to locate the entity, not as literal strings to extract or complete. Map the quote directly to the subject it describes."
+      },
+      {
+        "op": "replace",
+        "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+        "content": "- **Canonical Phrasing & Modifier Balance**: Preserve multi-word canonical names, official titles, or established proper nouns (e.g., \"Hundred Years' War\", \"Stephen Hawking\") when they constitute the standard trivia answer. Strip only non-essential adjectives, biographical descriptors, or contextual fluff. Avoid over-stripping necessary components that define the entity's identity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

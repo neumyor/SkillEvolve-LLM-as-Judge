@@ -1,0 +1,49 @@
+{
+  "step": 6,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 11,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agents consistently drop articles, alter singular/plural forms, or add/remove descriptive modifiers and titles, failing to match the exact short phrase or grammatical slot requested by the clue.",
+      "count": 11,
+      "task_ids": [
+        "37ba164b00db46d4886345dbffb01253",
+        "142bd93393f2485196d7788833e978c2",
+        "88d06cbae9ef4d5f827ed4d8ed7e2ee7",
+        "9ea2737a55994603b6ea7e7ebf88f98d",
+        "1a02c8a18c464f8eaa996aeeb6781f35",
+        "7e17030f4e8f487e922841322951cc8c",
+        "99ab970df1ad4eb299acf118599d630b",
+        "fd9daac9e3cc4f819c48b05fb6bd843f",
+        "f6f35af39efd4a16ba440993d142349e",
+        "2017497b907f4e17988203e7613abef6",
+        "a74042fa649f4fd28697a8a19aeac620"
+      ]
+    }
+  ],
+  "score_before": 0.73,
+  "score_after": 0.73,
+  "rejected_edits": [
+    {
+      "op": "insert_after",
+      "content": "\n- **Minimal Entity & Descriptor Pruning**: For short, fragmentary, or keyword-only questions, extract only the single core entity or exact term. Strip all descriptive clauses, temporal markers, titles, and generic categories. Default to the shortest direct name that uniquely satisfies the query. Never output multi-word descriptions unless they form a fixed proper name. Strictly preserve indefinite/definite articles ('a', 'an', 'the') and singular/plural forms; do not alter number agreement or strip articles to force conciseness.",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Primary Subject Isolation**: When contexts mention multiple related entities, isolate the one that directly satisfies the question's descriptor. Ignore tangential examples, historical anecdotes, or secondary mentions to prevent over-specification.",
+      "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Context Noise Filtering**: When contexts contain mixed snippets (e.g., recipe blogs, forum comments, book reviews), explicitly ignore conversational framing, personal anecdotes, and tangential mentions. Anchor strictly to definitive factual statements or direct definitions that name the target entity.",
+      "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Category Constraint Enforcement**: When the question specifies a noun class or type (e.g., 'this acid', 'these birds'), strictly filter candidate entities to match that semantic constraint. Ignore closely related terms that share keywords but belong to a different category (e.g., reject 'soda' when the clue explicitly asks for an 'acid').",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked."
+    }
+  ]
+}

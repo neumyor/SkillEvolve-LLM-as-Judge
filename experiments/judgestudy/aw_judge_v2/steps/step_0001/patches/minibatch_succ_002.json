@@ -1,0 +1,33 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Agents must account for the single-slot inventory limit by placing the first object before retrieving subsequent ones.",
+    "Use `inventory` to verify held items and `look` to scan surroundings when targets are not listed on surfaces.",
+    "Verify object types match the goal before taking, avoiding incorrect substitutions like 'pan' for 'pot'.",
+    "Systematically scan rooms with `look` and open all closed containers before concluding an area is empty."
+  ],
+  "patch": {
+    "reasoning": "Trajectories reveal a critical single-slot inventory constraint that causes failures if ignored during multi-object tasks. Agents also benefit from explicit verification steps (`inventory`, `look`) and careful object-type matching to avoid wasting steps on incorrect items. These patterns generalize across all task types and improve robustness.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration**: Use `look` to scan the room before moving. Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty."
+      },
+      {
+        "op": "append",
+        "content": "\n9. **Manage single-slot inventory**: You can only hold one object at a time. For multi-object tasks (e.g., Pick Two), place the first object at the destination, return to retrieve the second, and place it again. Do not attempt to pick up a second item while holding one."
+      },
+      {
+        "op": "append",
+        "content": "\n10. **Verify state with actions**: Use `inventory` to confirm what you are carrying, especially after failed pickups or complex sequences. Use `look` to refresh your view of the current location if the target isn't listed in surface observations."
+      },
+      {
+        "op": "replace",
+        "target": "- **Ignoring visible objects**: If the target object appears in the observation, pick it up immediately.",
+        "content": "- **Ignoring visible objects**: If the target object appears in the observation, pick it up immediately.\n- **Mismatched object types**: Verify the object name matches the goal exactly before taking. Picking up similar but incorrect items (e.g., 'pan' instead of 'pot') wastes steps and may block progress."
+      }
+    ]
+  },
+  "source_type": "success"
+}

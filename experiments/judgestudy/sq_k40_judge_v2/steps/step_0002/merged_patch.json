@@ -1,0 +1,26 @@
+{
+  "reasoning": "Failure-driven patches enforce grammatical fidelity and concept-over-example constraints, directly correcting over-specification and format violations. Success-driven patches introduce targeted search heuristics (placeholder parsing, temporal awareness, heading prioritization, distractor filtering) and streamline the verification step to reduce verbosity. There are no overlapping points or conflicts between the groups; failure edits secure answer formatting rigor while success edits optimize retrieval strategy and reasoning efficiency. All edits are preserved with their original support counts and source types.",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "\n- **Grammatical & Structural Fidelity**: Strictly match the grammatical form implied by the question. Provide only the surname if asked for a name, avoid plurals if a singular term is requested, and omit articles unless integral to the term. Never add middle initials or expand names beyond what the question demands.\n- **Concept Over Example**: For clue-like, Jeopardy-style, or definition-seeking questions, identify the overarching category, function, or concept. Do not default to a specific instance or example from the text unless the question explicitly asks for one.",
+      "support_count": 3,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match.",
+      "content": "\n- **Placeholder & Cloze Parsing**: Treat generic pointers (e.g., \"this film\", \"a [adjective] dessert\") and Jeopardy-style fragments as direct fill-in-the-blank requests. Map category hints directly to the specific subject named in the context.\n- **Temporal & Qualifier Awareness**: Scrutinize historical markers, superlatives (e.g., 'largest', 'first'), and dates. These qualifiers often distinguish between past/present entities, renamed locations, or similar namesakes.\n- **Heading & Snippet Prioritization**: For trivia queries, scan document titles (`[TLE]`) and opening snippets first. These often contain the exact answer or direct paraphrase, anchoring your search before diving into paragraphs.\n- **Distractor Filtering**: When context contains quiz pairs, forums, or mixed snippets, explicitly ignore incorrect guesses, anecdotes, or tangential details. Anchor strictly to definitive factual statements.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Provide a concise, single-sentence verification trace (e.g., \"Based on the provided context...\") only if synthesis or disambiguation is required. Skip extended analysis for straightforward matches to prevent verbosity.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Resolving implicit references ('this X') in trivia/Jeopardy clues",
+    "Extracting concise, verbatim answers from context",
+    "Cross-referencing document titles and snippets for keyword matching"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories involve Jeopardy-style trivia questions containing implicit references (e.g., 'this newspaper', 'this point', 'this country'). Successful agents consistently resolve these references by scanning context for keywords, verifying against passage text, and returning highly concise, verbatim answers. Encoding these patterns will improve performance on similar trivia/QA tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Jeopardy/Trivia Clue Resolution**: Treat questions as clues requiring identification of a specific entity, place, person, or term. Scan context for keywords and match against document titles/snippets.\n- **Implicit Reference Resolution**: Questions often use demonstratives like \"this [noun]\" (e.g., \"this newspaper\", \"this point\"). Map these directly to the concrete entity described in the context.\n- **Concise Extraction**: Provide only the exact answer or a very short phrase. Do not include full sentences, explanations, or restate the question inside `<answer>` tags.\n- **Context Verification**: Cross-reference the candidate answer with explicit mentions in the passage text to ensure accuracy before finalizing."
+      }
+    ]
+  },
+  "source_type": "success"
+}

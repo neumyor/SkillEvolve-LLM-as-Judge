@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Questions are typically trivia or fill-in-the-blank style, asking for a specific named entity, term, or phrase.",
+    "Context is structured with [DOC], [TLE], and [PAR] tags; successful agents scan paragraphs for keywords matching unique identifiers in the question (dates, numbers, quotes, descriptors).",
+    "Answers are highly concise, extracting only the core entity/term without additional explanation, formatted strictly within <answer> tags."
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories demonstrate successful handling of trivia-style, fill-in-the-blank questions using structured document contexts. The agents consistently perform direct entity extraction by scanning for keywords and returning highly concise answers. Encoding these patterns will improve retrieval accuracy and adherence to formatting constraints.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Core Strategy\n- **Recognize Trivia/Fill-in-the-Blank Style**: Questions often restate facts as clues (e.g., \"this country,\" \"his discovery,\" \"this prison\"). Map these descriptive phrases directly to the target entity.\n- **Scan Structured Context Efficiently**: Contexts use `[DOC]`, `[TLE]`, and `[PAR]` tags. Quickly scan paragraphs for unique identifiers in the question (dates, numbers, quotes, proper nouns) to locate the supporting sentence.\n- **Extract Concise Entities**: Return only the exact name, term, or phrase requested. Avoid full sentences, explanations, or repeating the question.\n- **Format Strictly**: Wrap the final answer in `<answer>...</answer>` tags. Keep the content inside to a few words maximum.\n\n## Common Pitfalls to Avoid\n- Over-explaining or adding conversational filler inside the answer tags.\n- Ignoring structural markers (`[PAR]`) and getting lost in long document blocks.\n- Failing to match quoted phrases or nicknames (e.g., \"Happiest Place on Earth\") to their canonical names in the text."
+      }
+    ]
+  },
+  "source_type": "success"
+}

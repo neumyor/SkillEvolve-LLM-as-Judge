@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Placeholder resolution in trivia/Jeopardy clues ('this X', '& this X')",
+    "Consistent single-sentence justification template preceding <answer> tags"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories handle Jeopardy-style clues by resolving placeholder references ('this X', '& this X') to exact entities. Additionally, every successful response uses a standardized single-sentence justification starting with 'Based on the provided context...' before the answer tag. Encoding these patterns will improve consistency and accuracy for similar trivia tasks.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Handling Jeopardy-Style Clues & Trivia Statements",
+        "content": "- **Resolve Placeholder References**: Questions frequently use phrases like \"this [entity]\", \"& this [entity]\", or \"one of these [category]\" as direct stand-ins for the answer. Map these placeholders immediately to the specific named entity requested, bypassing literal interpretation of the surrounding syntax."
+      },
+      {
+        "op": "replace",
+        "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+        "content": "- **Standardized Justification**: Precede the final tag with a single-sentence reasoning step using a consistent template: \"Based on the context, [brief evidence] identifies [answer].\" This ensures traceability and aligns with successful response patterns."
+      }
+    ]
+  },
+  "source_type": "success"
+}

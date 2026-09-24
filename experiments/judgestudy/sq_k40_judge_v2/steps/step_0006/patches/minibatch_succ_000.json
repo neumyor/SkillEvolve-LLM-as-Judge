@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct mapping of noun-phrase and declarative prompts to target entities",
+    "Filtering conversational noise and tangential mentions in mixed contexts",
+    "Skipping extended reasoning for direct, unambiguous matches"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently treat standalone noun phrases and declarative clues as direct entity requests, ignoring relational explanations. They also demonstrate strong immunity to contextual noise (blogs, forums, mixed snippets) by anchoring strictly to definitive facts. Finally, they streamline the reasoning step, skipping multi-step breakdowns when a direct match is evident, which prevents verbosity and aligns with the zero-reasoning-in-tags rule.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Noun-Phrase & Cloze Mapping**: Treat standalone noun phrases, declarative statements, and Jeopardy-style clues as direct entity requests. Map descriptive attributes straight to the target subject without generating categories or explaining relationships. For compound clues (e.g., \"X or Y\"), identify the single term satisfying all parts simultaneously."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match.",
+        "content": "\n- **Context Noise Filtering**: When contexts contain mixed snippets (e.g., recipe blogs, forum comments, book reviews), explicitly ignore conversational framing, personal anecdotes, and tangential mentions. Anchor strictly to definitive factual statements or direct definitions that name the target entity."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Perform a rapid verification: confirm the extracted term matches the question's descriptors and context exactly. Skip extended analysis or multi-step breakdowns if a direct, unambiguous match is found."
+      }
+    ]
+  },
+  "source_type": "success"
+}

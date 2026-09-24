@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Core Entity Isolation for Fragment/Cloze Questions",
+    "Contextual Paraphrase Mapping",
+    "Single-Sentence Verification Trace"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate a pattern of isolating the exact head noun or core entity from descriptive Jeopardy-style clues, mapping paraphrased question phrasing directly to context terminology, and using concise single-sentence verification traces instead of extended reasoning. Encoding these patterns will reinforce precise entity extraction and reduce verbosity.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Core Entity Isolation**: For Jeopardy-style, cloze, or fragmentary questions, isolate the primary subject or head noun being described. Strip away descriptive clauses, adjectives, and tangential examples to return only the exact core entity requested.\n- **Contextual Paraphrase Mapping**: Questions frequently rephrase factual statements using synonyms, descriptors, or cloze-style blanks. Map the question's descriptive phrasing directly to the exact terminology in the `[DOC]` passages before extraction."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Perform a single-sentence verification linking the question's core descriptor to the extracted entity, confirming exact textual alignment. Skip extended analysis for straightforward trivia matches to maintain speed and conciseness."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,24 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Conditional Reasoning Execution: Agents skip the reasoning trace entirely when the context provides a direct, unambiguous match, reducing latency and preventing verbosity.",
+    "Pointer & Modifier Resolution: For questions using descriptive pointers (e.g., 'this term', 'the Denver type of this'), agents correctly extract the core noun/base category rather than the full modified phrase.",
+    "List & Keyword Query Interpretation: Agents treat comma-separated names or keyword strings as implicit category/title queries, identifying the overarching subject that groups the items."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate three key behaviors: skipping reasoning for direct trivia matches, resolving descriptive pointers to their core nouns, and interpreting fragmented lists as implicit category queries. These patterns improve speed and accuracy for cloze-style and non-sentence inputs without conflicting with existing conciseness rules.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Provide a concise verification trace linking the question's core descriptor to the extracted entity. **Skip this step entirely** if the context contains a direct, unambiguous match to prevent verbosity."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Pointer & Modifier Resolution**: When questions use descriptive pointers (e.g., \"this term\", \"the [adjective] type of this\"), extract the core noun or base category rather than the full modified phrase. Prioritize the head entity over compound descriptors.\n- **List & Keyword Query Interpretation**: Treat comma-separated names, keyword strings, or fragmented phrases as implicit category or title queries. Identify the overarching subject, series, or concept that groups the listed items."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,46 @@
+{
+  "step": 9,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 8,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Model over-specifies answers by extracting full formal names, corporate suffixes, middle initials, or geographic descriptors instead of the canonical short form.",
+      "count": 8,
+      "task_ids": [
+        "553f1b511f044102b9a5a31fb23d7fd4",
+        "db8cf44331be40b993b053f5f0e4a996",
+        "445d4959a0a94d06adfb86d80c5a9dbd",
+        "55f92cd27974459aa893c131216a075c",
+        "9ccac9b7c91c4747b36dcae64742e3a1",
+        "760a703c4a2e4ffdaf30f3e6d61b4a89",
+        "dcbf2ef2cdf1480797460be29a1ee070",
+        "8517d298719f4e7aa9b1acb8c822b27e"
+      ]
+    }
+  ],
+  "score_before": 0.795,
+  "score_after": 0.78,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "- **Alias, Historical & Semantic Pointer Resolution**: Clues frequently use former names, historical references, literary allusions, pop-culture aliases, or semantic variants to point to an answer. Treat these as direct semantic identifiers. Scan the context for explicit mappings, glossary-style definitions, or explanatory bridges that link the pointer to the canonical entity. Discard the literal phrasing of the pointer and output only the exact canonical term.",
+      "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name."
+    },
+    {
+      "op": "replace",
+      "content": "- **Granularity-First Extraction & Name Normalization**: Prioritize the exact phrase length and structure implied by the clue. For companies, persons, and places, aggressively strip non-essential formal suffixes, corporate designations (e.g., 'Inc.', 'Cards', 'Corp.'), middle initials, and geographic descriptors (e.g., 'Mountains', 'Island') unless the clue explicitly requires them. Favor the core proper noun or widely recognized short form over the full contextual span. Normalize articles and plurality to match the question's syntax. Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+      "target": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints."
+    },
+    {
+      "op": "replace",
+      "content": "- **Standardized Reasoning Format**: Always precede the final answer with exactly one sentence using a fixed structure: 'The context explicitly states/references/identifies [Evidence], directly satisfying the question's constraint about [Clue].' Quote or closely paraphrase the exact context span containing the answer. This enforces grounding, eliminates filler, and aligns with expected output formats.",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Definition, Etymology & Glossary Mapping**: Clues often function as dictionary definitions, glossary entries, acronym expansions, or etymological breakdowns. Scan for explicit equivalence structures ('X is Y', 'Y stands for X'), definition headers, or translation cues. Map the clue's descriptive phrase or abbreviation directly to the canonical headword or full term defined in the text.",
+      "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer."
+    }
+  ]
+}

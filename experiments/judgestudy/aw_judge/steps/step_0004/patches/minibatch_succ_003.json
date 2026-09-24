@@ -1,0 +1,27 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Maintain continuous grip on primary objects while searching for auxiliary targets (e.g., desklamps, receptacles) to avoid step-wasting from repeated pick/drop cycles.",
+    "Immediately close containers (drawers, cabinets, fridges) after empty inspections during search phases to maintain environment state and reduce observation noise.",
+    "Use periodic `inventory` checks during extended navigation or complex searches to verify held object status and prevent state drift."
+  ],
+  "patch": {
+    "reasoning": "Analysis of the batch reveals inefficiencies in handling auxiliary searches (agents repeatedly drop and re-pick items while hunting for lamps) and inconsistent container management during exploration. Reinforcing continuous holding, immediate closure of inspected containers, and mid-search state verification will streamline navigation, reduce redundant actions, and improve robustness across all task types.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n17. **Maintain Grip During Auxiliary Searches**: When searching for secondary objects (e.g., desklamps, specific receptacles, or tools) required to complete a task, keep the primary object in your inventory. Do not place it down on surfaces unless explicitly instructed or forced by environment constraints. Repeatedly dropping and re-picking items wastes steps and risks accidental placement errors."
+      },
+      {
+        "op": "append",
+        "content": "\n18. **Immediate Container Closure**: When inspecting drawers, cabinets, or fridges during a search, close them immediately upon confirming they do not contain the target. Leaving containers open clutters the environment, obscures observations, and may interfere with subsequent interactions."
+      },
+      {
+        "op": "insert_after",
+        "target": "## Common Mistakes to Avoid",
+        "content": "- **Dropping items during search**: Avoid placing the target object down while searching for auxiliary items (like lamps or specific receptacles). Keep it in hand to save steps and prevent accidental placement.\n- **Leaving containers open**: Always close drawers, cabinets, and fridges immediately after checking them if they are empty. Open containers distort room observations and waste future interaction steps.\n- **Skipping mid-search verification**: During long navigation sequences or complex searches, periodically call `inventory` to confirm you are still holding the correct object. State drift or accidental drops can cause silent failures later."
+      }
+    ]
+  },
+  "source_type": "success"
+}

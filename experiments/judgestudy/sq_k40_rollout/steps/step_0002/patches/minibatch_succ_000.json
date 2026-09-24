@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Definitional & Functional Mapping: Trivia clues often describe entities through roles, sounds, or attributes rather than naming them directly. Agents successfully map these descriptors to the exact term in the context.",
+    "Ellipsis & Fragment Filtering: Questions frequently contain trailing ellipses, cut-off syntax, or repetitive phrasing. Successful agents strip non-semantic noise to isolate the core identifying constraint."
+  ],
+  "patch": {
+    "reasoning": "Across all 8 trajectories, agents consistently succeed by ignoring trailing ellipses/fragments and mapping descriptive clues (roles, sounds, attributes) to exact context spans. These strategies prevent over-parsing noisy question formats and ensure precise entity identification, which complements the existing Jeopardy-style handling rule.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "\n- **Definitional & Functional Mapping**: Trivia clues frequently describe entities through roles, sounds, or attributes rather than naming them directly. Map these descriptors to the exact term or phrase in the context.\n- **Ellipsis & Fragment Filtering**: Questions often contain trailing ellipses (`...`), cut-off syntax, or repetitive phrasing. Ignore the non-semantic noise and focus solely on the core identifying constraint to locate the answer span."
+      }
+    ]
+  },
+  "source_type": "success"
+}

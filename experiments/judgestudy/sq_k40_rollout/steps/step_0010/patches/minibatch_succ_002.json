@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct demonstrative-to-entity mapping",
+    "Verbatim extraction from high-signal zones ([TLE]/opening PAR)",
+    "Mandatory single-sentence verification with exact quote",
+    "1:1 constraint-evidence alignment"
+  ],
+  "patch": {
+    "reasoning": "The 8 successful trajectories consistently demonstrate a tight loop of identifying demonstrative pointers ('this holiday', 'this trade name'), extracting the exact verbatim span from titles or paragraph openings, and verifying it with a standardized single-sentence reasoning step that quotes the evidence. Reinforcing these patterns will reduce synonym substitution, paraphrasing errors, and inconsistent reasoning formats.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+        "content": "- **Mandatory Single-Sentence Verification**: Always precede the final answer with exactly one sentence of reasoning. Use a fixed structure: 'The context explicitly states/identifies [Exact Quote or Close Paraphrase], directly satisfying the question's constraint about [Clue Pointer].' This enforces grounding, eliminates filler, and strictly prevents reliance on external knowledge."
+      },
+      {
+        "op": "replace",
+        "target": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like \"this settlement\" or \"his discovery\". Scan the context to find the specific entity that satisfies the description. Prioritize explicit matches over assumptions.",
+        "content": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like \"this settlement\", \"this holiday\", or \"this trade name\". Treat these as direct placeholders. Scan the context to find the specific named entity that satisfies the description. Prioritize extracting the exact contextual span over substituting synonyms or rephrasing."
+      },
+      {
+        "op": "replace",
+        "target": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs.",
+        "content": "- **Title-First & Exact Span Extraction**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer verbatim in titles or co-occur within the first sentence. Extract the exact phrase from these high-signal zones rather than paraphrasing or inferring from deeper text."
+      },
+      {
+        "op": "replace",
+        "target": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span.",
+        "content": "- **Constraint-Answer Alignment**: In the reasoning step, explicitly map each key constraint from the question to the corresponding part of the extracted evidence. Ensure the found span simultaneously satisfies all descriptors (e.g., date, role, location, action) without adding extraneous information."
+      }
+    ]
+  },
+  "source_type": "success"
+}

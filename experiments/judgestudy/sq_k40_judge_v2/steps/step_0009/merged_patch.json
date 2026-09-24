@@ -1,0 +1,54 @@
+{
+  "reasoning": "Applied failure-driven patches with highest priority per guidelines. Replaced 'Exact Term Preference' with the comprehensive failure-driven 'Exact Term & Variant Alignment' rule. Added success-driven 'Acronym & Abbreviation Expansion' and 'Shared Attribute Inference' immediately following it. Retained failure-driven 'Clue & Fragment Parsing' and success-driven 'Primary Subject Isolation' as sequential inserts after 'Reference Resolution'. Applied success-driven 'Definitive Filter Bridging' after 'Keyword & Clue Anchoring'. Replaced 'Trivia/Fragment Handling' with success-driven 'Jeopardy & Cloze Subject Mapping' as it addresses a distinct cloze/predicate-mapping pattern not overridden by failure edits. Updated workflow step 3 with success-driven brevity instruction. All edits preserve support counts and source types. Overlapping patterns were resolved by prioritizing failure versions where direct conflicts occurred, while preserving distinct success insights.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "- **Exact Term & Variant Alignment**: When multiple variants of an entity exist in the context (e.g., full vs. short names, formal vs. nicknames, expanded vs. abbreviated), strictly default to the shortest, most direct identifier that matches the question's implied length. For company, organization, or location names, strip generic descriptive suffixes (e.g., 'Cards', 'Inc.', 'Company', 'Group', 'Foundation', 'Mountains', 'of Venus') unless explicitly required by the question or integral to the official short name. Strip non-essential middle names, initials, and geographic/event suffixes. Prefer the most commonly used or context-primary variant over obscure alternatives.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "\n- **Acronym & Abbreviation Expansion**: When the prompt uses an acronym or initialism (e.g., \"PIP\"), expand it to its full contextual name unless the passage exclusively uses the abbreviation. Match the exact phrasing found in the text.\n- **Shared Attribute Inference**: For prompts listing multiple entities or names, identify the common category, location, or attribute they share in the context rather than answering for a single item.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "\n- **Clue & Fragment Parsing**: For Jeopardy-style clues, name pairs, or declarative statements, isolate the single core entity, location, or concept being queried. Do not infer relationships, repeat parts of the question, or output descriptive phrases. Anchor strictly to the definitive factual noun or proper name.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "\n- **Primary Subject Isolation**: When contexts mention multiple related entities or tangential examples, isolate the single entity that directly satisfies the question's core descriptor. Discard loosely matching items, historical anecdotes, or secondary mentions to prevent over-specification.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+      "content": "\n- **Definitive Filter Bridging**: When the question contains highly specific proper nouns, dates, or unique phrases, treat them as exact filters. Immediately isolate the document or passage containing these markers to pinpoint the target entity, bypassing tangential or loosely matching texts.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "- **Jeopardy & Cloze Subject Mapping**: Treat declarative fragments, \"This [noun]...\" prompts, and definition-seeking clues as direct fill-in-the-blank requests. Map descriptive predicates or attributes directly to the exact head noun or core entity in the context, strictly avoiding answers that are merely properties, genres, or secondary examples.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Perform a rapid, single-sentence verification linking the question's core descriptor to the extracted entity, confirming exact textual alignment and grammatical slot satisfaction. Skip extended analysis for straightforward matches to maintain speed.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

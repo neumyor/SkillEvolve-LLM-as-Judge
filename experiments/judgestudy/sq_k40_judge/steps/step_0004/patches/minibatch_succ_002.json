@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative and fragmented clues are processed as direct fill-in-the-blank slots, mapping implicit subjects/demonstratives straight to the target entity.",
+    "Multiple independent constraints (dates, roles, events) are intersected to isolate a single context match, actively filtering out semantically adjacent but categorically incorrect entities.",
+    "Final answers strictly adhere to minimal canonical forms, matching the exact grammatical number (singular/plural) and categorical slot requested, with zero contextual leakage."
+  ],
+  "patch": {
+    "reasoning": "Across all 8 successful trajectories, agents consistently resolved declarative trivia clues by intersecting multiple constraints (temporal markers, roles, events) to pinpoint a single entity. They also enforced strict syntactic and categorical alignment (correct singular/plural, person vs. location), directly addressing prior failures where agents returned semantically related but syntactically mismatched entities. Encoding these patterns will improve precision in constraint-heavy trivia tasks.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Constraint Synthesis**: When a clue provides multiple independent attributes (e.g., date, role, location, party, quantity), intersect these constraints to isolate the single matching entity. Discard candidates that satisfy only a subset of conditions.",
+        "content": "\n- **Syntactic & Categorical Slot Verification**: Before finalizing, verify that the extracted entity matches the exact grammatical and categorical slot requested by the clue (e.g., person vs. place, singular vs. plural, number vs. phrase). Discard candidates that satisfy the general topic but fail the syntactic category or number agreement."
+      },
+      {
+        "op": "replace",
+        "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+        "content": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors. Prioritize the shortest valid canonical form that satisfies all constraints, avoiding unnecessary expansions."
+      },
+      {
+        "op": "replace",
+        "target": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts (e.g., scraped lists, flashcard dumps), ignore duplicated passages and isolate the single mention that directly defines or completes the query.",
+        "content": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts, cross-reference every constraint from the clue against candidate passages. Ignore duplicated entries and discard any entity that matches only some attributes or belongs to a different category."
+      }
+    ]
+  },
+  "source_type": "success"
+}

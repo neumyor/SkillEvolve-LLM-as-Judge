@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Mandatory single-sentence reasoning that explicitly maps question constraints to contextual evidence",
+    "Active filtering of narrative wrappers and irrelevant documents to isolate core identifying constraints",
+    "Prioritizing multi-passage convergence as a high-confidence validation signal",
+    "Treating declarative trivia questions strictly as fill-in-the-blank identification tasks"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories followed a highly consistent reasoning structure: a single-sentence verification that explicitly links the extracted span to the question's constraints, while actively ignoring narrative framing and cross-referencing multiple documents for convergence. Encoding these patterns will standardize the agent's constraint-matching behavior and reduce hallucination or over-paraphrasing.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+        "content": "- **Mandatory Single-Sentence Verification**: Always precede the final answer with exactly one sentence of reasoning. Structure it as: 'The context confirms [Evidence], directly satisfying the question's constraint about [Clue].' This forces strict alignment between query requirements and extracted spans."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "\n- **Constraint Verification & Noise Filtering**: Before extracting, verify that the candidate span satisfies every distinct constraint in the question (e.g., dates, locations, descriptors). Actively ignore narrative wrappers, introductory phrases, and irrelevant surrounding documents that do not contribute to constraint satisfaction."
+      },
+      {
+        "op": "replace",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "- **Multi-Passage Convergence**: When multiple documents address the same clue, prioritize the answer that appears consistently across passages. Convergence serves as a high-confidence signal; divergent or isolated mentions should be treated with caution unless explicitly supported by titles or authoritative sources."
+      },
+      {
+        "op": "replace",
+        "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+        "content": "- **Jeopardy-Style Clue Parsing**: Questions frequently appear as declarative statements or incomplete sentences. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints**. Treat the question strictly as a fill-in-the-blank identification task. Ignore narrative framing or historical context wrappers, focusing solely on the core identifying constraint to locate the exact match."
+      }
+    ]
+  },
+  "source_type": "success"
+}

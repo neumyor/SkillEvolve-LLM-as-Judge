@@ -1,0 +1,26 @@
+{
+  "batch_size": 3,
+  "failure_summary": [
+    {
+      "failure_type": "rule_wrong",
+      "count": 2,
+      "description": "Overly aggressive name-stripping rules cause mismatches when gold answers require full names or retain titles."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Lack of guidance to distinguish between defined categories/terms and specific examples mentioned in the context."
+    }
+  ],
+  "patch": {
+    "reasoning": "The current 'Answer Precision' rule forces arbitrary stripping of names and titles, causing failures when gold answers retain them (Trajectories 2 & 3). Additionally, the agent incorrectly selects specific examples over the intended general term when answering definitional clues (Trajectory 1). The proposed edit replaces the rigid stripping instructions with an 'Exact String Priority' approach that preserves titles and full names unless explicitly restricted, and adds a clear directive to prioritize core terms over contextual examples for definitions.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.",
+        "content": "## Answer Precision and Conciseness\n- **Exact String Priority**: Extract the exact phrase used in the context that directly satisfies the query. Do not modify names (add/remove titles, middle initials, or suffixes) unless the question explicitly instructs otherwise.\n- **Names & Titles**: Retain honorifics and titles (e.g., \"Sir\", \"Dr.\") if they appear in the primary supporting sentence. If the question explicitly asks for a surname or first name, provide only that component.\n- **Category vs. Example**: When a question provides a definition, function, or description, identify the core term or category being described. Avoid selecting specific examples, brands, or instances mentioned in the text unless the question explicitly asks for one.\n- Strip unnecessary articles or filler words, but preserve the core identifier exactly as it appears in the context."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

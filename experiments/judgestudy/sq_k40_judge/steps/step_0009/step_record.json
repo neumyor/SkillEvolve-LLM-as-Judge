@@ -1,0 +1,100 @@
+{
+  "step": 9,
+  "epoch": 1,
+  "step_in_epoch": 8,
+  "timing": {
+    "rollout_s": 23.4,
+    "reflect_s": 40.0,
+    "aggregate_s": 105.8,
+    "select_s": 38.2,
+    "update_s": 0.0,
+    "evaluate_s": 22.7
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 167081,
+      "completion_tokens": 25699
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 10367,
+      "completion_tokens": 3126
+    },
+    "merge": {
+      "calls": 3,
+      "prompt_tokens": 12473,
+      "completion_tokens": 17097
+    },
+    "ranking": {
+      "calls": 1,
+      "prompt_tokens": 4119,
+      "completion_tokens": 5151
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 131634,
+      "completion_tokens": 26833
+    }
+  },
+  "rollout_hard": 0.75,
+  "rollout_soft": 0.848333,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1051,
+      "n_envs": 40,
+      "hard": 0.75,
+      "soft": 0.8483333333333333,
+      "n_failure_patches": 2,
+      "n_success_patches": 4
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 2,
+  "n_success_patches": 4,
+  "n_edits_merged": 10,
+  "n_edits_ranked": 4,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    8,
+    8,
+    10,
+    8
+  ],
+  "candidate_hash": "178af524af18d81c",
+  "candidate_skill_len": 12369,
+  "edit_apply_summary": {
+    "total": 4,
+    "applied": 4,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_verdict": "ACCEPT",
+  "judge_confidence": "high",
+  "judge_reason": "The candidate introduces generalized directives to strip redundant category nouns, middle names, and meta-textual filler, which directly resolve the systematic over-verbosity and descriptive augmentation failures seen in the evidence (e.g., 'Hallmark Cards', 'Denver Mint', 'Charles Julius Guiteau'). It also adds a direct extraction priority rule to curb over-derivation, addressing the 'Transit of Venus' mismatch, making it strictly better without risking regression on successful tasks.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 547,
+  "judge_usage": {
+    "prompt_tokens": 10367,
+    "completion_tokens": 3126,
+    "total_tokens": 13493
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "candidate_gate_score": 0.72,
+  "action": "accept_new_best",
+  "current_score": 0.72,
+  "best_score": 0.72,
+  "best_step": 9,
+  "current_origin": "step_0009",
+  "best_origin": "step_0009",
+  "skill_len": 12369,
+  "wall_time_s": 230.2
+}

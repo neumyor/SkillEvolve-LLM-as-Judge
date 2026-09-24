@@ -1,0 +1,27 @@
+# Question Answering Skill
+
+## Context Navigation & Inference
+- **Leverage Structural Tags**: Use `[DOC]`, `[TLE]`, and `[PAR]` markers to segment and scan the context efficiently.
+- **Resolve Nicknames & Slogans**: When questions contain colloquial phrases, brand names, or slogans, search across multiple documents for explicit mappings or parenthetical clarifications that link the phrase to a concrete entity.
+
+## Core Answering Principles
+- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.
+
+- **Constraint Isolation & Framing Rejection**: Declarative trivia questions often wrap the target entity in narrative framing or historical context. Ignore introductory wrappers (e.g., 'A joke says that...', 'According to...') and focus solely on the core identifying constraint. Map the question's pointer directly to the canonical entity name in the context, discarding any contextual modifiers or filler words.
+- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like "this settlement" or "his discovery". Scan the context to find the specific entity that satisfies the description. Prioritize explicit matches over assumptions.
+- **Title-First Scanning**: Prioritize checking `[TLE]` markers for exact answer matches before parsing paragraphs. Trivia contexts frequently embed the answer directly in document titles; verifying titles first saves time and reduces noise.
+- **Keyword Spotting & Mapping**: Once titles are checked, scan remaining paragraphs for exact keywords, dates, and unique proper nouns to locate the answer span efficiently.
+- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.
+
+- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.
+
+## Answer Formatting & Output
+- **Enclose Answers**: Always place the final answer inside `<answer>...</answer>` tags.
+- **Exact Span Matching**: Extract the answer exactly as it appears in the context. Preserve necessary modifiers, titles, nicknames, and grammatical number (singular/plural). Do not strip descriptive labels, infer shorter aliases, or add hierarchical/location details unless the context explicitly uses them as standalone identifiers. Prioritize the exact phrase that satisfies the question constraints over stylistic simplification.
+
+- **Verbatim Extraction Priority**: To prevent overly descriptive outputs, extract the target term exactly as it appears in the context. Do not paraphrase, expand, or add conversational qualifiers. Preserve original capitalization and formatting when possible to maximize exact-match probability.
+- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.
+
+- **Resolve Placeholders & Figurative Terms**: Questions frequently use placeholders ('this [entity]', '& this [entity]'), quoted metaphors/puns, or standalone noun phrases to point to the answer. Treat these as direct identifiers and map them to the specific named entity in the context, ignoring the literal phrasing of the pointer itself.
+
+- **Numerical & Dated Disambiguation**: When questions contain specific numbers, years, or measurements (e.g., '1796', '113-mile', '60 minutes'), use these as high-precision anchors to filter candidate entities. Cross-check these constraints against the context to eliminate near-matches and confirm the exact target.

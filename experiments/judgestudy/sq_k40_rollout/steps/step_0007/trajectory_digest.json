@@ -1,0 +1,47 @@
+{
+  "step": 7,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 9,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Model over-specifies answers by extracting longer spans, full formal names, or descriptive suffixes instead of canonical short names.",
+      "count": 9,
+      "task_ids": [
+        "7e9cc91827e049e89624d8004cb786dd",
+        "82823aae4a844d19ac0a56464dfe28c0",
+        "3cf34a52916f4ff9a975008fe9d771d2",
+        "3c93b5a9314a453c98d709447a0d9272",
+        "f15f9a3314b644fb97db3cccdca78563",
+        "bb9262401a7d4fddb761e356ac024c4c",
+        "1f6f687c79a642328a742e61154c9d90",
+        "0b550017552f4b8ea569fba16a6516ed",
+        "af7efd5e34a443a79b86b8e86373c577"
+      ]
+    }
+  ],
+  "score_before": 0.795,
+  "score_after": 0.795,
+  "rejected_edits": [
+    {
+      "op": "append",
+      "content": "\n- **Noise Filtering via Cross-Doc Repetition**: Search contexts often contain noisy, fragmented, or boilerplate snippets. Prioritize candidate answers that are explicitly repeated or corroborated across multiple independent `[DOC]` blocks. Disregard isolated mentions or metadata-heavy titles that lack semantic confirmation in the paragraph text.",
+      "target": ""
+    },
+    {
+      "op": "replace",
+      "content": "- **Mandatory Explicit Grounding**: Always precede the final answer with a single-sentence reasoning step that explicitly quotes or closely paraphrases the exact context span containing the answer. Do not rely on external knowledge or implicit assumptions; the evidence must be directly visible in the provided text.",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n- **Definition & Equivalence Resolution**: When clues function as definitions, synonyms, or colloquial labels (e.g., 'A short, witty saying', 'Americans refer to Emmentaler as this'), scan for explicit dictionary-style definitions, glossary entries, or 'X is known as/called Y' structures. Map the clue's descriptive phrase directly to the canonical term defined in the text.",
+      "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer."
+    },
+    {
+      "op": "replace",
+      "content": "- **Canonical Short-Name Priority**: Always extract the shortest, most recognizable identifier for the entity. Aggressively strip descriptive suffixes, generic qualifiers, and full formal names (e.g., output 'Sirius' not 'Sirius Satellite Radio', 'Roanoke' not 'Roanoke Island', 'George Bush' not 'George H. W. Bush'). If the clue points to a common name or brand, use that exact short form. Never output definitions, descriptions, or multi-word explanatory phrases.\n- **Morphological & Plurality Alignment**: Match the grammatical number and word form (noun vs. adjective vs. verb) of the expected answer. If the context uses a different form (e.g., singular vs. plural, base verb vs. gerund), normalize to the standard dictionary form or the form implied by the clue's syntax. Prioritize the head term over compound phrases.",
+      "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").\n\n- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints."
+    }
+  ]
+}

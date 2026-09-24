@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Placeholder resolution for demonstrative nouns (e.g., 'this instrument', 'this state')",
+    "Standardized single-sentence reasoning template linking evidence to constraints",
+    "Verbatim extraction priority for direct factual claims over paraphrasing"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories consistently treat 'this/these + [category]' phrases as direct placeholders rather than vague references, use a fixed single-sentence reasoning structure to ground the answer, and extract exact context spans without paraphrasing when the text provides a direct factual match. These patterns are not fully captured by the current skill's existing bullet points.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like \"this settlement\" or \"his discovery\". Scan the context to find the specific entity that satisfies the description. Prioritize explicit matches over assumptions.",
+        "content": "- **Demonstrative & Placeholder Resolution**: Questions frequently use \"this/these + [category/noun]\" (e.g., 'this instrument', 'this state', 'this group') or possessive references ('his discovery', 'its mother') as direct placeholders. Treat these phrases as explicit pointers to the target entity. Scan the context to locate the specific named entity that fulfills the placeholder's category, prioritizing exact matches over inferred synonyms."
+      },
+      {
+        "op": "replace",
+        "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+        "content": "- **Standardized Reasoning Format**: Always precede the final answer with exactly one sentence using a fixed structure: 'The context explicitly states/references/identifies [Evidence], directly satisfying the question's constraint about [Clue].' Quote or closely paraphrase the exact context span containing the answer. This enforces grounding, eliminates filler, and aligns with expected output formats."
+      },
+      {
+        "op": "replace",
+        "target": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+        "content": "- **Granularity-First & Verbatim Extraction**: For direct factual claims, extract the exact context span as-is, preserving capitalization, plurality, and necessary modifiers. Only strip or normalize terms when the clue explicitly targets a base category, generic class, or implies a different grammatical form. Avoid paraphrasing, synonym substitution, or adding external knowledge; prioritize returning the precise identifier found in the text."
+      }
+    ]
+  },
+  "source_type": "success"
+}

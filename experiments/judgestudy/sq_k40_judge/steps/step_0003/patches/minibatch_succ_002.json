@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating demonstratives ('this man', 'this plant') as primary query anchors for rapid entity mapping.",
+    "Intersecting multiple independent clues (date, role, location, party) to isolate a single entity from noisy contexts.",
+    "Strictly matching singular/plural forms and grammatical case to align with the expected answer granularity."
+  ],
+  "patch": {
+    "reasoning": "Across all 8 successful trajectories, agents consistently resolve demonstrative references ('this [noun]') as the core query anchor, synthesize multiple independent constraints to filter candidates in noisy search-result contexts, and maintain strict singular/plural alignment with the gold answer. These patterns directly address the pluralization and over-descriptive failures from previous steps, and should be explicitly encoded to prevent regression.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Implicit Reference Resolution**: Map demonstratives like \"this [noun]\" directly to the concrete entity described in the context.",
+        "content": "- **Implicit Reference Resolution**: Treat demonstratives and anaphors (\"this man\", \"this plant\", \"this film\", \"it\") as the primary query anchors. Map them directly to the concrete entity described in the context, ignoring intervening descriptive clauses."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+        "content": "\n- **Multi-Constraint Synthesis**: When a clue provides multiple independent attributes (e.g., date, role, location, party, quantity), intersect these constraints to isolate the single matching entity. Discard candidates that satisfy only a subset of conditions."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Minimal Reasoning**: Skip verbose derivations for straightforward retrieval tasks. If step-by-step reasoning is performed, place it outside the answer tags and keep it brief.",
+        "content": "\n- **Number & Grammatical Alignment**: Strictly match the singular/plural form and grammatical case of the expected answer. If the clue implies a singular entity or the gold answer is singular, output the singular form. Do not default to plural or add inflectional suffixes unless explicitly required by the slot."
+      }
+    ]
+  },
+  "source_type": "success"
+}

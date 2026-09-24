@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Lateral & Shared-Term Clue Resolution: Treating compound or 'A or B' Jeopardy clues as converging on a single polysemous anchor or shared concept.",
+    "Strict Demonstrative-to-Entity Mapping: Resolving placeholders like 'this state' or 'this group' directly to the specific proper noun that satisfies all co-occurring constraints, avoiding generic category labels.",
+    "High-Priority Title/Snippet Anchoring: Prioritizing exact or near-exact string matches in document titles and opening sentences to rapidly locate trivia answers before deep reading."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently resolve lateral Jeopardy clues (e.g., 'mouth of the Mississippi or a Helen Reddy Dawn') by identifying shared polysemous anchors, and strictly map demonstrative placeholders ('this state') to specific proper nouns. These patterns are not fully covered in the current skill and explain the batch's perfect success rate.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Multi-Clause Description Mapping**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously.",
+        "content": "- **Multi-Clause & Lateral Clue Resolution**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. For compound clues (e.g., \"A or B\", comma-separated phrases), identify the shared term, polysemous anchor, or lateral connection that bridges the disparate parts. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures. The correct answer must satisfy every constraint simultaneously."
+      },
+      {
+        "op": "insert_after",
+        "target": "Many questions are phrased as statements or incomplete phrases (common in trivia/Jeopardy). Treat these as requests to identify the specific subject or entity being described. Do not respond with \"True\"/\"False\", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+        "content": "\n- **Demonstrative Placeholder Resolution**: When clues use demonstratives like \"this state,\" \"this nation,\" or \"this sport,\" immediately cross-reference them with explicit constraints (dates, locations, roles) to resolve the precise proper noun. Never output the category label itself; always extract the specific entity filling the blank."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Recognize trivia and clue-style questions as direct requests for specific entities or titles.",
+    "Prioritize exact entity extraction over verbose explanations when answering factual queries.",
+    "Leverage structured context markers ([DOC], [TLE], [PAR]) to rapidly scan for keywords.",
+    "Maintain strict conciseness in the final answer, wrapping only the core entity in <answer> tags."
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories successfully answered trivia/factual questions by directly extracting concise entities from structured context. Several questions were phrased as incomplete clues or Jeopardy-style prompts. Encoding these patterns will improve robustness for similar trivia and reading comprehension tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Trivial & Clue Recognition**: Treat incomplete sentences, trivia prompts, and Jeopardy-style clues as direct requests for the missing entity, title, or concept.\n- **Exact Entity Extraction**: Prioritize finding the precise noun phrase or proper noun requested. Avoid adding conversational filler or full sentences to the final answer.\n- **Structured Context Scanning**: Quickly parse `[DOC]`, `[TLE]`, and `[PAR]` blocks. Match question keywords against document titles first, then scan paragraphs for confirming details.\n- **Concise Formatting**: Always wrap the final extracted entity in `<answer>...</answer>` tags. Keep internal reasoning minimal or omit it if the answer is immediately obvious from the context.\n\n## Answer Strategy\n1. Identify the target type (person, place, title, concept) from the question.\n2. Scan context titles and key terms to locate the relevant passage.\n3. Verify the match against the question's constraints (dates, names, descriptors).\n4. Output the exact entity inside `<answer>...</answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

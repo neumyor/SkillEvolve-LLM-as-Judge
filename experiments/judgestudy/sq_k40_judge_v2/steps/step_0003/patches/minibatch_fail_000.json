@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 8,
+      "description": "Agents consistently misalign the answer's entity type, grammatical form (singular/plural), or phrase completeness with the question's explicit request, often providing verbose descriptions, truncated terms, synonyms, or the wrong entity class."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates a systematic failure in extraction precision: agents frequently answer with the wrong entity type (e.g., university instead of territory), truncate compound terms, mismatch singular/plural forms, or provide overly verbose/synonymous outputs. A consolidated rule enforcing Entity Type & Form Alignment directly addresses these gaps by mandating strict grammatical matching, complete phrase retention, and category fidelity before output.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Entity Type & Form Alignment**: Parse the question to identify the exact entity type requested (e.g., territory, sport, species). Answer strictly with that entity, avoiding tangential details or related institutions. Strictly preserve the exact grammatical form (singular/plural), retain all necessary modifiers, and output the complete compound term (e.g., 'Brown pelican', 'the South Sea Bubble') as it appears in the context. Do not truncate, expand, or substitute with synonyms."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

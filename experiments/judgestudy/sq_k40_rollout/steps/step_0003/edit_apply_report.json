@@ -1,0 +1,30 @@
+[
+  {
+    "op": "replace",
+    "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full name",
+    "content_preview": "- **Exact Span Matching**: Extract the answer exactly as it appears in the context. Preserve necessary modifiers, titles, nicknames, and grammatical number (singular/plural). Do not strip descriptive ",
+    "status": "applied_replace",
+    "index": 1
+  },
+  {
+    "op": "insert_after",
+    "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descripti",
+    "content_preview": "- **Constraint Isolation & Framing Rejection**: Declarative trivia questions often wrap the target entity in narrative framing or historical context. Ignore introductory wrappers (e.g., 'A joke says t",
+    "status": "applied_insert_after",
+    "index": 2
+  },
+  {
+    "op": "append",
+    "target": "",
+    "content_preview": "- **Numerical & Dated Disambiguation**: When questions contain specific numbers, years, or measurements (e.g., '1796', '113-mile', '60 minutes'), use these as high-precision anchors to filter candidat",
+    "status": "applied_append",
+    "index": 3
+  },
+  {
+    "op": "replace",
+    "target": "- **Keyword Spotting & Mapping**: Quickly scan document titles and paragraphs for exact keywords, dates, and unique proper nouns from the question to locate the answer span efficiently.",
+    "content_preview": "- **Title-First Scanning**: Prioritize checking `[TLE]` markers for exact answer matches before parsing paragraphs. Trivia contexts frequently embed the answer directly in document titles; verifying t",
+    "status": "applied_replace",
+    "index": 4
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Semantic Descriptor Mapping: Agents consistently map descriptive phrases and paraphrased clues (e.g., 'sickle-shaped weapon', 'lonely old woodcarver') directly to the exact entity names in the context.",
+    "Snippet & Title Leverage: Agents rapidly extract answers by prioritizing document titles (`[TLE]`) and opening snippets, which frequently contain direct definitions or exact matches.",
+    "Direct Entity Isolation: Agents output only the core entity or short phrase requested, strictly avoiding conversational framing, explanations, or over-specified modifiers inside the answer tags."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate two key strategies: leveraging titles/snippets for rapid extraction and mapping semantic descriptors/paraphrases to exact terms. Reinforcing these in the analytical and workflow sections will improve speed and accuracy for trivia and Jeopardy-style queries without adding verbosity.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Map descriptive phrases and semantic paraphrases directly to the exact terminology in the `[DOC]` passages before extraction."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, scan document titles (`[TLE]`) and opening snippets first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full paragraphs."
+      },
+      {
+        "op": "replace",
+        "target": "2. Search the context for those identifiers or their immediate synonyms. Ignore irrelevant tangential documents.",
+        "content": "2. Prioritize scanning document titles (`[TLE]`) and opening snippets for direct matches or paraphrases. Then search the body for identifiers or synonyms, ignoring tangential details."
+      }
+    ]
+  },
+  "source_type": "success"
+}

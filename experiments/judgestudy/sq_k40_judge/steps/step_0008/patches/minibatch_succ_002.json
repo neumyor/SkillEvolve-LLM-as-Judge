@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "List-to-Container Inference: Treating comma-separated enumerations of related entities as implicit requests for their overarching series, work, or category.",
+    "Pun & Riddle Decoding: Mapping playful language, metaphors, and wordplay in clues to their literal factual referents before extraction."
+  ],
+  "patch": {
+    "reasoning": "The batch shows consistent success in handling non-standard Jeopardy-style formats (comma-separated lists, puns/riddles) while maintaining strict minimal output. These specific decoding strategies are not explicitly covered in the current skill and should be encoded to prevent agents from returning raw lists, failing to decode figurative clues, or over-explaining.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.",
+        "content": "\n- **List-to-Container Inference**: When a prompt presents a comma-separated list or enumeration of related entities (e.g., characters, locations, works), treat it as a request for the overarching container, series, or category. Infer the parent entity rather than returning the list or individual items.\n- **Pun & Riddle Decoding**: Treat playful language, puns, metaphors, or wordplay in clues as semantic descriptors. Map them to their literal factual referents using context verification before extraction. Strip all figurative phrasing from the final answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

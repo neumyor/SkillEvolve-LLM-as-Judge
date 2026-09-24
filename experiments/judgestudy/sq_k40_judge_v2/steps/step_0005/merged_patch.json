@@ -1,0 +1,40 @@
+{
+  "reasoning": "Failure-driven patches take strict priority. Their additions to the Answer Extraction Rules section are preserved verbatim. The success-driven patch targeting 'Trivia/Fragment Handling' was omitted due to direct conceptual overlap with the failure-driven 'Subject Over Attribute Mapping' rule, per deduplication guidelines. All other success-driven patches (Snippet & Title Leverage, Constraint-Driven Filtering, and Workflow Step 3 optimization) were retained as they address distinct operational areas without conflict. Support counts and source types are carried forward from the original patches.",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+      "content": "\n- **Snippet & Title Leverage**: For trivia and factual queries, prioritize scanning document titles (`[TLE]`) and opening snippets first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Multi-Document Cross-Verification**: If multiple passages address the question, scan all relevant documents to confirm facts and resolve ambiguities. Prefer the most direct or consistently stated match.",
+      "content": "\n- **Constraint-Driven Filtering**: When contexts contain mixed snippets, tangential details, or multiple candidate entities, explicitly ignore loosely matching items. Anchor strictly to the entity that satisfies the most restrictive clues (e.g., exact dates, unique actions) simultaneously.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "\n- **Alias & Nickname Precision**: When questions request a nickname, moniker, or alias, extract exactly that term. Do not append the subject's actual name or surname unless it is intrinsically part of the alias itself.\n- **Full Entity Priority for Blanks**: For questions containing blanks or partial names (e.g., \"___ & Wagnalls\"), return the complete canonical entity name found in the context, rather than just filling the blank, unless the question explicitly limits the response to a single word or fragment.",
+      "support_count": 2,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Zero Reasoning in Tags**: Perform all analysis and step-by-step thinking before the `<answer>` tag. The content inside the tags must be the final answer only.",
+      "content": "\n- **Subject Over Attribute Mapping**: For Jeopardy-style fragments or cloze blanks, identify the core subject entity being described, not its attributes, genres, titles, or mediums. If the clue describes a property (e.g., \"made of rubber\", \"based on a play\"), extract the primary noun/category (e.g., \"bubble gum\", \"Romeo and Juliet\") rather than descriptive adjectives or related concepts.\n- **Entity Form & Name Fidelity**: Match the exact grammatical form and length of the expected entity. Avoid truncating essential modifiers or compound terms (e.g., keep \"Forbes magazine\" if that is the standard reference). Do not over-expand to verbose formal names unless explicitly required. Anchor to the shortest, most direct entity name that uniquely satisfies the query.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Provide a concise, single-sentence verification trace linking the question's core descriptors to the extracted entity. Skip extended analysis or multi-step breakdowns for straightforward trivia matches to maintain speed and conciseness.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

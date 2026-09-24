@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Multi-Anchor Conjunction Filtering",
+    "Snippet/Title Density Heuristic"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories demonstrate that trivia clues function as logical AND filters composed of multiple named entities or facts. Agents succeed by intersecting these anchors rather than relying on a single keyword. Additionally, answers are consistently located in the highest-density regions of the title or opening snippet, reflecting the summary nature of trivia source material. Encoding these heuristics will prevent over-reliance on semantic reasoning and improve retrieval speed/accuracy.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity.",
+        "content": "Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat clusters of proper nouns or facts in the clue as a logical AND filter; prioritize candidates that satisfy the maximum number of these anchors."
+      },
+      {
+        "op": "insert_after",
+        "target": "Direct Keyword Matching & Scanning",
+        "content": "- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs."
+      }
+    ]
+  },
+  "source_type": "success"
+}

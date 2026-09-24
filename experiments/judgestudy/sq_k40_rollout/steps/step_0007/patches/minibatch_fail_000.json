@@ -1,0 +1,36 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Model over-specifies answers by extracting longer spans, full formal names, or descriptive suffixes instead of canonical short names."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Model outputs descriptive phrases or definitions instead of the target entity."
+    },
+    {
+      "failure_type": "other",
+      "count": 1,
+      "description": "Model selects a secondary entity due to keyword overlap, missing the primary pointer constraint."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch shows a consistent failure where the agent extracts overly long, formally named, or descriptively modified spans from the context, ignoring the expectation for canonical short names. Additionally, the agent struggles with morphological alignment (plurality/word form) and occasionally misinterprets demonstrative pointers ('this site') by targeting secondary objects. These edits consolidate the conciseness and granularity rules into a strict 'Canonical Short-Name Priority' directive with explicit examples, add morphological normalization guidance, and introduce a primary entity disambiguation rule to prevent pointer confusion.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").\n\n- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+        "content": "- **Canonical Short-Name Priority**: Always extract the shortest, most recognizable identifier for the entity. Aggressively strip descriptive suffixes, generic qualifiers, and full formal names (e.g., output 'Sirius' not 'Sirius Satellite Radio', 'Roanoke' not 'Roanoke Island', 'George Bush' not 'George H. W. Bush'). If the clue points to a common name or brand, use that exact short form. Never output definitions, descriptions, or multi-word explanatory phrases.\n- **Morphological & Plurality Alignment**: Match the grammatical number and word form (noun vs. adjective vs. verb) of the expected answer. If the context uses a different form (e.g., singular vs. plural, base verb vs. gerund), normalize to the standard dictionary form or the form implied by the clue's syntax. Prioritize the head term over compound phrases."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs.",
+        "content": "\n- **Primary Entity Disambiguation**: When clues use demonstratives like 'this site', 'this place', or 'this person', always target the primary subject or overarching entity, not secondary objects, buildings, or associated items mentioned nearby. Verify the semantic role of the candidate against the clue's pointer before finalizing."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

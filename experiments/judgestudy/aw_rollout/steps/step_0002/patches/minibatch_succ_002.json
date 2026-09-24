@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Verifying inventory state when uncertain or stuck",
+    "Opening closed receptacles before placing items inside",
+    "Using admissible actions as ground truth for object names and locations",
+    "Distinguishing between storage containers (need opening) and appliances (auto-handle interaction)"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals four recurring success behaviors not fully captured in the current skill: (1) Agents frequently call `inventory` to verify their state when unsure what they are holding or if a task step was completed. (2) Successful placement into closed containers (e.g., fridge in Traj 6) requires explicitly opening them first, which contradicts the vague 'direct delivery' rule. (3) Agents heavily rely on the admissible action list to resolve naming ambiguities (e.g., 'pot' vs 'pan') and locate objects when visual observations are cluttered. (4) There is a critical distinction between storage containers (which must be opened to access/place) and transformation appliances (which handle interactions automatically without prior opening). Encoding these patterns reduces wasted steps and prevents common placement/exploration failures.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Systematic exploration: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "**Systematic exploration**: Cycle through likely locations (drawers, cabinets, shelves, tables) sequentially. Always open closed containers to inspect contents before marking them as empty. If uncertain about your current state or what you're holding, call `inventory` to verify."
+      },
+      {
+        "op": "replace",
+        "target": "Direct delivery: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.",
+        "content": "**Direct delivery**: Navigate to the target receptacle. If the receptacle is closed, open it first. Then place the object inside/on it. Never attempt to place items into closed containers."
+      },
+      {
+        "op": "replace",
+        "target": "Only choose admissible actions: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "**Rely on admissible actions**: Treat the admissible action list as the ground truth for object names, locations, and current state. Use it to confirm what you are holding or where an object is located, especially when visual observations are cluttered or ambiguous."
+      },
+      {
+        "op": "insert_after",
+        "target": "Transform before placing: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "**Appliance interaction**: For cleaning, heating, or cooling, you typically do not need to open the appliance (sink, microwave, fridge) beforehand; the interaction action handles it automatically. Reserve `open` commands strictly for storage containers (drawers, cabinets, fridge doors) when accessing or placing items inside."
+      }
+    ]
+  },
+  "source_type": "success"
+}

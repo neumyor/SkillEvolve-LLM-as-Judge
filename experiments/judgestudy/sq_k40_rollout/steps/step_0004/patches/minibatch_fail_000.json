@@ -1,0 +1,41 @@
+{
+  "batch_size": 4,
+  "failure_summary": [
+    {
+      "failure_type": "other",
+      "count": 1,
+      "description": "Model applies external knowledge instead of relying strictly on context (Traj 4)."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Model selects longer/formal name variants (e.g., 'Alan B. Shepard, Jr.') when shorter/canonical forms are expected (Traj 2, 3)."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Model fails to eliminate distractors that share keywords but fail full constraint verification (Traj 1)."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals three systematic issues: reliance on external knowledge over context, preference for formal/longer name variants over canonical ones, and failure to verify that a candidate satisfies all question constraints before selecting it. These edits enforce strict grounding, normalize name variants, and add a distractor-elimination step to prevent partial-match errors.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+        "content": "\n- **Strict Context Grounding**: Rely exclusively on the provided text. Never use external knowledge, real-world facts, or logical inference to fill gaps, resolve locations, or select between candidates. If the answer is not explicitly supported by the context, do not guess."
+      },
+      {
+        "op": "replace",
+        "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+        "content": "- **Canonical Name & Variant Handling**: When the context offers multiple name variants for the same entity (e.g., 'Alan B. Shepard, Jr.' vs 'Alan Shepard', 'People's Republic of China' vs 'China'), prefer the most direct, commonly used, or shortest unambiguous form. Strip unnecessary suffixes (Jr./Sr.), middle initials, or formal titles unless the question explicitly demands them. Prioritize natural-language identifiers over bureaucratic or full legal names.\n- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\")."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "\n- **Distractor Elimination & Constraint Verification**: Questions often include keywords that appear near incorrect candidates. Before finalizing an answer, verify that the selected entity satisfies *all* descriptive constraints in the question simultaneously. Discard any candidate that only partially matches, is mentioned in a different context, or contradicts a specific detail (e.g., action, date, or location)."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

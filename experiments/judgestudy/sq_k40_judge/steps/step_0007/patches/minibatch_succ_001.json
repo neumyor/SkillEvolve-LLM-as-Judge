@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Distributed fact correlation across fragmented snippets",
+    "Resolution of informal/clue descriptors to precise entities",
+    "Preservation of contextual capitalization and stylistic formatting"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate three key behaviors: correlating constraints split across multiple document snippets, mapping casual clue descriptors ('guy', 'raft') to precise canonical entities, and preserving the exact capitalization/style of the answer as presented in the context. These patterns address remaining failure modes around fragmented retrieval, informal trivia phrasing, and casing normalization.",
+    "edits": [
+      {
+        "op": "append",
+        "target": "## Core Retrieval & Reasoning Principles",
+        "content": "\n- **Distributed Fact Correlation**: When a clue's constraints are split across multiple `[DOC]` blocks, actively correlate them rather than evaluating each snippet in isolation. Use temporal, numerical, or proper-noun anchors to bridge disjointed facts and isolate the target entity."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Slot-Filling Strategy**:",
+        "content": "\n- **Informal Descriptor Resolution**: Treat casual or colloquial clue descriptors (e.g., \"this guy\", \"that raft\", \"witty saying\") as categorical placeholders. Map them directly to the precise canonical entity type requested, prioritizing factual alignment over literal interpretation of the descriptor."
+      },
+      {
+        "op": "replace",
+        "target": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses.",
+        "content": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Preserve the exact capitalization style (e.g., ALL CAPS, Title Case) found in the context or implied by the clue format. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses."
+      }
+    ]
+  },
+  "source_type": "success"
+}

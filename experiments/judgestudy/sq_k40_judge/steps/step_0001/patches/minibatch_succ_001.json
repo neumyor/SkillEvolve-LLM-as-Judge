@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct entity/term extraction for factual and Jeopardy-style queries",
+    "Leveraging context redundancy to quickly locate the definitive mention",
+    "Filtering out introductory fluff or host cues in questions",
+    "Strict adherence to concise <answer>...</answer> formatting without internal explanation"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories successfully answered factual/Jeopardy-style questions by rapidly scanning redundant context for exact keyword matches or defining phrases. Agents prioritized direct extraction over verbose reasoning, filtered out non-essential question cues, and strictly adhered to the concise answer tag format. Encoding these retrieval and formatting habits will improve speed and accuracy on similar tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "# Question Answering Skill\n\n(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Core Retrieval Strategy\n- **Direct Extraction First**: For factual, definition, or Jeopardy-style questions, scan the context for exact keyword matches or defining phrases. Prioritize extracting the precise entity, term, or name over generating explanatory text.\n- **Handle Context Redundancy**: Multiple passages often restate the same fact. Quickly identify the clearest, most direct mention and treat it as the ground truth. Ignore tangential details in overlapping documents.\n- **Filter Question Fluff**: Questions frequently contain introductory cues, parenthetical remarks, or host lines. Parse the prompt to isolate the core factual query before searching the context.\n\n## Answer Formatting Rules\n- **Strict Tag Usage**: Always wrap the final answer in `<answer>...</answer>` tags.\n- **Conciseness**: Keep the content inside the tags strictly to the requested entity or short phrase. Do not include full sentences, explanations, or conversational filler inside the tags.\n- **Minimal Reasoning**: Skip verbose derivations for straightforward retrieval tasks. If reasoning is included, place it outside the answer tags and keep it brief."
+      }
+    ]
+  },
+  "source_type": "success"
+}

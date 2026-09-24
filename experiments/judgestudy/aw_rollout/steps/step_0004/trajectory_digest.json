@@ -1,0 +1,48 @@
+{
+  "step": 4,
+  "action": "reject",
+  "n_total": 39,
+  "n_fail": 10,
+  "failure_patterns": [
+    {
+      "pattern": "navigation_loop: Agents repeatedly cycle through numbered containers (drawers, cabinets) or a fixed set of surfaces without expanding search scope.",
+      "count": 10,
+      "task_ids": [
+        "train:0029",
+        "train:0015",
+        "train:0034",
+        "train:0021",
+        "train:0013",
+        "train:0030",
+        "train:0024",
+        "train:0025",
+        "train:0026",
+        "train:0036"
+      ]
+    }
+  ],
+  "score_before": 0.8888888888888888,
+  "score_after": 0.8888888888888888,
+  "rejected_edits": [
+    {
+      "op": "append",
+      "content": "\n## Appliance & State Verification Rules\n- **Mandatory Retrieval Step**: After using a microwave, fridge, or sink for transformation, the object typically remains inside. You must explicitly `open <appliance>` and `take <object> from <appliance>` before moving to the final destination. Skipping this step causes immediate failure.\n- **Object Identity & State Check**: Verify the exact name and state of your carried object (`examine <object>` or `inventory`) before attempting placement. Mismatched names or untransformed states will block admissible actions.",
+      "target": ""
+    },
+    {
+      "op": "append",
+      "content": "\n## Systematic Exploration Guidelines\n- **Break Number-Cycling Traps**: Do not blindly iterate through numbered items (e.g., drawer 1, 2, 3...) if they yield nothing. Once a category is exhausted, pivot to entirely different furniture types (countertops, shelves, tables, dressers) or adjacent rooms.\n- **Mark & Move**: Mentally mark every opened container or examined surface as 'checked'. If you find yourself returning to a previously verified empty location, immediately abort that path and explore a new unvisited zone.",
+      "target": ""
+    },
+    {
+      "op": "append",
+      "content": "\n## Stuck-State Recovery\n- **Admissible Action Audit**: If `put`, `take`, or `open` actions are missing from your admissible list, pause and diagnose: check inventory, verify receptacle state, or confirm object compatibility. Do not guess or repeat failed moves.\n- **Forced Strategy Shift**: If three consecutive steps yield no progress or loop back to previous locations, execute `inventory` to reset context, then deliberately choose a location you have not visited in the last 5 steps.",
+      "target": ""
+    },
+    {
+      "op": "replace",
+      "content": "4. **Transform before placing**: Perform required state changes (clean/heat/cool) at the appropriate appliance before delivering. Ensure the appliance is open and ready before initiating the transformation, and close it afterward.",
+      "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination."
+    }
+  ]
+}

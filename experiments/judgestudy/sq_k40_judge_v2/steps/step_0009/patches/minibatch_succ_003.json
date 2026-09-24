@@ -1,0 +1,24 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Acronym & Abbreviation Expansion: Successfully expanding abbreviated forms (e.g., PIP) to their full contextual names when the prompt implies the complete term.",
+    "Shared Attribute Inference: Correctly identifying the common category, location, or trait linking multiple listed entities in the prompt rather than selecting one individually.",
+    "Declarative Cloze Mapping: Treating statement-style prompts and 'this [noun]' constructions as direct fill-in-the-blank requests, extracting the exact head noun or category defined in the text."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handled acronym expansion (PIP), shared-trait inference (listing multiple names), and declarative cloze prompts ('this part', 'this cheese'). These patterns address specific failure modes where agents either truncate acronyms, pick one entity from a pair, or over-analyze statement-style clues instead of treating them as direct definitions.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Acronym & Abbreviation Expansion**: When the prompt uses an acronym or initialism (e.g., \"PIP\"), expand it to its full contextual name (e.g., \"Picture in Picture\") unless the passage exclusively uses the abbreviation. Match the exact phrasing found in the text.\n- **Shared Attribute Inference**: For prompts listing multiple entities or names (e.g., \"Ferdinand VII, Juan Carlos\"), identify the common category, location, or attribute they share in the context rather than answering for a single item."
+      },
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Declarative Cloze Mapping**: Treat statement-style prompts, \"this [noun]\" constructions, and trailing blanks as direct fill-in-the-blank requests. Map the descriptive clause directly to the exact head noun or category defined in the passage, ignoring conversational framing."
+      }
+    ]
+  },
+  "source_type": "success"
+}

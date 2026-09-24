@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating questions as fill-in-the-blank clues requiring a specific entity completion",
+    "Prioritizing verbatim or near-verbatim keyword matching within provided context snippets",
+    "Extracting concise, single-entity answers without conversational filler or expansion",
+    "Strictly grounding extractions in the provided [DOC]/[PAR] blocks rather than external knowledge"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories involve trivia-style questions phrased as sentence fragments or clues. Agents succeed by mapping these clues to exact keyword matches in the context snippets, extracting concise entity names, and formatting them strictly within <answer> tags. Encoding these strategies will improve precision, reduce hallucination, and standardize output formatting.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Question Interpretation\n- **Treat as Clues/Fill-in-the-Blank**: Many questions are sentence fragments or trivia clues expecting a specific entity to complete them. Identify the missing term or name that logically finishes the statement.\n- **Ignore Conversational Framing**: Strip away introductory phrases or conversational wrappers. Focus on the core factual query.\n\n## Search & Extraction Strategy\n- **Keyword Scanning**: Extract key identifiers (names, dates, locations, quoted strings) from the question. Scan the `[DOC]`/`[PAR]` blocks for verbatim or near-verbatim matches of these identifiers.\n- **Cross-Reference Snippets**: When multiple passages mention the same clue, prioritize the one that explicitly links the clue to the target entity. Use overlapping details to confirm accuracy.\n- **Grounded Extraction**: Only extract answers directly stated or strongly implied in the context. Do not substitute similar concepts or guess.\n\n## Answer Formatting\n- **Concise Entities**: Return exactly the target word or phrase. Do not add descriptors, titles, explanations, or full sentences unless required by the question.\n- **Tagged Output**: Enclose the final answer within `<answer>...</answer>` tags. Provide step-by-step reasoning outside the tags if helpful, but keep the tagged answer minimal."
+      }
+    ]
+  },
+  "source_type": "success"
+}

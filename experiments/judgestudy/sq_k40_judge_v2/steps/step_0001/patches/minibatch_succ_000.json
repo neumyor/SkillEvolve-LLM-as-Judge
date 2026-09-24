@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Keyword anchoring for rapid context navigation",
+    "Direct mapping of trivia/Jeopardy-style clues to entities",
+    "Cross-document verification for fact confirmation",
+    "Strict extraction of concise noun phrases without filler"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories involve trivia/Jeopardy-style questions where success depends on quickly isolating distinctive keywords (dates, names, numbers, specific phrases) to locate the correct passage, mapping descriptive clues directly to an entity, and extracting a precise short phrase. Encoding these analytical shortcuts and extraction standards will significantly improve speed and accuracy for similar QA tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "# Question Answering Skill\n\n(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Analytical Strategies\n- **Keyword Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases). Use these to quickly locate the relevant document passages in the context.\n- **Clue-to-Entity Mapping**: Recognize trivia/Jeopardy-style phrasing (incomplete sentences, fill-in-the-blanks, descriptive clues). Directly map the clue's description to the target entity in the text without overcomplicating the interpretation.\n- **Context Synthesis**: When multiple documents cover the same topic, cross-reference them to verify facts and resolve ambiguities. Trust consistent mentions across sources.\n- **Precise Extraction**: Extract the exact term, name, or short phrase that answers the question. Strip conversational filler, full sentences, and redundant explanations.\n\n## Execution Checklist\n1. Read the question and highlight key identifiers.\n2. Search the context for those identifiers or their immediate synonyms.\n3. Verify the surrounding sentence confirms the relationship asked.\n4. Output only the core answer inside `<answer>...</answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

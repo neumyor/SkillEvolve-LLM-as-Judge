@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treat descriptive, fragmented, or definition-style prompts as direct queries for a specific entity, mapping clues directly to named entities in the context.",
+    "Perform minimal necessary inference (e.g., unit conversion, idiomatic completion) to bridge quantitative or phrasal clues to explicit context facts.",
+    "Extract exact terms while stripping articles, plural suffixes, and unnecessary expansions to align with gold-standard short-form answers.",
+    "Maintain strict conciseness with minimal single-sentence reasoning placed outside <answer> tags."
+  ],
+  "patch": {
+    "reasoning": "The batch consists entirely of trivia, Jeopardy-style, and definition-based questions requiring exact entity extraction. Successful agents consistently mapped descriptive clues to precise context terms, handled minor inferences (measurements, idioms), stripped articles/plurals for exact matches, and kept reasoning minimal. These patterns warrant encoding as core extraction and formatting rules.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core QA Strategy\n- **Clue-to-Context Mapping**: Treat descriptive, fragmented, or definition-style prompts as direct queries for a specific entity. Scan `[DOC]` titles and snippets for overlapping keywords or semantic matches.\n- **Direct Entity Extraction**: When a question describes a function, category, property, or role, extract the precise abstract category or functional term. Do not substitute with specific examples unless explicitly asked.\n- **Quantitative & Idiomatic Inference**: For clues involving measurements, conversions, or common phrases (e.g., \"letter to the ___\"), perform minimal necessary calculation or idiomatic completion to map directly to the context's factual statement.\n\n## Precision Extraction Rules\n- **Exact Match Priority**: Output the *exact* word or short phrase requested. Omit articles (a, an, the), plural suffixes, or unnecessary expansions unless the question explicitly demands them.\n- **Name Granularity**: Default to the surname or shortest widely recognized identifier for people. For organizations or committees, use the standard short form if it fits the query constraint.\n- **Grammatical Alignment**: Strictly match the grammatical number and form of the question. Preserve exact capitalization and hyphenation.\n\n## Formatting & Reasoning Constraints\n- **Strict Tagging**: Always wrap the final answer in `<answer>...</answer>`. Ensure the content inside matches the expected gold standard format.\n- **Concise Output**: Limit answers to a few words or a short phrase. Omit conversational filler, restatements of the question, or introductory phrases.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer. Keep all reasoning strictly outside the `<answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

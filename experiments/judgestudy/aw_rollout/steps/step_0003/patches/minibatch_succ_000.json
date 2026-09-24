@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Using `inventory` to verify holding status during extended searches",
+    "Closing appliances (microwave, fridge) immediately after transformation steps",
+    "Prioritizing transformation appliances (fridge, microwave) early in the search phase due to dual utility (storage + processing)"
+  ],
+  "patch": {
+    "reasoning": "Multiple trajectories demonstrate that agents benefit from verifying their carried state via `inventory` to avoid redundant searches, closing appliances after use to maintain a clean environment, and strategically checking transformation appliances early since they serve both as storage and processing units.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n9. **Verify state with inventory**: During long searches or if unsure about your current load, use the `inventory` action to confirm whether you are holding the target object before navigating elsewhere.\n10. **Close appliances after use**: After heating, cooling, or cleaning with an appliance (microwave, fridge, sink), close it to clear the workspace and prevent blocking future interactions.\n11. **Prioritize transformation appliances**: When searching for food or perishables, check the fridge or microwave early in the episode. These locations often store the target item and are required later for the transformation step, saving travel time."
+      },
+      {
+        "op": "replace",
+        "target": "- **Revisiting searched locations**: Keep track of which surfaces/containers have been checked; do not re-examine them.",
+        "content": "- **Revisiting searched locations**: Keep track of which surfaces/containers have been checked; do not re-examine them unless necessary for a dual-purpose location (e.g., fridge).\n- **Skipping inventory checks**: Failing to verify what you are carrying can lead to redundant searches or accidental placement of wrong items. Use `inventory` when uncertain."
+      }
+    ]
+  },
+  "source_type": "success"
+}

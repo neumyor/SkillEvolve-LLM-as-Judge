@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative & Fragment Gap-Filling",
+    "Demonstrative & Core Subject Resolution"
+  ],
+  "patch": {
+    "reasoning": "Agents consistently succeeded by treating diverse clue formats (fragments, full sentences, and declarative statements) as direct semantic gap-filling tasks. They also reliably resolved demonstrative phrases ('this X', 'one of these Y') to the primary subject entity, avoiding common traps where clues describe attributes, locations, or related works. These patterns warrant explicit reinforcement to prevent over-specification and entity misalignment.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Trivia/Fragment & Declarative Mapping**: Treat incomplete sentences, Jeopardy-style clues, and full declarative statements as direct semantic gap-filling requests. Identify the exact noun phrase or entity that logically completes the clue, ignoring conversational framing or trailing metadata."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "\n- **Demonstrative & Core Subject Resolution**: For phrases like \"this [noun]\", \"one of these [X]\", or pronouns, explicitly map the descriptor to the primary subject entity in the context. Extract the core entity itself, not its attributes, locations, or associated works, unless the question explicitly asks for those specifics."
+      }
+    ]
+  },
+  "source_type": "success"
+}

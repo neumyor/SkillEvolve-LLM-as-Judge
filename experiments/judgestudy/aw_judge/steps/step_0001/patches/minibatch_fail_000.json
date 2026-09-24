@@ -1,0 +1,40 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 7,
+      "description": "Agents repeatedly cycle through the same set of locations (cabinets, countertops, drawers, shelves) without tracking visited/empty containers, leading to premature termination."
+    },
+    {
+      "failure_type": "rule_wrong",
+      "count": 1,
+      "description": "Agent fails to accept functionally equivalent objects (e.g., 'pot' for 'pan') due to overly literal matching, causing unnecessary searching."
+    },
+    {
+      "failure_type": "action_loop",
+      "count": 1,
+      "description": "Agent gets stuck in a loop between an appliance and destination due to uncertainty about object state/possession after transformation actions."
+    }
+  ],
+  "patch": {
+    "reasoning": "The majority of failures stem from agents failing to track visited locations, resulting in infinite search loops. Additionally, one trajectory fails due to rigid object-name matching, and another due to confusion over object state after appliance use. These edits strengthen systematic search rules, introduce flexibility for functional equivalents, and clarify post-appliance state verification.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration**: Maintain a strict mental log of every container and surface you have already inspected. Once a container is opened and confirmed empty, or a surface is checked and found lacking the target, **do not revisit it** until all other unexplored locations have been exhausted. Prioritize moving to new, unvisited areas over returning to previously checked ones."
+      },
+      {
+        "op": "replace",
+        "target": "7. **Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+        "content": "7. **Avoid loops**: Track your recent navigation history. If you find yourself cycling through the same 3+ locations without progress, **stop and reassess**. Verify your inventory, check if you are holding the target, or consider that the target may be named differently than expected. Force a change of direction to a completely unvisited room or furniture type."
+      },
+      {
+        "op": "append",
+        "content": "- **Accept functional equivalents**: If the exact target object (e.g., 'pan', 'mug', 'keychain') is not found after thorough searching, consider taking functionally similar items (e.g., 'pot', 'cup', 'tag') that fulfill the task's physical requirements. Do not let strict naming conventions cause indefinite loops.\n- **Verify post-appliance state**: Immediately after using a transformation appliance (microwave, fridge, sink), execute `inventory` to confirm you are holding the transformed object before navigating to the final destination. Appliance interactions may auto-transfer items or require explicit retrieval."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

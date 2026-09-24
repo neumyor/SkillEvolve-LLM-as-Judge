@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Use `inventory` to verify carried items and debug unexpected action outcomes.",
+    "Respect single-item capacity limits by placing the first object at the destination before fetching subsequent objects in multi-pick tasks.",
+    "Explicitly manage appliance states (open/close) based on observations before placing, heating, or cooling objects."
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 trajectories reveals three recurring, high-value patterns not explicitly covered in the current skill: frequent use of the `inventory` command to resolve uncertainty or debug failures (T1, T4, T8), explicit handling of single-item capacity limits during 'Pick Two' tasks (T1, T4), and careful management of appliance door states (open/close) during heating/cooling interactions (T5, T6). Encoding these will improve agent robustness, prevent capacity-related deadlocks, and ensure correct appliance sequencing.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n9. **Verify state with inventory**: If you are unsure what you are carrying, or if an action unexpectedly fails or returns \"Nothing happens\", call `inventory` to check your current load and adjust your plan.\n10. **Respect capacity limits**: You can only hold one object at a time. For multi-object tasks, always place the first acquired item at its destination before navigating back to fetch the second.\n11. **Manage appliance states**: Appliances like microwaves and fridges often require opening before placing objects inside, and closing before heating/cooling. Always check the observation for their state and act accordingly."
+      }
+    ]
+  },
+  "source_type": "success"
+}

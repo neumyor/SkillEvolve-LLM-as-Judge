@@ -1,0 +1,109 @@
+{
+  "step": 4,
+  "epoch": 1,
+  "step_in_epoch": 3,
+  "timing": {
+    "rollout_s": 14.7,
+    "reflect_s": 47.1,
+    "aggregate_s": 72.0,
+    "select_s": 30.8,
+    "update_s": 0.0,
+    "evaluate_s": 32.4
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 85052,
+      "completion_tokens": 25553
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 7863,
+      "completion_tokens": 3573
+    },
+    "merge": {
+      "calls": 2,
+      "prompt_tokens": 4757,
+      "completion_tokens": 9644
+    },
+    "ranking": {
+      "calls": 1,
+      "prompt_tokens": 1314,
+      "completion_tokens": 3399
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 62483,
+      "completion_tokens": 23860
+    }
+  },
+  "rollout_hard": 0.875,
+  "rollout_soft": 0.930833,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1046,
+      "n_envs": 40,
+      "hard": 0.875,
+      "soft": 0.9308333333333334,
+      "n_failure_patches": 1,
+      "n_success_patches": 5
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 1,
+  "n_success_patches": 5,
+  "n_edits_merged": 6,
+  "n_edits_ranked": 4,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    5,
+    8,
+    8,
+    8
+  ],
+  "candidate_hash": "8194cf765639a666",
+  "candidate_skill_len": 3036,
+  "edit_apply_summary": {
+    "total": 4,
+    "applied": 4,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_prompt_variant": "v2",
+  "judge_verdict": "REJECT",
+  "judge_confidence": "high",
+  "judge_reason": "The candidate exceeds the growth allowance by including three success-driven modifications that are not tied to any failing task, directly violating the replacement criteria. It also re-proposes mechanisms previously rejected in attempts 2 and 3 without materially new evidence, making further improvement highly unlikely.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 732,
+  "judge_usage": {
+    "prompt_tokens": 7863,
+    "completion_tokens": 3573,
+    "total_tokens": 11436
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "judge_defect_mechanism": "Over-specification and tangential entity selection in trivia extraction",
+  "judge_evidence_count": 5,
+  "judge_counter_evidence_count": 0,
+  "judge_expected_window_delta": "flat",
+  "judge_falsifier": "Consistent accuracy gains on suffix-heavy or ambiguous multi-entity trivia questions in subsequent windows without new mismatches on standard factual queries.",
+  "judge_rule_override": "",
+  "judge_accepted": false,
+  "rollout_hard_after": 0.875,
+  "candidate_gate_score": 0.73,
+  "action": "reject",
+  "current_score": 0.73,
+  "best_score": 0.73,
+  "best_step": 1,
+  "current_origin": "step_0001",
+  "best_origin": "step_0001",
+  "skill_len": 1891,
+  "wall_time_s": 197.1
+}

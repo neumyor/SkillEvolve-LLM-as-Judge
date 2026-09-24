@@ -1,0 +1,44 @@
+{
+  "step": 1,
+  "action": "reject",
+  "n_total": 39,
+  "n_fail": 6,
+  "failure_patterns": [
+    {
+      "pattern": "navigation_loop: Agents repeatedly revisit inspected surfaces and containers without tracking visited states, causing infinite search cycles.",
+      "count": 6,
+      "task_ids": [
+        "train:0036",
+        "train:0013",
+        "train:0030",
+        "train:0024",
+        "train:0025",
+        "train:0015"
+      ]
+    }
+  ],
+  "score_before": 0.9444444444444444,
+  "score_after": 0.9444444444444444,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "Find X -> take X -> find desklamp -> use desklamp -> examine X",
+      "target": "Find X -> take X -> find desklamp -> use desdlamp"
+    },
+    {
+      "op": "replace",
+      "content": "## General Principles\n\n1. **Decompose the task**: Parse the goal into ordered sub-goals (locate, acquire, transform, deliver). Complete each before moving to the next.\n2. **Systematic exploration**: Maintain an explicit mental list of visited surfaces and containers. Never revisit a location you have already inspected. Open closed containers before judging them empty. If you find yourself returning to a checked location, immediately pivot to an unexplored area.\n3. **Grab immediately**: When a required object is visible and reachable, take it right away before moving elsewhere.\n4. **Use atomic appliance actions**: For heating, cooling, or cleaning tasks, rely directly on the provided interaction commands (e.g., `heat X with Y`, `cool X with Y`, `clean X with Y`). These actions are typically atomic and handle internal placement/retrieval automatically. Do not manually open/close appliances or move objects in/out unless the admissible actions explicitly require it.\n5. **Receptacle Access & Delivery**: Always **open the target receptacle** (fridge, cabinet, shelf) before attempting to place an object. For multi-object tasks, place the first item at the destination immediately to free inventory, then continue searching for the remainder.\n6. **Verify state before placing**: If the expected `put` or `place` action is missing from the admissible list at the destination, immediately check your inventory. Confirm you are holding the correct item. If holding, examine the receptacle or reconsider if the item requires further transformation. Avoid cycling between locations without verifying your current state.\n7. **Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.\n8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.\n9. **Accept functional substitutes**: If the exact target object is not found after exhaustive searching, consider accepting functionally equivalent items (e.g., 'pot' for 'pan', 'bowl' for 'plate') that satisfy the task constraints. Do not halt progress solely due to a naming mismatch if a suitable alternative is available.\n10. **Manage inventory constraints**: You can only hold one object at a time. If holding an item, you must place it down (`move <item> to <location>`) before attempting to take another. Do not attempt to pick up a second item while holding one.\n11. **Sequential location search**: Visit numbered containers and surfaces in ascending order (e.g., shelf 1 → shelf 2 → shelf 3) rather than jumping randomly. This ensures thorough coverage without unnecessary backtracking.\n12. **Direct appliance interaction**: For heating/cooling tasks, try the direct action (`heat <object> with <appliance>` or `cool <object> with <appliance>`) while standing at the appliance. If unavailable, place the object inside and follow the open/close cycle.\n13. **Inventory checkpoints**: If you are unsure what you are carrying or why actions are unavailable, execute `inventory` to verify your current state before deciding the next move.",
+      "target": "## General Principles\n\n1. **Decompose the task**: Parse the goal into ordered sub-goals (locate, acquire, transform, deliver). Complete each before moving to the next.\n2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.\n3. **Grab immediately**: When a required object is visible and reachable, take it right away before moving elsewhere.\n4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.\n5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.\n6. **Track progress**: Maintain an internal count of how many objects still need to be found and placed. Only stop searching when the count reaches zero.\n7. **Avoid loops**: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.\n8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions."
+    },
+    {
+      "op": "replace",
+      "content": "- **Ignoring visible objects**: If the target object appears in the observation, pick it up immediately.\n- **Mismatched object types**: Verify the object name matches the goal exactly before taking. Picking up similar but incorrect items (e.g., 'pan' instead of 'pot') wastes steps and may block progress.",
+      "target": "- **Ignoring visible objects**: If the target object appears in the observation, pick it up immediately."
+    },
+    {
+      "op": "insert_after",
+      "content": "\n**Appliance Location Heuristic**: When searching for appliances like desklamps, prioritize checking desks and shelves, as these are the most common locations for such items.",
+      "target": "13. **Inventory checkpoints**: If you are unsure what you are carrying or why actions are unavailable, execute `inventory` to verify your current state before deciding the next move."
+    }
+  ]
+}

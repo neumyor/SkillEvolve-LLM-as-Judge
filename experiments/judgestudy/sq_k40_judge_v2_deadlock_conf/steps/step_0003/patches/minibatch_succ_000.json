@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Interpret Jeopardy-style clues and sentence fragments as prompts to identify a specific missing entity.",
+    "Extract the exact entity name or short phrase directly stated in the context without adding descriptive filler.",
+    "Locate the answer by scanning document titles and snippets for keywords matching the clue.",
+    "Always enclose the final answer strictly within <answer>...</answer> tags."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories feature Jeopardy-style trivia clues or definition fragments rather than direct questions. Agents succeed by treating these as entity-matching prompts, extracting the precise term from the context, and formatting it concisely within answer tags. Encoding this interpretation strategy and extraction discipline will prevent over-explanation and mismatched granularity.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "# Question Answering Skill\n\n## Clue & Fragment Interpretation\n- **Jeopardy/Trivia Format**: Questions frequently appear as incomplete sentences, definitions, or factual clues rather than direct interrogatives. Treat them as prompts to identify the specific entity, term, or concept that completes the statement.\n- **Strip Conversational Framing**: Ignore introductory fluff. Focus solely on the core factual query embedded in the clue.\n\n## Search & Extraction Strategy\n- **Identifier Mapping**: Extract core keywords (names, locations, dates, unique phrases) from the question. Map these directly to `[DOC]` titles and `[PAR]` snippets.\n- **Direct Span Retrieval**: Scan context for verbatim or near-verbatim matches. Prioritize passages where the clue's key identifiers appear alongside the answer.\n- **Exact Match Granularity**: Return the exact entity name or short phrase as implied by the clue. Do not append roles, adjectives, or explanatory clauses unless explicitly required by the question.\n\n## Output Formatting\n- **Strict Tagging**: Place all final answers strictly within `<answer>...</answer>` tags.\n- **Minimalist Response**: Keep the answer concise. Omit reasoning, greetings, or filler inside the tags. Provide step-by-step rationale outside the tags if helpful."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,30 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 7,
+      "description": "Agents consistently output verbose explanations, full sentences, or descriptive phrases instead of concise entities."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 5,
+      "description": "Agents fail to recognize trivia/Jeopardy-style fragments as direct queries for a specific keyword, leading to category guesses or true/false responses."
+    },
+    {
+      "failure_type": "rule_wrong",
+      "count": 3,
+      "description": "Agents expand canonical answers to full names or synonyms (e.g., 'Vitamin C' instead of 'C', 'Jean Genet' instead of 'Genet') despite context providing shorter terms."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch shows a consistent pattern of verbose outputs, failure to treat fragmented trivia clues as direct keyword queries, and over-expansion of canonical answers. These edits enforce strict conciseness, provide explicit guidance for Jeopardy-style fragments, and mandate exact-term extraction over synonyms or full names.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n## Answer Extraction Rules\n- **Strict Conciseness**: Output only the exact entity, word, or short phrase requested. Never include full sentences, explanations, or conversational filler inside `<answer>...</answer>`.\n- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.\n- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.\n- **Zero Reasoning in Tags**: Perform all analysis and step-by-step thinking before the `<answer>` tag. The content inside the tags must be the final answer only."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

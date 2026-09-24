@@ -1,0 +1,28 @@
+{
+  "batch_size": 4,
+  "success_patterns": [
+    "Title-First Anchoring for Creative Works",
+    "Direct Fill-in-the-Blank Completion",
+    "Strict Avoidance of Syntactic Mirroring"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently solve Jeopardy-style fill-in-the-blank questions by prioritizing document titles ([TLE]) as direct anchors and treating the prompt as a request for a single missing entity. Previous failures stemmed from overly descriptive answers and syntactic mirroring. Reinforcing a title-first scanning strategy and explicit completion rules will prevent verbose outputs and align with the batch's high-precision success pattern.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Implicit Reference Resolution",
+        "content": "\n- **Title-First Anchoring**: For trivia about creative works (films, books, plays), prioritize the `[TLE]` header as the primary source for the answer. The correct entity is frequently the exact title or its core component."
+      },
+      {
+        "op": "replace",
+        "target": "Many questions are incomplete clues or trivia statements. Identify the missing subject, object, or keyword rather than summarizing the context.",
+        "content": "Many questions are incomplete clues or trivia statements (e.g., \"in this [X]\", \"the 14th [Y]\"). Identify the missing subject, object, or keyword rather than summarizing the context or mirroring the prompt's sentence structure."
+      },
+      {
+        "op": "append",
+        "content": "\n- **No Syntactic Mirroring**: Never repeat the prompt's phrasing or complete the sentence grammatically. Output only the isolated entity or title requested."
+      }
+    ]
+  },
+  "source_type": "success"
+}

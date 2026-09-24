@@ -1,0 +1,35 @@
+{
+  "step": 1,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 7,
+  "failure_patterns": [
+    {
+      "pattern": "rule_missing: Skill lacks explicit rules for exact-match extraction in trivia/Jeopardy-style questions",
+      "count": 7,
+      "task_ids": [
+        "b55578edb7ba4b5ba9ed09dc7333795b",
+        "8709f2c5215049e2b2edc482a2d6a332",
+        "6252b238d9554d45bc4eb9b9978543c5",
+        "3154424fc756402986578589696e0cea",
+        "b44cf87107b9474d8e04d8147c895a60",
+        "01a52018756346b795de67cabdb907dd",
+        "60f6f1a1734b4ea3ac6130d52c2264ed"
+      ]
+    }
+  ],
+  "score_before": 0.715,
+  "score_after": 0.715,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "## Answer Extraction Rules (Priority for Trivia & Exact Matches)\n- **Exact Match Priority**: For trivia, Jeopardy-style, or fill-in-the-blank questions, output the *exact* word or short phrase requested. Do not paraphrase or add descriptive clauses.\n- **Avoid Expansions & Full Names**: If the expected answer is a single letter, abbreviation, or surname, output only that. Do not expand \"C\" to \"Vitamin C\" or \"Genet\" to \"Jean Genet\" unless the question explicitly asks for the full name.\n- **Direct Entity Response**: When a question asks for a person, band, place, or object, provide only the entity name. Do not answer with \"Yes/No\", descriptions (e.g., \"a tribute band\"), or full sentences.\n- **Partial Query Handling**: For fragmented questions (e.g., lyrics, titles, or incomplete statements), infer the missing keyword directly from the context and output it concisely.",
+      "target": "(No learned rules yet. Rules will be added through the reflection process.)"
+    },
+    {
+      "op": "insert_after",
+      "content": "\n## Core QA Principles & Strategy\n- **Concise Formatting**: Keep answers strictly within `<answer>...</answer>` tags. Limit to a few words or a short phrase. Do not repeat the question or include conversational filler.\n- **Clue-to-Context Mapping**: Treat descriptive or incomplete-sentence questions as clues. Match key descriptors directly to named entities in the context.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through all `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n- **Handle Quotes & Paraphrases**: If the question contains a partial quote or translated phrase, locate its counterpart in the context to identify the target answer.\n- **Strict Conciseness**: Once the target information is identified, extract only the precise entity, name, or short phrase. Omit full sentences, conversational filler, or restatements of the question.",
+      "target": "- **Partial Query Handling**: For fragmented questions (e.g., lyrics, titles, or incomplete statements), infer the missing keyword directly from the context and output it concisely."
+    }
+  ]
+}

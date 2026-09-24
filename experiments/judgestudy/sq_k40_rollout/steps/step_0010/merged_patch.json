@@ -1,0 +1,96 @@
+{
+  "reasoning": "Prioritized failure-driven patches per guidelines. Deduplicated 'Map Colloquial & Pop-Culture Pointers' by retaining the failure-driven 'Decode Puns...' version over the success-driven 'Quote & Phrase Completion' version. Preserved all other success-driven edits as they target distinct sections or add non-overlapping patterns. All edits maintain their original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+      "content": "- **Granularity-First Extraction & Canonical Normalization**: Prioritize the exact phrase length and structure implied by the clue. For proper nouns, titles, and brands, normalize spacing and tokenization to the standard canonical form (e.g., merge split words like 'Show Boat' → 'Showboat', remove non-standard hyphens). Extract the shortest, widely recognized identifier for the entity. Aggressively remove redundant phrasing that duplicates the question (e.g., if the clue says 'this market', output 'bear' not 'bear market'; if it says 'these businesses', output 'laundries' not 'Chinese Hand Laundry Alliance'). Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category. Normalize articles and plurality to match the question's syntax. Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+      "content": "- **Specific Entity Priority Over Hypernyms**: Do not default to extracting generic categories or hypernyms (e.g., 'city', 'capital cities', 'businesses') unless the question explicitly asks for a classification. When clues present lists, single words, or vague pointers, prioritize identifying the specific named entity, its location, or its defining attribute. Treat hypernyms only as search anchors, not final answers.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+      "content": "- **Decode Puns, Wordplay & Phonetic Clues**: Clues frequently rely on puns, double meanings, phonetic similarities, or idiomatic expressions (e.g., 'Ball of Fire' for a person named Ball). Treat these as semantic identifiers rather than literal descriptions. Cross-reference the clue's figurative meaning with candidate entities in the context, prioritizing semantic alignment and wordplay over exact keyword matches. Discard the literal pointer phrasing and output the mapped canonical entity.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+      "content": "\n- **List & Single-Word Clue Parsing**: Questions may consist solely of comma-separated lists or a single proper noun. Treat these as direct entity references or implicit location/attribute queries. Do not interpret them as requests for categories or definitions. Scan the context to find the specific entity, its associated attribute, or the missing item in the set that aligns with the gold answer's granularity.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+      "content": "\n- **Verbatim Phrase Anchoring**: Trivia clues frequently lift distinctive phrases, quotes, or definitions directly from the context (e.g., glossary entries, review blurbs, flashcards). Use these exact or near-exact phrases as high-precision anchors to locate the answer span immediately, bypassing broad semantic searches.\n\n- **Relational Predicate Parsing**: Questions often frame the target entity through a specific relationship, possession, or superlative (e.g., 'largest museum of...', 'posing as... son', 'last song on... album'). Parse the relational predicate to identify the missing subject or object, then scan the context for the entity that fulfills that specific role.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+      "content": "- **Mandatory Single-Sentence Verification**: Always precede the final answer with exactly one sentence of reasoning. Use a fixed structure: 'The context explicitly states/identifies [Exact Quote or Close Paraphrase], directly satisfying the question's constraint about [Clue Pointer].' This enforces grounding, eliminates filler, and strictly prevents reliance on external knowledge.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like \"this settlement\" or \"his discovery\". Scan the context to find the specific entity that satisfies the description. Prioritize explicit matches over assumptions.",
+      "content": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like \"this settlement\", \"this holiday\", or \"this trade name\". Treat these as direct placeholders. Scan the context to find the specific named entity that satisfies the description. Prioritize extracting the exact contextual span over substituting synonyms or rephrasing.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs.",
+      "content": "- **Title-First & Exact Span Extraction**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer verbatim in titles or co-occur within the first sentence. Extract the exact phrase from these high-signal zones rather than paraphrasing or inferring from deeper text.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span.",
+      "content": "- **Constraint-Answer Alignment**: In the reasoning step, explicitly map each key constraint from the question to the corresponding part of the extracted evidence. Ensure the found span simultaneously satisfies all descriptors (e.g., date, role, location, action) without adding extraneous information.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+      "content": "\n- **Explicit Slot Targeting & Partial Extraction**: Questions frequently request a specific sub-component of a broader entity (e.g., 'First name of...', 'Duchess of [it]', 'to this color'). Parse the syntactic gap in the question to determine exactly which part of the entity to extract. Output only the targeted span, even if it is a fragment of a longer name or title found in the context.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+      "content": "- **Triangulation Across Fragmented Documents**: Search contexts frequently split information across multiple `[DOC]` blocks. Use one document to identify candidate entities and another to verify attributes, dates, or relationships. Cross-referencing disparate snippets prevents hallucination and confirms the exact answer span.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+      "content": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\"). **Exception**: Retain standard articles, suffixes, and rank/designation terms when they are integral to an official title, show name, or branded entity (e.g., \"The Flintstones\", \"Eagle Scout\", \"What's Happening!!\").",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+      "content": "\n- **Definition & Glossary Mapping**: Questions often function as direct dictionary definitions, etymological breakdowns, or functional descriptions (e.g., 'A house with floors that differ by about half a story', 'means servant of Allah'). Scan for explicit equivalence structures ('X is Y', 'Y stands for X') or glossary-style entries. Map the clue's descriptive phrase directly to the canonical headword or term defined in the text.",
+      "support_count": 7,
+      "source_type": "success"
+    }
+  ]
+}

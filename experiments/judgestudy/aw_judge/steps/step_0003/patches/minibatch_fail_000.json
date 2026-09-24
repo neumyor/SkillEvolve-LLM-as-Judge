@@ -1,0 +1,41 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "missed_object",
+      "count": 8,
+      "description": "Agents rigidly search for exact object names and fail to accept functional equivalents, causing prolonged searches."
+    },
+    {
+      "failure_type": "navigation_loop",
+      "count": 7,
+      "description": "Agents repeatedly cycle through the same containers/surfaces without marking categories exhausted or pivoting strategies."
+    },
+    {
+      "failure_type": "premature_stop",
+      "count": 5,
+      "description": "Agents enter infinite take-place loops when `done()` is unavailable post-placement, failing to trust successful deliveries."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates a systemic failure where agents ignore functional equivalents during search, leading to navigation loops. Furthermore, agents repeatedly pick up and place already-delivered items when `done()` is not immediately admissible, preventing task completion. These edits enforce a functional equivalent trigger, clarify termination conditions to prevent re-picking, and mandate single-pass transformations for appliance tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Semantic & Systematic Exploration**: Begin searches at **semantically likely locations** (e.g., cutlery in drawers, produce on countertops, bedding on beds, electronics on desks/dressers). Maintain a strict mental log of every container and surface inspected. Once a specific *type* of furniture (e.g., all drawers, all cabinets) is checked and consistently yields no results, mark that entire category as **exhausted**. Immediately pivot to a different furniture category or room zone. Never revisit an empty container or type while other unexplored options remain, **except** when cycling through an appliance's operational sequence. Prioritize moving to new, unvisited areas over returning to previously checked surfaces.",
+        "content": "2. **Semantic & Systematic Exploration**: Begin searches at **semantically likely locations** (e.g., cutlery in drawers, produce on countertops, bedding on beds, electronics on desks/dressers). Maintain a strict mental log of every container and surface inspected. Once a specific *type* of furniture (e.g., all drawers, all cabinets) is checked and consistently yields no results, mark that entire category as **exhausted**. Immediately pivot to a different furniture category or room zone. Never revisit an empty container or type while other unexplored options remain, **except** when cycling through an appliance's operational sequence. Prioritize moving to new, unvisited areas over returning to previously checked surfaces.\n\n**Functional Equivalent Trigger**: If the exact target object remains unfound after thoroughly checking 3-4 semantically relevant locations or exhausting one furniture category, **immediately accept a functionally equivalent item** (e.g., 'pot' for 'pan', 'cup' for 'mug', 'bowl' for 'plate'). Do not continue searching for the exact name if it causes indefinite loops. Trust that the environment accepts valid substitutes for the task's physical requirements."
+      },
+      {
+        "op": "replace",
+        "target": "**Verify Before Stopping**: When `done()` is available, call it only after explicitly verifying that the object is in the correct receptacle/surface AND meets all task conditions. Perform a final `look` or `inventory` check if unsure.\n- **Handle Blocked Actions**: If placement actions are missing from the admissible list, inspect the receptacle's state or re-evaluate the object's properties. Adjust your approach rather than looping or guessing.",
+        "content": "**Verify Before Stopping**: When `done()` is available, call it only after explicitly verifying that the object is in the correct receptacle/surface AND meets all task conditions. Perform a final `look` or `inventory` check if unsure.\n- **Handle Blocked Actions**: If placement actions are missing from the admissible list, inspect the receptacle's state or re-evaluate the object's properties. Adjust your approach rather than looping or guessing.\n- **Trust Successful Placement**: If you have just placed the required object onto the target surface/receptacle and `done()` is **not** listed in the admissible actions, **do not re-pick the object**. Assume the task is complete and attempt to end the episode. Repeatedly picking up and placing down already-delivered items wastes steps and prevents termination."
+      },
+      {
+        "op": "insert_after",
+        "target": "9. **Appliance & Receptacle Workflow**: Enclosed appliances require a strict sequence: `open <appliance>` -> `move <object> in` -> `close <appliance>` -> `heat/cool/clean <object> with <appliance>` -> `open <appliance>` -> `take <object> from <appliance>`. Always verify receptacles are open before placing items. **Always close appliances** immediately after interaction and retrieval to maintain environment state. Note: Some environments allow direct commands like `heat <object> with <appliance>` without moving it in/out; attempt the direct command first if holding the object near the appliance.",
+        "content": "10. **Single-Pass Transformation & Delivery**: For heat/cool/clean tasks, perform the transformation exactly once. After executing the appliance command (e.g., `cool X with Y`), verify your inventory holds the transformed object. Navigate directly to the destination and place it. Do not retrieve the object from the destination to re-transform it unless the environment explicitly indicates the state change failed. Trust the appliance interaction upon successful execution."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

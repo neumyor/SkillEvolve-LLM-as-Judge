@@ -1,0 +1,47 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 6,
+      "description": "Agents repeatedly cycle through numbered containers (drawers, cabinets) or a fixed set of surfaces without expanding search scope."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 2,
+      "description": "Agents fail to retrieve objects from appliances after heating/cooling, or miss sequential pickups for multi-object tasks."
+    },
+    {
+      "failure_type": "action_loop",
+      "count": 3,
+      "description": "Agents get stuck toggling between locations or repeating failed actions without diagnosing missing admissible commands."
+    },
+    {
+      "failure_type": "premature_stop",
+      "count": 2,
+      "description": "Episodes end before final placement due to incomplete transformation retrieval or inventory mismanagement."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch exhibits four systemic failures: (1) blind iteration over numbered items causing navigation loops, (2) skipping mandatory retrieval steps after appliance transformations, (3) failing to grab multiple visible targets sequentially, and (4) getting stuck in action loops without diagnosing missing admissible commands. These edits provide explicit protocols to break search traps, enforce appliance retrieval, handle multi-object pickup, and implement forced recovery strategies.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Systematic Exploration Guidelines\n- **Break Number-Cycling Traps**: Do not blindly iterate through numbered items (e.g., drawer 1, 2, 3...) if they yield nothing. Once a category is exhausted, pivot to entirely different furniture types (countertops, shelves, tables, dressers) or adjacent rooms.\n- **Mark & Move**: Mentally mark every opened container or examined surface as 'checked'. If you find yourself returning to a previously verified empty location, immediately abort that path and explore a new unvisited zone."
+      },
+      {
+        "op": "append",
+        "content": "## Multi-Object & Inventory Protocols\n- **Consecutive Pickup**: When searching for multiple identical objects, if you spot additional targets on the same surface where you just picked one up, grab them immediately in sequence. Do not navigate away to search elsewhere while targets remain visible.\n- **Destination First-Load**: If your inventory fills up before collecting all targets, navigate directly to the destination receptacle, place the held item(s), then return to finish collection."
+      },
+      {
+        "op": "append",
+        "content": "## Appliance & State Verification Rules\n- **Mandatory Retrieval Step**: After using a microwave, fridge, or sink for transformation, the object typically remains inside. You must explicitly `open <appliance>` and `take <object> from <appliance>` before moving to the final destination. Skipping this step causes immediate failure.\n- **Object Identity & State Check**: Verify the exact name and state of your carried object (`examine <object>` or `inventory`) before attempting placement. Mismatched names (e.g., holding a 'cup' for a 'mug' task) or untransformed states will block admissible actions."
+      },
+      {
+        "op": "append",
+        "content": "## Stuck-State Recovery\n- **Admissible Action Audit**: If `put`, `take`, or `open` actions are missing from your admissible list, pause and diagnose: check inventory, verify receptacle state, or confirm object compatibility. Do not guess or repeat failed moves.\n- **Forced Strategy Shift**: If three consecutive steps yield no progress or loop back to previous locations, execute `inventory` to reset context, then deliberately choose a location you have not visited in the last 5 steps."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

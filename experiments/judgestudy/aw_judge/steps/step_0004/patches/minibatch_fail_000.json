@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 4,
+      "description": "Agents cycle through identical furniture categories (drawers/cabinets) without pivoting when targets are hidden or named differently."
+    },
+    {
+      "failure_type": "appliance_error",
+      "count": 3,
+      "description": "Direct appliance commands cause objects to vanish from inventory or fail to transfer, trapping agents in re-heating/re-cooling loops."
+    },
+    {
+      "failure_type": "premature_stop",
+      "count": 2,
+      "description": "Agents re-pick successfully placed items solely because `done()` is not immediately admissible, resetting task progress."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Agents misinterpret prepositions like 'in desk', placing items on surfaces instead of internal containers, causing placement loops."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch exhibits systematic failures in search persistence, appliance state tracking, termination logic, and preposition interpretation. These edits enforce hard search limits, clarify direct-command recovery, stabilize termination despite `done()` latency, and resolve 'in' vs 'on' placement ambiguities.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n## Critical Fallback Protocols\n\n1. **Hard Search Limit**: If you visit 3 consecutive locations of the same furniture type (e.g., drawer 1, 2, 3) without finding the target, **immediately abandon** that category and room zone. Do not return to it unless explicitly required by the task workflow. Use `look` to refresh spatial awareness before switching zones.\n2. **Direct Appliance Command Recovery**: When using direct commands (`heat/cool/clean <obj> with <appliance>`), the object may remain inside the appliance or drop unexpectedly. If your inventory becomes empty or the object disappears from admissible actions immediately after the command, **open the appliance**, `take <obj> from <appliance>`, and close it. Do not navigate away while holding nothing.\n3. **Non-Deterministic Termination**: The `done()` command may not appear immediately after successful placement due to environment latency. If you have just placed the target object at the correct destination and `inventory` confirms you are empty-handed, **stop all further manipulation**. Attempt `done()` once; if it fails or is unavailable, terminate the episode regardless. Re-picking delivered items will reset progress.\n4. **'In' vs 'On' Placement Logic**: Tasks specifying 'in [furniture]' (e.g., desk, cabinet, drawer) usually require placing the object inside an internal container (drawer/cabinet) rather than on the external surface. If `move <obj> to <furniture>` fails or loops, pick up the object, locate an open drawer/cabinet belonging to that furniture, and use `move <obj> to <container>` instead."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

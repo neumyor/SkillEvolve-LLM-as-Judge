@@ -1,0 +1,100 @@
+{
+  "step": 2,
+  "epoch": 1,
+  "step_in_epoch": 1,
+  "timing": {
+    "rollout_s": 125.3,
+    "reflect_s": 40.0,
+    "aggregate_s": 63.0,
+    "select_s": 24.9,
+    "update_s": 0.0,
+    "evaluate_s": 14.6
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 78671,
+      "completion_tokens": 24740
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 7026,
+      "completion_tokens": 1696
+    },
+    "merge": {
+      "calls": 2,
+      "prompt_tokens": 5093,
+      "completion_tokens": 11572
+    },
+    "ranking": {
+      "calls": 1,
+      "prompt_tokens": 1726,
+      "completion_tokens": 2516
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 65470,
+      "completion_tokens": 18227
+    }
+  },
+  "rollout_hard": 0.9,
+  "rollout_soft": 0.936667,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1044,
+      "n_envs": 40,
+      "hard": 0.9,
+      "soft": 0.9366666666666668,
+      "n_failure_patches": 1,
+      "n_success_patches": 5
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 1,
+  "n_success_patches": 5,
+  "n_edits_merged": 7,
+  "n_edits_ranked": 4,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    8,
+    8,
+    8,
+    8
+  ],
+  "candidate_hash": "c32f74dc391a294f",
+  "candidate_skill_len": 3559,
+  "edit_apply_summary": {
+    "total": 4,
+    "applied": 4,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_verdict": "ACCEPT",
+  "judge_confidence": "high",
+  "judge_reason": "The candidate introduces targeted rules for proper name granularity, category-versus-instance distinction, and exact grammatical alignment that directly address the three failures in the evidence window. These generalized constraints improve precision without altering behavior on previously successful tasks.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 366,
+  "judge_usage": {
+    "prompt_tokens": 7026,
+    "completion_tokens": 1696,
+    "total_tokens": 8722
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "candidate_gate_score": 0.72,
+  "action": "accept_new_best",
+  "current_score": 0.72,
+  "best_score": 0.72,
+  "best_step": 2,
+  "current_origin": "step_0002",
+  "best_origin": "step_0002",
+  "skill_len": 3559,
+  "wall_time_s": 267.7
+}

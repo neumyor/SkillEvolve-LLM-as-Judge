@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Resolving quoted catchphrases and nicknames to their source media/characters",
+    "Parsing colon-delimited trivia formats (Category: Clue)",
+    "Stripping pronoun/possessive wrappers to isolate core clues"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handled quoted catchphrases, nicknames, and colon-separated trivia formats by treating them as direct semantic pointers rather than literal strings. They also effectively stripped grammatical wrappers (pronouns, possessives) to isolate the defining anchor. Encoding these strategies will prevent over-literal parsing and improve resolution of structured trivia prompts.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Alias & Cross-Lingual Resolution**: Trivia questions frequently use foreign terms, nicknames, mythological figures, or translated phrases as direct pointers (e.g., \"lambi\" → Conch, \"Clio\" → History, \"Soyuz\" → Union). Treat these as semantic anchors rather than literal strings. Map them immediately to their standard English/canonical equivalents found in the context, bypassing strict keyword matching.",
+        "content": "\n- **Colon-Separated Trivia Format**: Many trivia prompts follow a `Category: \"Clue\"` or `Descriptor: \"Phrase\"` structure. Treat the segment after the colon as the definitive anchor. Ignore the preceding category label unless it is necessary to constrain the entity type, and resolve the quoted phrase directly to its canonical referent."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Partial Quote & Ellipsis Matching**: When a question contains a truncated sentence or partial quote, scan the context for the exact phrase or its immediate continuation. The missing word or phrase completing the thought is almost always the target entity.",
+        "content": "\n- **Quoted Catchphrases & Nicknames**: When a question features a famous quote, slogan, or nickname enclosed in quotes (e.g., \"Yabba Dabba Do!\", \"America's Sherlock Holmes in Sneakers\"), treat it as a direct pointer to its originating media franchise, character, or work. Resolve the quote to the canonical title or proper noun associated with it, bypassing literal string searches."
+      }
+    ]
+  },
+  "source_type": "success"
+}

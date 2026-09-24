@@ -1,0 +1,41 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "rule_ignored",
+      "count": 2,
+      "description": "Agents mirror the prompt's explicit entity instead of resolving the implicit query target in Jeopardy/declarative clues."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 4,
+      "description": "Agents fail to match canonical trivia granularity, either over-expanding names or extracting only fill-in-the-blank fragments instead of full entity names."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 2,
+      "description": "Agents select incorrect entities when clues use relative temporal labels ('current') or overlapping constraints without verifying unique historical anchors."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch failures cluster into three systematic patterns: (1) prompt mirroring in declarative/Jeopardy formats where agents output the stated entity instead of the implied answer; (2) canonical form mismatches where agents over-expand names or under-extract fill-in-the-blank slots; and (3) entity disambiguation failures when relative labels or overlapping constraints lead to selecting the wrong candidate. These three targeted edits patch the skill to enforce implicit query resolution, strict canonical granularity alignment, and robust constraint verification for temporal/status labels.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Declarative Clue Parsing**: Treat declarative statements, descriptive fragments, and incomplete prompts identically to interrogative questions. Identify the grammatical slot or subject being described and treat it as a direct request for the missing entity.",
+        "content": "- **Declarative Clue Parsing & Implicit Query Resolution**: Treat declarative statements, descriptive fragments, and Jeopardy-style prompts as direct requests for the *implied* answer, not the stated entity. If the prompt names an entity (e.g., a film, book, or series), determine what is actually being queried about it (e.g., its source material, subject matter, or creator) and extract that target. Never mirror the prompt's explicit noun phrase unless it directly completes the semantic gap."
+      },
+      {
+        "op": "replace",
+        "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+        "content": "- **Canonical Phrasing & Granularity Alignment**: Strictly match the canonical trivia answer's length and form. Do not arbitrarily expand names (e.g., output \"Boss\" not \"Boss Tweed\", \"Napoleon\" not \"Napoleon Bonaparte\") or contract them unless the clue dictates otherwise. For fill-in-the-blank clues presenting partial names (e.g., \"___ & Wagnalls\"), extract the full canonical entity name, not just the missing word."
+      },
+      {
+        "op": "replace",
+        "target": "- **Constraint-Driven Verification**: Prioritize exact matches for numerical, temporal, or proper-noun constraints embedded in the clue. Discard candidates that satisfy the general topic but fail specific quantitative or categorical filters.",
+        "content": "- **Constraint-Driven Verification & Entity Disambiguation**: Prioritize exact matches for numerical, temporal, or proper-noun constraints. When clues use relative labels like \"current,\" \"modern,\" or \"former,\" cross-reference them with specific historical anchors (dates, events, locations) in the context. Discard candidates that match the label but fail unique factual identifiers, and avoid relying on external knowledge or ambiguous status tags."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

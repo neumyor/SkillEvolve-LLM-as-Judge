@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Bypassing verbatim context repetition to locate the single defining sentence",
+    "Resolving descriptive/synonymous clues directly to canonical entity names",
+    "Stripping trailing punctuation and whitespace from final answers"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories feature highly repetitive context blocks and descriptive/synonymous clues. Success relied on instantly skipping past duplicated text to find the exact definition, mapping paraphrased clues to canonical terms, and outputting perfectly clean answer tags without trailing punctuation.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Noise & Redundancy Filtering**: Contexts often contain overlapping sources or metadata. Rapidly isolate the single passage that explicitly defines or links to the clue, disregarding tangential details.",
+        "content": "- **Noise & Redundancy Filtering**: Contexts frequently contain verbatim repeated paragraphs across multiple documents. Ignore duplicated blocks entirely and jump straight to the first passage that explicitly defines or links to the clue."
+      },
+      {
+        "op": "replace",
+        "target": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Map descriptive phrases directly to the target entity (person, place, term, work).",
+        "content": "- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Questions rarely use the exact target term; they rely on synonyms, roles, or attributes. Resolve these descriptive phrases directly to the canonical proper noun or term found in the context."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Punctuation Stripping**: Remove any trailing periods, commas, or spaces from the extracted answer before wrapping it in tags. The content inside `<answer>` should be purely alphanumeric/proper nouns."
+      }
+    ]
+  },
+  "source_type": "success"
+}

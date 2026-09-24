@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Metadata-first scanning for trivia/flashcard prompts",
+    "Acronym expansion from question pointer to context full name",
+    "Direct lookup mindset over relational reasoning",
+    "Strict three-step search hierarchy (scan metadata -> filter constraints -> extract)"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate a metadata-first scanning strategy, treating trivia prompts as direct lookups rather than complex reasoning tasks. They also reliably expand question-provided acronyms to their full canonical names and follow a strict scan-filter-extract hierarchy. These patterns are present but lack explicit priority ordering and clear expansion rules in the current skill.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Search Priority Protocol**: Execute a strict three-step search: (1) Scan `[TLE]` and `[PAR]` metadata for exact/near-exact matches; (2) Apply logical AND filters across all stated constraints to narrow candidates; (3) Extract the exact term only if it satisfies every constraint simultaneously. Do not read deeply until shallow scans fail."
+      },
+      {
+        "op": "replace",
+        "target": "- **Snippet/Title Exact Match Priority**: Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning document titles and snippets for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis.",
+        "content": "- **Snippet/Title Exact Match Priority**: Treat document titles (`[TLE]`) and snippets (`[PAR]`) as the primary search surface. Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning these metadata fields for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis."
+      },
+      {
+        "op": "replace",
+        "target": "- **Abbreviation & Acronym Resolution**: Trivia frequently asks what an acronym or abbreviation stands for, or uses location codes/state abbreviations (e.g., \"PHL\", \"NYC\"). Treat abbreviated forms as direct pointers to their full canonical names. Scan for definition markers like \"short for,\" \"stands for,\" or \"means\" in the context. If the context uses the abbreviation, output it; if it uses the full form, prefer the full form unless the clue strictly demands the abbreviation.",
+        "content": "- **Abbreviation & Acronym Resolution**: Trivia frequently asks what an acronym or abbreviation stands for, or uses location codes/state abbreviations (e.g., \"PHL\", \"NYC\"). Treat abbreviated forms in the *question* as direct pointers to their full canonical names found in the context (e.g., PIP → Picture in Picture). If the context uses the abbreviation, output it; if it uses the full form, prefer the full form unless the clue explicitly requests the short form."
+      },
+      {
+        "op": "replace",
+        "target": "- **Quiz, Flashcard & Definition Recognition**: Many prompts originate from trivia databases, flashcards, or dictionary entries. Treat these as direct lookup requests. When the question reads as a definition, description, or flashcard prompt, the target is invariably the *term* being defined. If the full question or a significant clause matches a document title or snippet verbatim, treat that document as the definitive source and extract the answer directly without over-analyzing.",
+        "content": "- **Quiz, Flashcard & Definition Recognition**: Many prompts originate from trivia databases, flashcards, or dictionary entries. Treat these as direct lookup requests. When the question reads as a definition, description, or flashcard prompt, the target is invariably the *term* being defined. If the full question or a significant clause matches a document title or snippet verbatim, treat that document as the definitive source and extract the answer directly. Avoid applying complex relational reasoning or multi-hop logic when a direct lexical match exists in the metadata."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,35 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Category-based location prioritization during search",
+    "Leveraging admissible actions to locate hidden/nearby objects",
+    "Minimizing redundant state checks (inventory/look)",
+    "Explicit tracking of visited containers to prevent loops"
+  ],
+  "patch": {
+    "reasoning": "Trajectories 5, 6, and 8 demonstrate significant inefficiency due to blind systematic searching, frequent revisiting of empty locations, and over-reliance on `inventory`/`look` checks. Conversely, efficient paths rely on prioritizing high-probability locations for object categories and trusting admissible action hints. These edits reinforce smarter exploration and reduce wasted steps.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Systematic exploration: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "Smart prioritization: Prioritize search locations based on object category (e.g., food in fridge/countertops, electronics on desks/shelves, cookware on stoves/cabinets). Open closed containers before judging them empty. Do not revisit unproductive locations."
+      },
+      {
+        "op": "replace",
+        "target": "Track progress: Maintain an internal count of how many objects still need to be found and placed. Only stop searching when the count reaches zero.",
+        "content": "Track progress & locations: Maintain a mental log of visited surfaces and opened containers. If an object isn't found after checking high-probability locations, systematically scan remaining areas. Stop searching only when the object is acquired or all viable locations are exhausted."
+      },
+      {
+        "op": "insert_after",
+        "target": "Only choose admissible actions: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "\n9. **Leverage admissible actions**: If an action like `take [object] from [location]` appears in the admissible list but the object isn't visible, navigate to that location immediately. Admissible actions often reveal hidden or nearby objects."
+      },
+      {
+        "op": "replace",
+        "target": "Avoid loops: Never repeat the same action more than twice in a row. If stuck, move to a different unexplored location.",
+        "content": "Avoid loops & redundancy: Never repeat the same action more than twice in a row. Minimize use of `inventory` or `look` unless explicitly stuck or verifying task completion. Rely on observation history and admissible actions to guide movement."
+      }
+    ]
+  },
+  "source_type": "success"
+}

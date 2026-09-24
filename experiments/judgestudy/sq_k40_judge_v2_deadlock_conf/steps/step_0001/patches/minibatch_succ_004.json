@@ -1,0 +1,19 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Direct entity extraction for factoid/trivia questions",
+    "Cross-referencing overlapping context snippets to verify the target entity",
+    "Strict adherence to concise, tag-only answer formatting"
+  ],
+  "patch": {
+    "reasoning": "The trajectory demonstrates successful identification of a specific entity ('The New York Times') by matching role-based clues ('crossword editor', 'newspaper') across multiple overlapping context snippets. Encoding explicit guidance for factoid extraction, snippet verification, and strict conciseness will generalize this behavior to future QA tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Extract Exact Entities**: For factoid, trivia, or cloze-style questions, locate the precise noun phrase or entity in the context that directly satisfies the query's clues.\n- **Verify Across Snippets**: When multiple documents reference the same topic, cross-check details to confirm the correct entity before answering.\n- **Maintain Conciseness**: Return only the direct answer (name, date, or short phrase). Omit full sentences, reasoning, or repetitions inside the answer tags.\n\n## Execution Strategy\n1. Scan context for keywords matching the question (roles, titles, locations, dates).\n2. Pinpoint the exact phrase that completes the fact or answers the query.\n3. Validate against all provided snippets to avoid hallucination or mismatched entities.\n4. Output the verified entity strictly within `<answer>...</answer>` tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

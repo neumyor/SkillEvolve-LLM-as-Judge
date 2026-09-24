@@ -1,0 +1,103 @@
+{
+  "step": 2,
+  "epoch": 1,
+  "step_in_epoch": 1,
+  "timing": {
+    "rollout_s": 13.4,
+    "reflect_s": 38.4,
+    "aggregate_s": 50.3,
+    "select_s": 0.0,
+    "update_s": 0.0,
+    "evaluate_s": 16.6
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 76318,
+      "completion_tokens": 21998
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 7373,
+      "completion_tokens": 2827
+    },
+    "merge": {
+      "calls": 2,
+      "prompt_tokens": 3987,
+      "completion_tokens": 6500
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 63230,
+      "completion_tokens": 19754
+    }
+  },
+  "rollout_hard": 0.925,
+  "rollout_soft": 0.941667,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1044,
+      "n_envs": 40,
+      "hard": 0.925,
+      "soft": 0.9416666666666667,
+      "n_failure_patches": 1,
+      "n_success_patches": 5
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 1,
+  "n_success_patches": 5,
+  "n_edits_merged": 3,
+  "n_edits_ranked": 3,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    3,
+    8,
+    8
+  ],
+  "candidate_hash": "036ea3c6480a4d56",
+  "candidate_skill_len": 3502,
+  "edit_apply_summary": {
+    "total": 3,
+    "applied": 3,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_prompt_variant": "v2",
+  "judge_verdict": "REJECT",
+  "judge_confidence": "medium",
+  "judge_reason": "The candidate introduces six new rules, but four lack direct ties to the visible failures, violating the strict growth allowance. A prior attempt targeting similar over-specification and verbosity issues yielded zero improvement, suggesting the proposed heuristics may dilute rather than refine the skill. Without clear evidence that the added complexity drives measurable gains, the risk of regression outweighs the benefit.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 864,
+  "judge_usage": {
+    "prompt_tokens": 7373,
+    "completion_tokens": 2827,
+    "total_tokens": 10200
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "judge_defect_mechanism": "Over-specification and grammatical mismatch in trivia/cloze answers",
+  "judge_evidence_count": 2,
+  "judge_counter_evidence_count": 0,
+  "judge_expected_window_delta": "flat",
+  "judge_falsifier": "A subsequent window showing a statistically significant increase in accuracy specifically on category-vs-example and plural-vs-singular trivia questions, without new formatting regressions.",
+  "judge_rule_override": "",
+  "judge_accepted": false,
+  "rollout_hard_after": 0.925,
+  "candidate_gate_score": 0.73,
+  "action": "reject",
+  "current_score": 0.73,
+  "best_score": 0.73,
+  "best_step": 1,
+  "current_origin": "step_0001",
+  "best_origin": "step_0001",
+  "skill_len": 1891,
+  "wall_time_s": 118.8
+}

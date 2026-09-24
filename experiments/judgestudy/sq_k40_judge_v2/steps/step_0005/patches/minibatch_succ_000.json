@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Metadata-First Scanning: Rapidly locate answers by prioritizing document titles ([TLE]) and opening snippets, which often contain direct definitions or exact matches.",
+    "Descriptive Clause Mapping: Treat Jeopardy-style or standalone descriptive prompts as direct definition requests, mapping the clause's attributes straight to the target entity in the context.",
+    "Direct Match Confidence: When the context explicitly confirms the answer or provides a clear definition, output the exact term immediately without extended synthesis or verification traces."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate three high-value behaviors: (1) leveraging document titles and opening snippets for rapid answer location, (2) treating descriptive/definitional prompts as direct mappings to exact terms rather than open-ended questions, and (3) skipping verbose reasoning when the context provides an explicit match. These patterns address common failure modes (verbosity, over-analysis, slow retrieval) and generalize across trivia, definition, and entity-matching tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "- **Metadata-First Scanning**: Prioritize document titles (`[TLE]`) and opening snippets to rapidly locate answers. These sections frequently contain direct definitions, exact matches, or paraphrased clues, allowing faster extraction before reading full paragraphs."
+      },
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Descriptive Clause Mapping**: Treat standalone descriptive phrases, Jeopardy-style clues, and definitional fragments as direct fill-in-the-blank requests. Map the clause's attributes directly to the exact subject term in the context, ignoring conversational framing or trailing punctuation."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Direct Match Confidence**: When the context explicitly states the answer or provides a clear, unambiguous definition matching the prompt, output the exact term immediately. Skip extended synthesis or multi-step verification for straightforward trivia to prevent verbosity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

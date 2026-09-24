@@ -1,0 +1,19 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Extract key entities, dates, and numerical values from the question to guide context scanning.",
+    "Match exact or closely paraphrased factual statements in the provided documents.",
+    "Maintain strict formatting: provide step-by-step reasoning first, then output only the concise final answer inside <answer> tags.",
+    "Avoid restating the question or adding explanatory text within the answer tags."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectory demonstrates precise extraction of numerical/date cues ('1609', '500', '60', 'spring 1610') to locate the correct passage, followed by strict adherence to the concise answer format. Encoding these steps ensures consistent retrieval and formatting across diverse questions.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n## Core Reasoning & Answering Principles\n1. **Cue Extraction**: Identify specific dates, numbers, names, and unique phrases in the question to quickly scan the context.\n2. **Fact Matching**: Locate sentences that directly confirm or contradict the question's premise. Paraphrased matches are acceptable if they preserve the core facts.\n3. **Structured Output**: Always perform step-by-step reasoning in your thought process. Then, output the final answer strictly inside `<answer>...</answer>` tags.\n4. **Conciseness**: The content inside `<answer>` tags must be direct (typically a few words or a short phrase). Do not repeat the question or include explanations."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,60 @@
+{
+  "reasoning": "Prioritized failure-driven patches per guidelines. Applied failure edits to Principles 2 and 3, and inserted corrective sub-principles 4b and 5b. Omitted success replacements for Principles 2, 4, and 5 due to direct overlap and explicit priority rule favoring failure versions. Preserved success modification to the first common mistake bullet and appended its additional principles (9-14) as they address distinct navigation, appliance management, and heuristic search patterns not covered by failure patches. Integrated failure's Loop Recovery Protocol and supplementary mistake bullets into their respective sections. All edits retain original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+      "content": "2. **Systematic exploration**: Categorize locations into Containers (drawers, cabinets, fridge) and Surfaces (countertops, tables, shelves, dressers). Check every Container and Surface in the room exactly once before any revisit. Always open closed containers before judging them empty.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "3. **Grab immediately**: When a required object is visible and reachable, take it right away before moving elsewhere.",
+      "content": "3. **Grab immediately**: When the exact goal object (or its closest valid match) is visible and reachable, take it immediately. Do not skip visible items to search elsewhere. Verify object names carefully against the task description to avoid picking up distractors.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+      "content": "\n4b. **Verify transformation state**: Before executing a heating, cooling, or cleaning action, confirm the object actually requires the transformation. If it is already hot/cold/clean, skip the appliance interaction entirely and proceed to delivery. Do not repeat transformations.",
+      "support_count": 1,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.",
+      "content": "\n5b. **Check receptacle state before placement**: If the 'put' action is unavailable or returns 'Nothing happens', inspect the target receptacle. If it is closed, open it first, then retry placement. Never assume a receptacle is ready without verification.",
+      "support_count": 1,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n## Loop Recovery Protocol\nWhen systematic searching yields no results or you detect a loop:\n1. **Check Inventory**: Run `inventory` to confirm what you are holding. If holding the goal object, go directly to the destination.\n2. **Switch Category**: If you have exhausted Containers, pivot entirely to Surfaces (and vice versa).\n3. **Verify Admissible Actions**: Only choose actions explicitly listed. Do not assume object names; match exact strings (e.g., 'pan' vs 'pot').\n4. **Break Cycles**: If you return to a previously checked location, force a move to an unvisited location immediately.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Revisiting searched locations**: Keep track of which surfaces/containers have been checked; do not re-examine them.",
+      "content": "- **Revisiting searched locations**: Keep track of which surfaces/containers have been checked; do not re-examine them unless necessary for a dual-purpose location (e.g., fridge).\n- **Skipping inventory checks**: Failing to verify what you are carrying can lead to redundant searches or accidental placement of wrong items. Use `inventory` when uncertain.\n- **Ignoring container states**: Never attempt to place an object into a closed container or use a closed appliance. Always open the container/appliance first and verify it is accessible before proceeding.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Action loops**: Repeatedly toggling or examining the same object wastes steps. Move on to new locations instead.",
+      "content": "\n- **Fixating on one furniture type**: Cycling through only drawers or only shelves ignores other high-probability locations. Alternate between containers and surfaces.\n- **Object identity confusion**: Picking up a 'pot' when asked for a 'pan' (or vice versa) wastes steps. Always verify the exact object name in observations and admissible actions before interacting.\n- **Redundant appliance cycling**: Do not return to appliances multiple times for the same object unless explicitly instructed. Track internal state flags for transformations.\n- **Silent failure recovery**: When placement yields no result, do not immediately navigate away. Verify inventory possession and receptacle openness at the location before leaving.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+      "content": "\n9. **Open before interact/place**: Always open closed containers (cabinets, drawers, fridge) or appliances (microwave) before placing objects inside or performing state changes (clean, heat, cool). Do not attempt to place or transform while the receptacle is closed.\n10. **Sequential placement for multi-object tasks**: When tasked with moving multiple items, place the first acquired item at the target receptacle immediately. This frees your inventory/hands to retrieve and transport the remaining items without unnecessary backtracking.\n11. **Verify state with inventory**: During long searches or if unsure about your current load, use the `inventory` action to confirm whether you are holding the target object before navigating elsewhere.\n12. **Close appliances after use**: After heating, cooling, or cleaning with an appliance (microwave, fridge, sink), close it to clear the workspace and prevent blocking future interactions.\n13. **Prioritize transformation appliances**: When searching for food or perishables, check the fridge or microwave early in the episode. These locations often store the target item and are required later for the transformation step, saving travel time.\n14. **Use object priors**: Guide your initial search by targeting locations where the object type is commonly found (e.g., sponges near sinks, knives on counters, CDs on desks, statues in drawers) to minimize random exploration.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Pronoun & Predicate-First Parsing: Treating questions starting with 'Its...', 'The...', or lacking a subject as property sets to be satisfied by a logical subject.",
+    "Compound Descriptor Convergence: Parsing comma-separated or hyphenated phrases as independent constraints that must converge on a single entity.",
+    "Symbolic & Formulaic Translation: Decoding mathematical notation, shorthand, or abbreviations into conceptual terms before context matching."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handle fragmentary, pronoun-led, and compound-clue questions by treating them as sets of independent constraints rather than grammatical sentences. They also decode symbolic/shorthand inputs into conceptual search terms. Encoding these parsing strategies will improve robustness on Jeopardy-style and trivia prompts.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "\n- **Pronoun & Predicate-First Parsing**: Questions frequently begin with possessive pronouns ('Its...', 'His...') or definite articles ('The...') followed by a property or action, omitting the subject. Treat these openings as defining attributes rather than grammatical subjects. Scan the context to find the entity that logically serves as the subject satisfying the subsequent predicate."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like \"this settlement\" or \"his discovery\". Scan the context to find the specific entity that satisfies the description. Prioritize explicit matches over assumptions.",
+        "content": "\n- **Compound Descriptor Convergence**: Clues often use comma-separated or hyphenated noun phrases (e.g., 'Georgia guy, flag-fashioning pop painter') to point to an answer. Parse each segment as an independent constraint. The correct entity must satisfy all segments simultaneously. Discard literal interpretations of individual segments if they conflict, focusing on the convergent entity."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "\n- **Symbolic & Shorthand Decoding**: Questions may contain mathematical notation, abbreviations, or conceptual shorthand (e.g., 'pi r (squared)', 'DC', 'PTO'). Translate these symbolic representations into their full conceptual meanings before scanning. Match the translated concept to the corresponding entity or term in the text."
+      }
+    ]
+  },
+  "source_type": "success"
+}

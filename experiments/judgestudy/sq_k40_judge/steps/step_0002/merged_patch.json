@@ -1,0 +1,54 @@
+{
+  "reasoning": "Failure-driven patches are prioritized per guidelines. Corrective rules for proper name formatting, category-vs-instance distinction, and exact grammatical alignment are preserved as primary directives. Success-driven patches addressing noisy context scanning, constraint-driven verification, comprehensive slot-filling/clue syntax mapping, and enhanced conciseness are retained as they cover distinct, well-supported patterns. Where overlap exists (e.g., modifier stripping vs. name preservation), the failure-driven version takes precedence. All edits retain their original support counts and source types.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "Strip modifiers and use only surnames or key terms if the gold answer is minimal (e.g., output \"C\" not \"Vitamin C\", \"Genet\" not \"Jean Genet\").",
+      "content": "For proper names, preserve the exact format (including titles, middle initials, or surnames) as it appears in the most direct context match. Do not arbitrarily drop honorifics or expand/contract names unless the clue explicitly demands a specific part (e.g., 'surname only').",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "Avoid converting declarative clues into Yes/No answers.",
+      "content": "- **Category vs. Specific Instance**: When a clue asks for a term, class, or definition (e.g., 'An astringent applied...'), prioritize the general category or technical term over specific examples mentioned in the text. Verify if the question seeks a label rather than a particular item.",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "Minimal Reasoning: Skip verbose derivations for straightforward retrieval tasks. If step-by-step reasoning is performed, place it outside the answer tags and keep it brief.",
+      "content": "- **Exact Grammatical Alignment**: Strictly match the singular/plural form requested by the question or implied by the context. If the gold answer or context uses a singular term, do not pluralize it (and vice versa). Preserve exact capitalization and punctuation.",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches or defining phrases. When multiple passages restate the same fact, quickly identify the clearest, most direct mention and treat it as ground truth. Ignore tangential details.",
+      "content": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts (e.g., scraped lists, flashcard dumps), ignore duplicated passages and isolate the single mention that directly defines or completes the query.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Verification**: Cross-reference candidate answers against explicit mentions and question constraints (dates, names, descriptors) before finalizing.",
+      "content": "- **Constraint-Driven Verification**: Prioritize exact matches for numerical, temporal, or proper-noun constraints embedded in the clue. Discard candidates that satisfy the general topic but fail specific quantitative or categorical filters.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- Many questions are incomplete clues or trivia statements. Identify the missing subject, object, or keyword rather than summarizing the context.",
+      "content": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.\n- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.\n- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.\n- **Noise Filtering**: In search-result-style or repetitive contexts, rapidly scan titles and snippets for exact keyword matches, then verify in the passage body before extracting. Ignore duplicated passages.\n- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.\n- **Gold Alignment**: Match the granularity and phrasing of the expected answer exactly. If the gold answer is a single word or short phrase, do not expand it into a full sentence or add explanatory clauses inside the answer tags.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler.",
+      "content": "- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

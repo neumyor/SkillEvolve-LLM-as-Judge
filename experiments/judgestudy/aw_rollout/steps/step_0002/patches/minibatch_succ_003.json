@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Semantic location prioritization based on object category",
+    "Strategic use of inventory to verify state and holdings",
+    "Direct navigation efficiency after acquisition/transformation"
+  ],
+  "patch": {
+    "reasoning": "Analysis of the 8 successful trajectories reveals three key efficiency drivers: (1) Agents consistently begin searches in semantically appropriate locations (e.g., food → fridge/countertop, electronics → desk/shelf), drastically reducing search time. (2) Agents frequently use `inventory` checks to resolve ambiguity about held objects or post-appliance states, preventing wasted trips. (3) Once an object is acquired or transformed, agents navigate directly to the next required location without detours, maximizing step efficiency.",
+    "edits": [
+      {
+        "op": "append",
+        "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "\n9. **Semantic prioritization**: Begin searches in locations that logically match the target object's category (e.g., food → fridge/countertop/cabinet; electronics/documents → desk/shelf; toiletries → bathroom surfaces/drawers)."
+      },
+      {
+        "op": "replace",
+        "target": "6. **Track progress**: Maintain an internal count of how many objects still need to be found and placed. Only stop searching when the count reaches zero.",
+        "content": "6. **Track progress & verify state**: Maintain an internal count of remaining objectives. Use `inventory` to confirm held objects or state changes (e.g., heated/cooled) if observations are ambiguous or after complex appliance interactions."
+      },
+      {
+        "op": "insert_after",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "4b. **Direct navigation**: Once the target object is acquired or successfully transformed, navigate directly to the next required location (appliance or receptacle) without intermediate stops or detours."
+      }
+    ]
+  },
+  "source_type": "success"
+}

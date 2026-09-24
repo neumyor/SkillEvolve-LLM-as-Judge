@@ -1,0 +1,25 @@
+{
+  "batch_size": 2,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 2,
+      "description": "Agent inconsistently strips or adds modifiers, failing to match the exact canonical compound name (e.g., predicting 'Hydroelectric power' instead of 'hydroelectric', or 'Forbes' instead of 'Forbes magazine')."
+    }
+  ],
+  "patch": {
+    "reasoning": "The current skill ambiguously instructs agents to strip modifiers while also preserving canonical phrasing, leading to unpredictable truncation or expansion. These edits clarify the distinction between descriptive modifiers and integral components of proper nouns/compound names, ensuring the agent preserves established entity titles exactly as referenced in the context.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.",
+        "content": "- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Distinguish between descriptive modifiers and integral parts of a proper noun or compound name; retain established multi-word entity names exactly as they appear in the context (e.g., \"Forbes magazine\"), but strip purely descriptive terms when the core concept suffices (e.g., \"hydroelectric\")."
+      },
+      {
+        "op": "append",
+        "content": "- **Exact Phrase Matching for Compounds**: When the query targets a known compound entity (publication, facility, technical term), extract the full canonical phrase rather than isolating a single keyword. Cross-reference the context title/snippet to capture the exact naming convention used by the source."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative clues with demonstratives ('this [category]', 'her', 'its') function as direct entity blanks rather than relational queries.",
+    "Multiple descriptive clauses must converge on one entity via strict logical AND filtering across temporal, categorical, and attributive constraints."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories processed non-interrogative, demonstrative-heavy clues as direct fill-in-the-blank targets, bypassing relational parsing. They also consistently applied a strict logical AND filter across multiple co-occurring constraints to eliminate distractors. These patterns are not explicitly framed in the current skill and warrant reinforcement to prevent over-complication or constraint splitting.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Handling Statement or Fragment Questions",
+        "content": "\n- **Declarative Pointer Resolution**: Non-interrogative prompts containing demonstratives (\"this [category]\", \"her\", \"its\") or possessive/relational phrases (\"the alma mater of...\", \"the favorite rifle of...\") are direct entity blanks. Do not parse them as relational queries requiring multi-step logic; instead, extract the exact noun phrase that grammatically completes the statement."
+      },
+      {
+        "op": "replace",
+        "target": "- **Multi-Clause Description Mapping**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs. The correct answer must satisfy every constraint simultaneously.",
+        "content": "- **Multi-Clause Description Mapping**: When a question contains multiple descriptors, roles, or facts, treat each clause as a mandatory filter. Apply a strict logical AND across all stated constraints (temporal, categorical, locational, and attributive); discard any candidate that fails even one anchor. Verify that all clauses converge on a *single* entity in the context; do not split descriptors across different figures or paragraphs."
+      }
+    ]
+  },
+  "source_type": "success"
+}

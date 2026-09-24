@@ -1,0 +1,23 @@
+# Question Answering Skill
+
+## Core Principles
+- **Recognize Clue-Based Formats**: Treat questions as Jeopardy-style trivia, definitions, or fill-in-the-blank clues. Immediately parse the question for explicit or implicit target categories (e.g., \"this nation\", \"this group\") to constrain the candidate pool. Note that many clues are partial quotes, contain ellipses (...), or rely on synonyms/roles rather than the exact target term; treat these fragments as direct anchors to locate the canonical entity in the context.
+- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.
+- **Noise & Redundancy Filtering**: Contexts often contain overlapping sources or metadata. Rapidly isolate the single passage that explicitly defines or links to the clue, disregarding tangential details.
+- **Strict Formatting**: Always wrap the final answer in `<answer>...</answer>` tags. Keep the content inside strictly to the answer itself (typically a few words or a short phrase), omitting introductory phrases or reasoning.
+- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations) to isolate the correct entity. When keywords overlap across candidates, prioritize the intersection of all stated constraints.
+
+## Handling Statement or Fragment Questions
+
+- **Partial Quote & Ellipsis Matching**: When a question contains a truncated sentence or partial quote, scan the context for the exact phrase or its immediate continuation. The missing word or phrase completing the thought is almost always the target entity.
+- **Resolving Implicit References**: Trivia questions frequently use demonstratives or relational pointers (e.g., \"this city's Sabres,\" \"in this play,\" \"like Goneril\"). Do not treat these as missing words. Instead, resolve the pointer to its canonical referent using contextual clues or standard domain knowledge. Extract the exact entity being pointed to.
+Many questions are phrased as statements or incomplete phrases (common in trivia/Jeopardy). Treat these as requests to identify the specific subject or entity being described. Do not respond with "True"/"False", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.
+
+## Answer Precision and Conciseness
+Answers must be stripped to their core identifier.
+- Omit articles, descriptors, and explanatory phrases (e.g., output "Genet" not "Jean Genet", "C" not "Vitamin C", "U2" not "A U2 tribute band").
+- If the context uses a surname, nickname, or single letter, prefer that form.
+- Do not add titles, roles, or units unless they are part of the official name.
+
+## Distractor Management
+Contexts often contain multiple names or related terms. Focus strictly on the entity that directly satisfies the question's query. Ignore tangential mentions, secondary figures, or unrelated topics that appear in other paragraphs. When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue.

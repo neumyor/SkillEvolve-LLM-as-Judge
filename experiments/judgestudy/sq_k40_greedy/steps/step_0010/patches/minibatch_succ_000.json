@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Explicit Dimension Literalism",
+    "Verbatim Quote Completion"
+  ],
+  "patch": {
+    "reasoning": "Historical failure logs (Steps 2-9) consistently show agents failing due to overly aggressive stripping or canonicalization that ignores explicit question constraints. Successful trajectories (e.g., 'First name of...', 'this color', 'Duchess of it') demonstrate that when a prompt explicitly requests a specific dimension or sub-component, the agent must extract and output exactly that lexical item verbatim, bypassing general minimization rules. This edit enforces constraint literalism to resolve the tension between strict minimal extraction and explicit dimensional requests.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Strict Minimal Entity Extraction**: Aggressively strip non-essential modifiers, corporate suffixes (e.g., \"Cards\", \"Inc.\"), middle initials (e.g., \"B.\"), titles, and roles (e.g., \"King of\", \"President\"). For events or phenomena, extract only the core term (e.g., \"transit\" not \"Transit of Venus\"). Always prioritize the shortest, most direct identifier that satisfies all constraints.",
+        "content": "- **Strict Minimal Entity Extraction**: Aggressively strip non-essential modifiers, corporate suffixes (e.g., \"Cards\", \"Inc.\"), middle initials (e.g., \"B.\"), titles, and roles (e.g., \"King of\", \"President\"). For events or phenomena, extract only the core term (e.g., \"transit\" not \"Transit of Venus\"). Always prioritize the shortest, most direct identifier that satisfies all constraints. **Exception**: When the question explicitly requests a specific dimension or sub-component (e.g., \"First name of...\", \"this color\", \"the year\"), extract and output exactly that lexical item as it appears in the context. Do not apply general stripping rules to explicitly requested components; preserve their exact form."
+      }
+    ]
+  },
+  "source_type": "success"
+}

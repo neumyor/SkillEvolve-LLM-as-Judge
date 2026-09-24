@@ -1,0 +1,109 @@
+{
+  "reasoning": "Prioritized failure-driven corrections for entity stripping, constraint verification, and demonstrative resolution. Integrated success-driven enhancements for structured trivia formats, metadata locking, and search pipeline optimization. Resolved minor overlap on compound term extraction by retaining the failure-driven rule for prefix preservation while keeping the success-driven rule for multi-word canonical names as a complementary guideline. All edits carry forward their original support counts and source types.",
+  "edits": [
+    {
+      "op": "append",
+      "content": "- **Surname-Only Preference for Persons**: In trivia and Jeopardy-style contexts, default to returning only the surname for persons (e.g., 'Clark' not 'Wesley Clark'). Only include first/middle names if explicitly requested by the question or required to resolve ambiguity among multiple candidates with the same surname.",
+      "support_count": 1,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "## Answer Precision and Conciseness",
+      "content": "\n- **No Appended Categories or Descriptors**: Never append contextual categories, roles, or descriptors (e.g., \"market\", \"city\", \"group\", \"Scouts\") to the answer unless they are strictly part of the recognized canonical name. If the question asks for a specific entity or term, output only that term. Avoid descriptive phrases like \"capital cities\" or \"city in Germany\"; resolve directly to the proper noun or specific attribute requested.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Head-Noun Extraction from Compound Terms**: When the context presents a compound phrase or title (e.g., \"Egg White Denver Omelet\", \"McCormick & Company\", \"Henry V\"), extract the core head-noun or primary identifier (e.g., \"Omelet\", \"McCormick\", \"Henry V\") unless the full compound is the recognized canonical name. Avoid outputting unnecessary modifiers, adjectives, or conjunctions that do not change the entity's identity.",
+      "content": "- **Head-Noun Extraction from Compound Terms**: When the context presents a compound phrase or title (e.g., \"Egg White Denver Omelet\", \"McCormick & Company\", \"Henry V\"), extract the core head-noun or primary identifier (e.g., \"Omelet\", \"McCormick\", \"Henry V\") unless the full compound is the recognized canonical name. **Preserve integral geographical, honorific, or institutional prefixes** (e.g., \"Lake\", \"Mount\", \"St.\", \"University\") when they are essential to the canonical name (e.g., \"Lake Superior\", not \"Superior\"). Do not strip definite articles (e.g., \"the\") if they are part of the standard reference. Avoid outputting unnecessary modifiers, adjectives, or conjunctions that do not change the entity's identity.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Target Dimension Verification**: Before finalizing, explicitly verify the exact dimension requested (e.g., location, person, original phrase, specific term). Never substitute related concepts such as relationships (\"Sisters\"), phenomena (\"Spoonerism\"), or categories. If the clue describes a place or entity via attributes, output the place/entity itself, not the descriptor or relational link.",
+      "content": "\n- **Resolving \"this/these [Category]\" Clues**: When a question uses demonstratives like \"this nation,\" \"these businesses,\" or \"one of these,\" the target is often the *specific category or term* being described, not the associated organization or broader group. If the clue points to a type (e.g., \"these Chinese businesses\"), extract the exact noun used in the context for that type (e.g., \"laundries\"), rather than the proper name of the alliance or movement. Match the demonstrative directly to the missing word or category in the source material.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. Explicitly check the *requested entity type* and categorical properties (e.g., \"acid\" vs \"base\") against candidate matches to avoid answering with a related but incorrect entity. Discard candidates that fail any single constraint, even if they match other keywords.",
+      "content": "- **Constraint Verification**: Simultaneously verify multiple co-occurring constraints (e.g., specific numbers, dates, roles, locations, and **named entities**) to isolate the correct entity. Treat numerical values, years, and temporal markers as high-priority disambiguation anchors alongside proper nouns. Apply a strict logical AND filter across all stated constraints; prioritize candidates that satisfy every single anchor. **Explicitly reject candidates that rely on frequency or general prominence.** If a candidate matches keywords but fails any single constraint (e.g., wrong birth year, wrong location), discard it immediately. Always cross-reference the requested entity type and categorical properties against the candidate pool.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Alias & Cross-Lingual Resolution**: Trivia questions frequently use foreign terms, nicknames, mythological figures, or translated phrases as direct pointers (e.g., \"lambi\" → Conch, \"Clio\" → History, \"Soyuz\" → Union). Treat these as semantic anchors rather than literal strings. Map them immediately to their standard English/canonical equivalents found in the context, bypassing strict keyword matching.",
+      "content": "\n- **Colon-Separated Trivia Format**: Many trivia prompts follow a `Category: \"Clue\"` or `Descriptor: \"Phrase\"` structure. Treat the segment after the colon as the definitive anchor. Ignore the preceding category label unless it is necessary to constrain the entity type, and resolve the quoted phrase directly to its canonical referent.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Partial Quote & Ellipsis Matching**: When a question contains a truncated sentence or partial quote, scan the context for the exact phrase or its immediate continuation. The missing word or phrase completing the thought is almost always the target entity.",
+      "content": "\n- **Quoted Catchphrases & Nicknames**: When a question features a famous quote, slogan, or nickname enclosed in quotes (e.g., \"Yabba Dabba Do!\", \"America's Sherlock Holmes in Sneakers\"), treat it as a direct pointer to its originating media franchise, character, or work. Resolve the quote to the canonical title or proper noun associated with it, bypassing literal string searches.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Direct Lookup Priority: When a question closely mirrors a document title, snippet, or definition sentence, treat it as a direct lookup request. Extract the answer verbatim from the matching passage without applying complex semantic transformations or over-analyzing.",
+      "content": "Direct Lookup Priority: When a question closely mirrors a document title, snippet, or definition sentence, treat it as a direct lookup request. **Bypass semantic reasoning entirely**; extract the answer verbatim from the matching passage.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "Verbatim Context Lifting: Trivia questions are often copied verbatim or near-verbatim from context sentences, titles, or flashcards. Prioritize scanning for exact or near-exact string matches in document titles and snippets before attempting semantic reasoning or keyword stripping.",
+      "content": "\n- **Flashcard & Definition Prompts**: When the question reads as a standalone definition or flashcard prompt, treat it as a direct string-match request. Do not attempt to rephrase or infer; locate the exact term being defined in the context and extract it verbatim.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "Direct Keyword Matching & Scanning: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+      "content": "\n- **Clue Separator & Artifact Parsing**: Questions frequently use colons, ampersands (&), or ellipses (...) as structural separators rather than semantic content. Treat these as delimiters to split the clue into its component constraints, stripping them immediately to isolate the core anchor phrases.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Strict Minimal Entity Extraction**: Aggressively strip non-essential modifiers, corporate suffixes (e.g., \"Cards\", \"Inc.\"), middle initials (e.g., \"B.\"), titles, and roles (e.g., \"King of\", \"President\"). For events or phenomena, extract only the core term (e.g., \"transit\" not \"Transit of Venus\"). Always prioritize the shortest, most direct identifier that satisfies all constraints.",
+      "content": "- **Strict Minimal Entity Extraction**: Aggressively strip non-essential modifiers, corporate suffixes (e.g., \"Cards\", \"Inc.\"), middle initials (e.g., \"B.\"), titles, and roles (e.g., \"King of\", \"President\"). For events or phenomena, extract only the core term (e.g., \"transit\" not \"Transit of Venus\"). Always prioritize the shortest, most direct identifier that satisfies all constraints. **Exception**: When the question explicitly requests a specific dimension or sub-component (e.g., \"First name of...\", \"this color\", \"the year\"), extract and output exactly that lexical item as it appears in the context. Do not apply general stripping rules to explicitly requested components; preserve their exact form.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "- **Declarative Statement Resolution**: Many trivia prompts are phrased as complete declarative sentences (e.g., \"This science of growing plants without soil was developed in the mid-19th century\"). Treat these as direct fill-in-the-blank prompts. Identify the grammatical slot being queried (subject, object, or modifier) and extract the exact term that completes the statement.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "- **Preserve Multi-Word Canonical Names**: When the target is a recognized proper name, title, organization, or phrase (e.g., \"Smithsonian Institution\", \"Raindrops Keep Fallin' On My Head\"), retain the full canonical phrasing. Do not apply aggressive head-noun stripping to compound terms that function as a single conceptual unit or official title.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "**Crucially, always strip document title prefixes/suffixes and metadata artifacts (e.g., \"- Wikipedia\", \"Official Flag of\") to isolate the core entity requested by the clue.**",
+      "content": "\n\n- **Metadata Constraint Locking**: Before scanning paragraphs, cross-reference explicit constraints in the question (dates, numbers, specific named entities, locations) against `[TLE]` and `[PAR]` fields. Use these metadata anchors to instantly lock onto the correct document, preventing distractor selection from overlapping sources.",
+      "support_count": 7,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "Execute a strict three-step search: (1) Scan `[TLE]` and `[PAR]` metadata for exact/near-exact matches; (2) Apply logical AND filters across all stated constraints to narrow candidates; (3) Extract the exact term only if it satisfies every constraint simultaneously. Do not read deeply until shallow scans fail.",
+      "content": "Execute a strict three-step pipeline: (1) **Lock Source via Metadata**: Cross-reference question constraints (dates, numbers, entities) against `[TLE]`/`[PAR]` to instantly isolate the definitive document; (2) **Verify & Extract**: Confirm the target term satisfies all constraints within that locked passage; (3) **Format Output**: Return the exact canonical term without semantic over-analysis. Skip deep paragraph reading if metadata alignment is confirmed.",
+      "support_count": 7,
+      "source_type": "success"
+    }
+  ]
+}

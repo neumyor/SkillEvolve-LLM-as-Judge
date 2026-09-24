@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Handling minimalist/reverse-clue prompts by inferring implicit question dimensions from context",
+    "Consistent constraint intersection across fragmented trivia clues"
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates successful handling of both standard fragment clues and minimalist/reverse-clue prompts (e.g., single-word questions like 'Timonium'). Agents correctly inferred the implicit question dimension (typically location, category, or defining attribute) from the context rather than treating the prompt as the final answer. Encoding this reverse-clue strategy prevents failure on sparse prompts while maintaining strict answer precision.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Handling Statement or Fragment Questions",
+        "content": "- **Reverse Clues & Minimalist Prompts**: When the question is a single proper noun or extremely short phrase lacking an explicit interrogative, treat it as a reverse Jeopardy clue. Infer the implicit question dimension (typically location, category, or defining attribute) from the context's dominant associations, and answer that attribute instead of repeating the prompt."
+      },
+      {
+        "op": "replace",
+        "target": "Many questions are phrased as statements or incomplete phrases (common in trivia/Jeopardy). Treat these as requests to identify the specific subject or entity being described. Do not respond with \"True\"/\"False\", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+        "content": "Many questions are phrased as statements, incomplete phrases, or reverse clues (common in trivia/Jeopardy). Treat these as requests to identify the specific subject, attribute, or missing term. Do not respond with \"True\"/\"False\", nor repeat the prompt itself. Instead, extract the exact proper noun, value, or attribute that satisfies the implied query."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,36 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 8,
+      "description": "Agents consistently over-specify answers, select categories/booleans instead of entities, or fail to match the exact grammatical slot and conciseness required by Jeopardy-style/cloze fragments."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals systematic failures where agents output verbose titles, categories, booleans, or mismatched entity types instead of the precise, concise term requested by fragmentary or Jeopardy-style clues. The proposed edits strengthen Cloze/Jeopardy parsing to explicitly forbid categories/booleans, enforce strict conciseness by stripping generic suffixes/formal titles while preserving necessary prefixes, mandate semantic slot alignment to prevent category/organization confusion, and streamline the verification step to reduce verbosity-driven format drift.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "- **Cloze & Jeopardy Parsing**: Treat declarative statements, Jeopardy-style clues, and trailing blanks as direct fill-in-the-blank requests. Extract the exact missing subject or entity, never a category, boolean, or descriptive phrase. Anchor strictly to the noun or proper name that completes the clue."
+      },
+      {
+        "op": "replace",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "- **Exact Term & Conciseness**: Prioritize the shortest, most direct entity name that uniquely satisfies the query. Strip generic organizational suffixes (e.g., 'Alliance', 'Market', 'Inc.'), formal titles, and non-essential descriptors unless they are integral to the official short name. Preserve necessary prefixes/modifiers (e.g., 'Lake', 'The') exactly as used in the standard reference."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Strict Conciseness**: Output only the exact entity, word, or short phrase requested. Never include full sentences, explanations, or conversational filler inside `<answer>...</answer>`.",
+        "content": "\n- **Semantic Slot & Category Alignment**: Parse the question to identify the precise semantic role requested (e.g., person, location, business type, concept). Strictly filter candidates to match that role. Do not default to tangential examples, parent organizations, or broader categories mentioned in the text."
+      },
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Perform a single-sentence verification linking the question's core descriptor directly to the extracted entity, confirming exact textual alignment and grammatical slot satisfaction. Skip extended analysis for straightforward trivia matches."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "rule_missing",
+      "count": 8,
+      "description": "Lack of guidance for interpreting statement/fragment questions and enforcing strict answer precision."
+    }
+  ],
+  "patch": {
+    "reasoning": "Agents consistently misinterpret statement-style trivia questions as True/False or descriptive prompts, yielding answers like 'True' or 'A U2 tribute band'. They also over-specify answers ('Vitamin C' vs 'C', 'Jean Genet' vs 'Genet') and get distracted by secondary entities in noisy contexts. These edits provide explicit rules for identifying target entities in non-interrogative prompts, stripping answers to core identifiers, and ignoring distractors.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "## Handling Statement or Fragment Questions\nMany questions are phrased as statements or incomplete phrases (common in trivia/Jeopardy). Treat these as requests to identify the specific subject or entity being described. Do not respond with \"True\"/\"False\", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.\n\n## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.\n\n## Distractor Management\nContexts often contain multiple names or related terms. Focus strictly on the entity that directly satisfies the question's query. Ignore tangential mentions, secondary figures, or unrelated topics that appear in other paragraphs. When in doubt, choose the most frequently referenced or prominently featured entity in the immediate vicinity of the clue."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

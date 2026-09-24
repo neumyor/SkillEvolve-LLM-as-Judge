@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Verbatim Quote & Text Completion: Treating direct quotes, poem lines, or sentence fragments as text-completion tasks to find the exact missing word or continuation.",
+    "Definitional & Etymological Mapping: Scanning for explicit definitions, translations, or etymologies ('Greek for leaf', 'Latin radix meaning root') and mapping them directly to the target term.",
+    "Evidence-Quoting Reasoning: Consistently quoting the exact context span in the reasoning step to force verifiable grounding and constraint alignment."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently handle three specific clue types: verbatim quotes/text completions, explicit definitions/etymologies, and evidence-quoting reasoning. These patterns were not fully covered in the current skill and represent high-frequency success behaviors across the batch.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "- **Handle Fragments, Quotes & Text Continuations**: Questions frequently appear as trailing ellipses (`...`), verbatim quotes, poem lines, or sentence fragments requiring completion. Treat these as direct text-completion tasks. Scan the context for the exact matching phrase and extract the immediately following word(s) or the missing term. Ignore non-semantic noise and focus on core identifying constraints."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+        "content": "\n- **Definitional & Etymological Mapping**: Clues often provide explicit definitions, translations, or etymologies (e.g., \"Greek for 'leaf'\", \"From the Latin 'radix' meaning root\"). Scan for dictionary-style definitions, glossary entries, or explicit equivalence statements (\"X means/called Y\", \"derived from Z\"). Map the clue's descriptive phrase directly to the canonical term defined in the text."
+      },
+      {
+        "op": "replace",
+        "target": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span.",
+        "content": "- **Evidence-Quoting & Constraint Alignment**: In the reasoning step, explicitly quote or closely paraphrase the exact context span containing the answer. State clearly how this evidence satisfies the question's constraints (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces verifiable grounding and aligns the query's requirements with the extracted span."
+      }
+    ]
+  },
+  "source_type": "success"
+}

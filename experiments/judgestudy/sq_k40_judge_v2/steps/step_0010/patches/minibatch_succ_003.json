@@ -1,0 +1,29 @@
+{
+  "batch_size": 7,
+  "success_patterns": [
+    "Direct List/Attribute-to-Entity Mapping",
+    "Concise Single-Sentence Verification",
+    "Context-Anchor Bridging"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate three behaviors not fully captured by the current skill: (1) resolving lists of attributes or sequential steps into a single parent/container entity, (2) generating highly concise, single-link verification traces instead of multi-step breakdowns for straightforward trivia, and (3) confidently bridging minor knowledge gaps using strong contextual anchors. Encoding these patterns will reduce verbosity and improve accuracy on list-based and slightly implicit queries.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+        "content": "3. Generate a concise, single-sentence verification trace that directly links the question's core descriptor to the extracted entity. Skip multi-step breakdowns for straightforward trivia matches to maintain speed and conciseness."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **List & Attribute Mapping**: When questions present a list of names, features, or sequential steps (e.g., character rosters, rank progressions), identify the overarching container, title, or final target entity. Do not output the list components themselves; resolve them to the single subject requested."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+        "content": "\n- **Context-Anchor Bridging**: If the context provides a definitive anchor (e.g., familial ties, geographic hints, associated works), confidently supply the precise entity even if it requires minor external recall. Verify only that the answer aligns with the contextual clue before extracting."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Definition & Flashcard Clue Resolution",
+    "Boilerplate & Repetition Invariance",
+    "Structural Marker Stripping"
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates high success on trivia questions that function as direct definitions, flashcard prompts, or are lifted from repetitive boilerplate contexts (e.g., job postings, dictionary entries). Agents succeed by treating the entire question as an atomic clue, stripping non-essential structural markers (parentheticals, metadata), and focusing on the invariant factual core across repetitive documents. These patterns are not explicitly codified in the current skill and should be reinforced to prevent over-parsing or distraction by template text.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- Direct Keyword Matching & Scanning: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+        "content": "- Direct Keyword Matching & Scanning: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), ellipses, and **parenthetical stage directions or metadata** from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply."
+      },
+      {
+        "op": "insert_after",
+        "target": "- Paraphrase & Synonym Mapping: Clues rarely quote the answer verbatim. Instead, they describe attributes, roles, or associations. Match descriptive phrases to their canonical terms using contextual anchors and domain knowledge.",
+        "content": "\n\n- **Definition & Flashcard Clues**: When the question reads as a definition, description, or flashcard prompt (e.g., \"A short, witty saying\", \"this crunchy vegetable\"), the target is invariably the *term* being defined. Locate the definition in the context and extract the associated canonical term."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Handling Clue Comparisons & Analogies**: Questions frequently use a known entity as a comparative anchor (e.g., \"like [Name]\", \"similar to [Entity]\"). Never output the comparison term itself. Instead, extract the target category, role, or relationship being described, and resolve the pointer to the actual subject of the query.",
+        "content": "\n\n- **Boilerplate & Repetition Handling**: Contexts often consist of repetitive templates (e.g., job postings, dictionary entries, news wires). Ignore boilerplate formatting, dates, and metadata. Focus solely on the invariant factual core that repeats across documents to identify the answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

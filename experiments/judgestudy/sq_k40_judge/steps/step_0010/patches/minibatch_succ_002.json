@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Resolving possessive pronouns ('his', 'her') and standalone pronouns ('it', 'he') as primary query anchors in declarative clues.",
+    "Treating quoted titles, phrases, or song names in prompts as contextual constraints rather than the answer itself.",
+    "Converting declarative trivia statements into explicit 'Who/What/Where' queries to isolate the missing variable."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories handled Jeopardy-style declarative clues containing implicit pronouns ('his', 'it') and quoted titles/phrases. While the skill covers demonstratives, it lacks explicit guidance for possessive/pronoun anchors and quoted material, which frequently cause agents to mirror the prompt or select the wrong entity. Encoding these patterns will prevent mirroring errors and improve anchor resolution.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Pronoun & Possessive Resolution**: Treat possessive pronouns (\"his\", \"her\", \"their\") and standalone subject pronouns (\"it\", \"he\") in declarative clues as primary query anchors. Map them to the missing entity and use the accompanying descriptive clauses as active filtering constraints, just as with demonstratives."
+      },
+      {
+        "op": "insert_after",
+        "target": "No Syntactic Mirroring",
+        "content": "- **Quoted Material as Constraints**: When clues contain quoted titles, phrases, or song names, treat them as contextual constraints or distractors, not the answer. Resolve the semantic gap to the creator, subject, or category implied by the quote, ensuring the output does not simply repeat the quoted string."
+      }
+    ]
+  },
+  "source_type": "success"
+}

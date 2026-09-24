@@ -1,0 +1,22 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Completing the full examination sequence (turn on lamp -> examine object)",
+    "Searching desks and shelves for appliances"
+  ],
+  "patch": {
+    "reasoning": "The trajectory shows the agent turning on the desklamp but stopping short of the final 'examine' action required to complete the goal. The skill's 'Examine in Light' steps were incomplete. Additionally, the agent successfully found the desklamp on a shelf, supporting a heuristic to prioritize desks and shelves when searching for stationary appliances.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Find X -> take X -> find desklamp -> use desdlamp",
+        "content": "Find X -> take X -> find desklamp -> use desklamp -> examine X"
+      },
+      {
+        "op": "append",
+        "content": "**Appliance Location Heuristic**: When searching for appliances like desklamps, prioritize checking desks and shelves, as these are the most common locations for such items."
+      }
+    ]
+  },
+  "source_type": "success"
+}

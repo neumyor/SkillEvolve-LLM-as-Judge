@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Acronym & Abbreviation Expansion: Agents correctly expand shortened forms or acronyms in clues (e.g., PIP → Picture in picture, uke → ukulele) to their full canonical terms when context supports it.",
+    "Playful & Cultural Aside Filtering: Agents treat pop-culture references, jokes, or non-factual asides in clues as secondary constraints or distractors, prioritizing hard factual anchors (dates, locations, proper nouns) for entity resolution.",
+    "Direct Extraction Priority: Agents treat declarative trivia prompts as direct lookup tasks, extracting the exact verbatim entity from titles or snippets to complete the semantic gap without unnecessary derivation or rephrasing."
+  ],
+  "patch": {
+    "reasoning": "The successful trajectories consistently demonstrate three behaviors not fully emphasized in the current skill: expanding abbreviated clues to canonical forms, filtering out playful/cultural distractors in favor of factual anchors, and treating declarative trivia as direct verbatim lookups rather than complex reasoning problems. Encoding these will prevent over-derivation and ensure precise canonical matching.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Pun & Riddle Decoding**: Treat playful language, puns, metaphors, or wordplay in clues as semantic descriptors. Map them to their literal factual referents using context verification before extraction. Strip all figurative phrasing from the final answer.",
+        "content": "- **Acronym & Abbreviation Expansion**: When clues use acronyms, initialisms, or shortened forms (e.g., PIP, uke, NASA), expand them to their full canonical terms if the context supports it. Prioritize the unabbreviated form unless the gold answer explicitly requires the short version.\n- **Playful & Cultural Aside Filtering**: Treat pop-culture references, jokes, historical anecdotes, or non-factual asides in clues as secondary constraints or distractors. Prioritize hard factual anchors (dates, locations, proper nouns, explicit categories) to isolate the target entity, and strip away any humorous or conversational framing from the final answer."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, headlines, or incomplete prompts—as direct fill-in-the-blank requests. Mentally convert declarative statements or scene descriptions into explicit 'Who/What/Where is X?' queries to isolate the target slot. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.",
+        "content": "- **Direct Extraction Priority**: For declarative trivia prompts, treat the task as a direct lookup rather than a complex reasoning problem. Identify the missing variable and extract the exact verbatim entity from document titles or passage headers. Avoid over-deriving or rephrasing; the correct answer is typically a direct string match present in the context."
+      }
+    ]
+  },
+  "source_type": "success"
+}

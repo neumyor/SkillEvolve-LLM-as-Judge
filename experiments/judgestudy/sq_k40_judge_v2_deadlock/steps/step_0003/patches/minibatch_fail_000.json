@@ -1,0 +1,26 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Agent outputs descriptive phrases, parenthetical translations, or True/False instead of the exact short entity requested."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 4,
+      "description": "Agent fails to match exact grammatical form (plural/specificity), misidentifies the target entity type due to unclear constraints, or struggles with truncated/noisy queries."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch shows consistent failures where the agent over-explains, adds unnecessary formatting (parentheses, translations), ignores grammatical specifics (singular/plural, species names), or targets the wrong entity type when constraints are implicit or queries are truncated. These edits establish strict extraction priorities to force exact-match behavior, enforce grammatical fidelity, clarify constraint targeting, and provide a fallback strategy for noisy inputs.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "- **Exact Match Priority**: Output only the precise word, short phrase, or entity requested. Never add descriptions, parenthetical translations, explanatory clauses, or \"Yes/No\" verdicts unless explicitly asked.\n- **Grammatical & Specificity Alignment**: Strictly match the exact number (singular/plural), capitalization, and specificity of the target. If the context or expected answer uses a specific term (e.g., \"Brown pelican\", \"Pineapples\"), output that exact string. Do not generalize or simplify.\n- **Constraint Targeting**: Carefully parse the question's grammatical subject and object to determine exactly what is being asked (e.g., location, time period, institution vs. territory). Extract only the entity that satisfies the specific constraint, ignoring closely related but incorrect entities.\n- **Fragmented Query Resolution**: For truncated, typo-ridden, or incomplete prompts, isolate the key descriptive clues and map them directly to the most salient factual answer in the context. Prioritize direct entity matches over inferred relationships."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

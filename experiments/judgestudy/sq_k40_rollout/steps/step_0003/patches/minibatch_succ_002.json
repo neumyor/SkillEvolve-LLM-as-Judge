@@ -1,0 +1,18 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Parsing multi-constraint clues joined by '&' into a composite search profile",
+    "Stripping generic type-indicators (e.g., 'this bubble', 'species of these') to prevent answer contamination"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handle complex trivia clues linked by '&' and correctly strip generic demonstrative nouns that merely indicate the answer's category. Encoding these strategies directly addresses the observed failure mode of appending clue adjectives or unnecessary name parts, ensuring exact-match extraction.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Resolve Placeholders & Figurative Terms**: Questions frequently use placeholders ('this [entity]', '& this [entity]'), quoted metaphors/puns, or standalone noun phrases to point to the answer. Treat these as direct identifiers and map them to the specific named entity in the context, ignoring the literal phrasing of the pointer itself.",
+        "content": "- **Resolve Placeholders & Figurative Terms**: Questions frequently use placeholders ('this [entity]', '& this [entity]'), quoted metaphors/puns, or standalone noun phrases to point to the answer. Use `&` to combine multiple independent constraints into a single search profile. When encountering generic pointers like \"this [noun]\" or \"species of these\", treat them as category labels; strip them from the final output and extract only the precise target entity."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,46 @@
+{
+  "reasoning": "Prioritized failure-driven patches for 'Trivia/Fragment Handling' and 'Exact Term Preference', overriding overlapping success edits per priority guidelines. Preserved success-driven updates for 'Reference Resolution', Step 3 workflow refinement, and added 'Title & Snippet Prioritization'. All edits maintain original support counts and source types. No protected sections were targeted.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+      "content": "- **Trivia/Fragment Handling**: Treat incomplete sentences, Jeopardy-style clues, and malformed/concatenated fragments (e.g., missing spaces, run-on phrases) as direct fill-in-the-blank requests. Map the combined descriptors directly to the single target entity named in the context. Identify the target immediately without describing relationships or generating categories.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "- **Exact Term & Variant Selection**: Prioritize the exact term found in the context that best matches the question's implied form. When multiple variants exist (e.g., nicknames vs. formal names, original language vs. English translation), select the one that aligns with the question's grammatical slot or standard reference. Do not default to the most prominent or verbose variant.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "append",
+      "content": "\n- **Modifier & Suffix Management**: Preserve essential compound terms, geographic pairings, and formal titles when they function as a single recognized entity. For nicknames, monikers, or short identifiers, extract only the distinctive core term and strip generic organizational suffixes (e.g., 'Party', 'Club', 'Group') or non-essential descriptive qualifiers unless strictly part of the official name or explicitly requested.",
+      "support_count": 9,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Provide a concise, single-sentence verification trace linking the question's core descriptor to the extracted entity, confirming context alignment. Skip this step entirely for straightforward, unambiguous matches to prevent verbosity.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "- **Reference & Placeholder Resolution**: When questions contain demonstratives, possessives, standalone placeholders (\"this\", \"that\", \"one of these\"), or descriptive modifiers, explicitly map them to the primary subject entity or head noun in the context. Extract the core entity itself, not its attributes, locations, or associated works, unless the question explicitly asks for those specifics.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+      "content": "\n- **Title & Snippet Prioritization**: For factual and trivia queries, scan document titles (`[TLE]`) and opening paragraphs first. These sections frequently contain direct definitions, exact matches, or paraphrased clues, enabling rapid extraction before reading full passages.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating truncated/cut-off trivia statements as intentional fill-in-the-blank slots requiring contextual completion rather than discarding them as noise.",
+    "Resolving enumeration and alternative clues (lists, series, 'A or B') by isolating the target position and finding the matching entity.",
+    "Broadening pop-culture pointer resolution to explicitly include book/film titles, songs, and puzzle/crossword formats alongside slogans and metaphors."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handle truncated trivia, list/alternative completions, and media/puzzle references. The current skill incorrectly advises ignoring cut-off syntax as 'non-semantic noise' and limits pop-culture mapping to slogans/metaphors. Updating these sections aligns the agent with proven strategies for completing incomplete clues and resolving broader cultural references without overcomplicating the framework.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+        "content": "- **Map Colloquial, Media & Puzzle Pointers**: Clues often reference TV plots, song lyrics, book/film titles, slogans, literary metaphors, or crossword/puzzle formats. Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name."
+      },
+      {
+        "op": "replace",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. **Treat cut-off syntax as intentional trivia blanks** rather than noise; use surrounding context to logically complete the missing term. Focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. **Treat cut-off syntax as intentional trivia blanks** rather than noise; use surrounding context to logically complete the missing term. Focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+        "content": "\n- **Resolve Enumeration & Alternative Clues**: Questions frequently present lists, series, or alternatives (e.g., 'A, B & this one', 'X or Y'). Isolate the target position in the sequence or choice, then scan the context for the entity that completes the set or satisfies the alternative condition."
+      }
+    ]
+  },
+  "source_type": "success"
+}

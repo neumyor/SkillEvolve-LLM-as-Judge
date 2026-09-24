@@ -1,0 +1,35 @@
+{
+  "step": 5,
+  "action": "reject",
+  "n_total": 40,
+  "n_fail": 12,
+  "failure_patterns": [
+    {
+      "pattern": "answer_format: Agent outputs descriptive phrases, full names, or roles instead of the exact short canonical entity.",
+      "count": 12,
+      "task_ids": [
+        "178c1b2e8450497a8fa6b0d853b885ab",
+        "4c64770f574c499392b07f182a75c72c",
+        "bc63eb4bd9234e4583a6c12cb3851cef",
+        "1368fa832f564bf9b2cd4df9fdb4d356",
+        "3c064caf2f694852a0d26e639caefa01",
+        "80437ec671f24947ba2ee4c4c40957b7",
+        "d86f059053b84a90964e806da32c9302",
+        "699d0ee09cef409cb640078bb31baa00",
+        "7e6a92097b984d0b9bf6307dca097b02",
+        "34f2d76dceb14a998d726e820be90c5e",
+        "24e447c6f2564bfcab303c390cb606dd",
+        "a234f47261f14ab9aed867375bddc652"
+      ]
+    }
+  ],
+  "score_before": 0.715,
+  "score_after": 0.715,
+  "rejected_edits": [
+    {
+      "op": "replace",
+      "content": "## Trivia & Clue-Based Extraction Rules\n- **Declarative Clue Handling**: Treat complete sentences or statements as direct queries for a missing entity. Do not answer with \"True/False\" or descriptions; extract the specific noun/title referenced.\n- **Canonical Shortest Form**: Default to the shortest, most widely recognized identifier for an entity. Omit titles, honorifics, full middle names, and descriptive clauses (e.g., output \"Boss\" not \"Boss Tweed\"; \"Napoleon\" not \"Napoleon Bonaparte\").\n- **Compound Name Integrity**: Do not truncate compound or multi-word proper nouns. Preserve essential connectors and modifiers (e.g., output \"Funk & Wagnalls\", not \"Funk\"; \"Forbes magazine\", not \"Forbes\").\n- **Exact String Matching**: Output the precise word or short phrase requested. Preserve exact capitalization, singular/plural form, and avoid adding filler words unless they are part of the canonical name.\n- **Constraint Over Prominence**: When multiple entities in the context could fit a vague clue, select the one that strictly satisfies the unique constraint in the question. If the clue specifies a particular identifier (e.g., surname, specific campus), default to that exact form rather than the most prominent or modern equivalent.\n- **Target Concept Isolation**: For fragmented, definition-style, or Jeopardy prompts, isolate the single target concept being queried. Ignore adjacent metadata, dates, or descriptive phrases in the context.\n- **Avoid Role/Description Outputs**: Never output a person's title, role, or a film/book's genre/director summary. Extract only the named entity itself (e.g., output \"Brunei\" for a sultan query; output \"Romeo and Juliet\" for a West Side Story reference).\n- **Exact Granularity Matching**: Match the precise scope requested. If the clue specifies a sub-category or specific variant, output that exact term rather than the broader class or a general descriptor.\n- **Minimal Reasoning**: Provide only a single sentence linking the clue to the extracted entity before the final answer. Keep `<answer>` tags strictly for the exact target string.",
+      "target": "(No learned rules yet. Rules will be added through the reflection process.)"
+    }
+  ]
+}

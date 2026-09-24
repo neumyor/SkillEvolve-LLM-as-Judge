@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Target slot isolation in compound/multi-constraint clues",
+    "Strict exact-string extraction for fill-in-the-blank trivia"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently handled multi-clause and compound trivia questions by isolating the specific target slot (e.g., 'this city's Sabres' vs 'Boston Bruins') and extracting the exact minimal entity without paraphrasing. This directly addresses the batch failure mode where agents produced overly descriptive answers or misinterpreted clue structures.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Avoid converting declarative clues into Yes/No answers.",
+        "content": "- **Target Slot Isolation**: When questions present multiple entities or conditions (e.g., \"A & B\", \"X did Y\"), isolate the specific query target (the blank or missing piece) and filter candidates against all constraints. Do not return any entity merely mentioned in the prompt.\n- **Exact String Matching**: For fill-in-the-blank and Jeopardy-style prompts, extract the exact entity string found in context titles or snippets. Avoid expanding acronyms, adding articles, or rephrasing the clue's descriptors in the final answer."
+      },
+      {
+        "op": "replace",
+        "target": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler.",
+        "content": "**Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

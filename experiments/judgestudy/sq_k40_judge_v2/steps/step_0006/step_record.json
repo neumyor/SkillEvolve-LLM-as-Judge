@@ -1,0 +1,109 @@
+{
+  "step": 6,
+  "epoch": 1,
+  "step_in_epoch": 5,
+  "timing": {
+    "rollout_s": 17.8,
+    "reflect_s": 49.8,
+    "aggregate_s": 99.5,
+    "select_s": 18.4,
+    "update_s": 0.0,
+    "evaluate_s": 25.5
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 94231,
+      "completion_tokens": 26552
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 7697,
+      "completion_tokens": 3074
+    },
+    "merge": {
+      "calls": 3,
+      "prompt_tokens": 6185,
+      "completion_tokens": 13679
+    },
+    "ranking": {
+      "calls": 1,
+      "prompt_tokens": 1499,
+      "completion_tokens": 3079
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 62358,
+      "completion_tokens": 30425
+    }
+  },
+  "rollout_hard": 0.725,
+  "rollout_soft": 0.834583,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1048,
+      "n_envs": 40,
+      "hard": 0.725,
+      "soft": 0.8345833333333333,
+      "n_failure_patches": 2,
+      "n_success_patches": 4
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 2,
+  "n_success_patches": 4,
+  "n_edits_merged": 7,
+  "n_edits_ranked": 4,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    11,
+    8,
+    8,
+    8
+  ],
+  "candidate_hash": "c4eaf1a2ed803610",
+  "candidate_skill_len": 3334,
+  "edit_apply_summary": {
+    "total": 4,
+    "applied": 4,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_prompt_variant": "v2",
+  "judge_verdict": "REJECT",
+  "judge_confidence": "high",
+  "judge_reason": "The candidate exceeds the 1.50x size limit while introducing rules justified solely by success evidence, violating the strict growth allowance. Additionally, it re-proposes mechanisms already evaluated in attempts 3-5 without material new evidence, indicating a flat or worse expected delta.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 758,
+  "judge_usage": {
+    "prompt_tokens": 7697,
+    "completion_tokens": 3074,
+    "total_tokens": 10771
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "judge_defect_mechanism": "Over-specification and entity form mismatch in trivia/cloze extraction",
+  "judge_evidence_count": 6,
+  "judge_counter_evidence_count": 7,
+  "judge_expected_window_delta": "flat",
+  "judge_falsifier": "A subsequent execution window demonstrating statistically significant accuracy gains on tasks requiring precise article/plural preservation or short-name extraction, without regression on previously successful items.",
+  "judge_rule_override": "",
+  "judge_accepted": false,
+  "rollout_hard_after": 0.725,
+  "candidate_gate_score": 0.73,
+  "action": "reject",
+  "current_score": 0.73,
+  "best_score": 0.73,
+  "best_step": 1,
+  "current_origin": "step_0001",
+  "best_origin": "step_0001",
+  "skill_len": 1891,
+  "wall_time_s": 211.0
+}

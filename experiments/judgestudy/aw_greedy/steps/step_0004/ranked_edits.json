@@ -1,0 +1,42 @@
+{
+  "reasoning": "Priority applied to failure-driven patches correcting critical loop triggers (state verification, rigid location cycling, termination confusion, and premature synonym rejection). These replace their respective base-skill sections. Success-driven patches address distinct operational gaps: appliance closure management, pre-delivery inventory checks, structured sequential scanning, destination-driven prioritization, pickup failure interpretation, proactive container opening, surface-first search strategy, refined multi-object workflow, and clear separation of transformation vs. placement actions. No overlapping points require deduplication; all success insights are preserved alongside the higher-priority failure corrections. [optimizer-ranked: selected 4/13 edits]",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "3. **Co-located Efficiency**: If the target object and the required appliance (e.g., desklamp, sink, fridge) are on the same surface, perform actions sequentially at that location without navigating away.",
+      "content": "- **Interpret Pickup Failure Signals**: If attempting to `take [object]` returns `'Nothing happens'`, your inventory is full. Do not retry or drop items randomly. Immediately navigate to the target receptacle and place the held object there to free your hands for subsequent items.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "target": "",
+      "content": "- **Placement vs. Transformation Semantics**: Use `move [object] to [receptacle]` exclusively for final placement, regardless of whether the object was previously heated, cooled, or cleaned. Reserve `heat`, `cool`, and `clean` actions strictly for the transformation step at the appliance. Confusing these leads to redundant or failed interactions.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Location Exhaustion Rule**: If you visit a container or surface twice and find it empty, mark it as permanently searched. Immediately navigate to a completely different, unvisited location or room. Never repeat the same search pattern more than once.",
+      "content": "- **Dynamic Location Exhaustion**: Mark any container or surface as permanently searched after checking it once. If you visit three consecutive locations and find them empty, or if admissible actions suggest a target location (`take [obj] from [loc]`), immediately pivot to that location. Never cycle through previously checked empty spots; prioritize unvisited zones or follow environmental probes.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "- **Object Synonymy**: If the exact goal object is missing after thorough searching, accept functionally equivalent items commonly used in the environment (e.g., treat `pot` as `pan`, `cup` as `mug`, `bowl` as `plate`) to prevent infinite search loops.",
+      "content": "- **Object Synonymy Application**: If the exact goal object is missing after checking 2-3 high-probability locations, immediately accept functionally equivalent items (e.g., `pot` as `pan`, `cup` as `mug`, `bowl` as `plate`). Do not discard synonyms to continue blind searching unless a perfect match is found elsewhere. Acquiring a synonym saves critical steps and prevents navigation loops.",
+      "support_count": 7,
+      "source_type": "failure"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [8] provides a critical error-recovery protocol for a frequent agent failure mode (full inventory causing repeated 'Nothing happens' signals), offering immediate, actionable guidance to unblock progress. Edit [12] clarifies a fundamental action semantic distinction (placement vs. transformation) that prevents systemic workflow derailment caused by incorrect command usage. Edit [1] significantly improves search efficiency by tightening the location exhaustion threshold and explicitly integrating admissible actions as navigation probes, directly addressing widespread navigation looping. Edit [3] optimizes the synonym acceptance strategy to balance thoroughness with step-efficiency, preventing both premature goal abandonment and infinite blind searches. Together, these four edits target the highest-frequency failure patterns with clear, complementary, and highly actionable principles.",
+    "selected_indices": [
+      8,
+      12,
+      1,
+      3
+    ]
+  }
+}

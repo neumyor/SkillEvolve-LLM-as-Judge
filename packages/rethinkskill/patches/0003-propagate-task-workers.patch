@@ -1,0 +1,34 @@
+--- a/src/rethinkskill/evolution/native.py
++++ b/src/rethinkskill/evolution/native.py
+@@ -275,6 +275,7 @@
+     seed: int = 42,
+     asset_root: Path | None = None,
+     timeout_seconds: int = 900,
++    task_workers: int = 1,
+ ) -> FrozenNativeEvolutionInputs:
+     """Freeze dataset hashes and disjoint exact task IDs with zero model calls."""
+     if type(repository) is not Repository:
+@@ -313,6 +314,7 @@
+                 seed=seed,
+                 asset_root=asset_root,
+                 timeout_seconds=timeout_seconds,
++                task_workers=task_workers,
+             ),
+         )
+         plans[role] = plan
+@@ -567,6 +569,7 @@
+     output_root: Path
+     executor: ModelExecutor
+     timeout_seconds: int = 900
++    task_workers: int = 1
+ 
+     def _validate_capability_binding(self) -> None:
+         capability = resolve_native_capability(self.catalog, self.frozen.benchmark)
+@@ -625,6 +628,7 @@
+                 seed=self.frozen.seed,
+                 asset_root=self.frozen.asset_root,
+                 timeout_seconds=self.timeout_seconds,
++                task_workers=self.task_workers,
+             ),
+         )
+         validate_frozen_plan(self.frozen, role=split, selection=selection, plan=plan)

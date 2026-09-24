@@ -1,0 +1,42 @@
+{
+  "reasoning": "Merged all patches while strictly adhering to priority rules. Failure-driven edits took precedence: replaced the rigid 'Strict Verbatim Extraction' rule with 'Granularity-First Extraction' to prevent over-specification, and inserted explicit semantic slot verification ('Distinguish Source vs. Creator & Category vs. Member') to address systematic identification failures. Success-driven edits were fully preserved as they covered distinct, complementary patterns (media/puzzle pointers, cut-off syntax handling, category/hypernym resolution, bare entity queries, enumeration/predicate parsing, symbolic decoding, definitional mapping, and compound descriptors). No direct content conflicts existed between failure and success patches, allowing seamless integration across all sections. [optimizer-ranked: selected 4/11 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Strict Verbatim Extraction**: Extract the answer exactly as it appears in the context, preserving original capitalization, punctuation, and phrasing. Do not alter plurality, strip necessary modifiers, or adapt the term to fit the question's grammar. Prioritize the exact context span over stylistic normalization.",
+      "content": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Resolve Enumeration & Alternative Clues**: Questions frequently present lists, series, or alternatives (e.g., 'A, B & this one', 'X or Y'). Isolate the target position in the sequence or choice, then scan the context for the entity that completes the set or satisfies the alternative condition.",
+      "content": "\n- **Pronoun & Predicate-First Parsing**: Questions frequently begin with possessive pronouns ('Its...', 'His...') or definite articles ('The...') followed by a property or action, omitting the subject. Treat these openings as defining attributes rather than grammatical subjects. Scan the context to find the entity that logically serves as the subject satisfying the subsequent predicate.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Demonstrative & Possessive Resolution**: Questions frequently use vague references like \"this settlement\" or \"his discovery\". Scan the context to find the specific entity that satisfies the description. Prioritize explicit matches over assumptions.",
+      "content": "\n- **Compound Descriptor Convergence**: Clues often use comma-separated or hyphenated noun phrases (e.g., 'Georgia guy, flag-fashioning pop painter') to point to an answer. Parse each segment as an independent constraint. The correct entity must satisfy all segments simultaneously. Discard literal interpretations of individual segments if they conflict, focusing on the convergent entity.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+      "content": "\n- **Category & Hypernym Resolution**: Questions frequently use collective or generic pointers (e.g., 'these birds', 'this material', 'lively dance') to target a class or type rather than a specific instance. Scan the context for the explicit hypernym or category label that satisfies the description, and extract that exact term as the answer.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [8] fundamentally upgrades extraction logic from rigid verbatim matching to context-aware granularity, addressing a widespread failure mode in QA where exact spans mismatch clue intent. Edit [6] provides a clear, actionable parsing strategy for predicate-first structures, a pervasive pattern in trivia that routinely breaks standard subject identification. Edit [10] systematizes the handling of multi-constraint clues by treating compound descriptors as independent converging filters, preventing misalignment. Edit [3] fills a semantic gap by directing the model to resolve generic/collective pointers to their explicit hypernyms rather than defaulting to specific instances. Together, they cover critical gaps in extraction, syntactic parsing, and semantic resolution with high actionability and broad applicability.",
+    "selected_indices": [
+      8,
+      6,
+      10,
+      3
+    ]
+  }
+}

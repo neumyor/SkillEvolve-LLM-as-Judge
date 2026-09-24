@@ -1,0 +1,45 @@
+{
+  "step": 2,
+  "action": "reject",
+  "n_total": 39,
+  "n_fail": 7,
+  "failure_patterns": [
+    {
+      "pattern": "navigation_loop: Agents repeatedly cycle through the same few locations without tracking visited sites or expanding search scope.",
+      "count": 7,
+      "task_ids": [
+        "train:0034",
+        "train:0025",
+        "train:0036",
+        "train:0030",
+        "train:0024",
+        "train:0015",
+        "train:0021"
+      ]
+    }
+  ],
+  "score_before": 0.8888888888888888,
+  "score_after": 0.8333333333333334,
+  "rejected_edits": [
+    {
+      "op": "append",
+      "content": "**Appliance & Inventory verification**: After any transformation (heating, cooling, cleaning) or appliance interaction, always check your inventory (`inventory`) to confirm what you are holding. Objects often remain inside appliances; retrieve them before navigating elsewhere.",
+      "target": ""
+    },
+    {
+      "op": "insert_after",
+      "content": "\n9. **Manage inventory constraints**: You can typically hold only one object at a time. For multi-object tasks, place the first item at the destination before retrieving the second. If a 'take' action returns 'Nothing happens', your inventory is full; place the held item first.",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions."
+    },
+    {
+      "op": "replace",
+      "content": "**Direct delivery**: Navigate to the target receptacle. If the receptacle is a closed storage container, open it first. Then place the object inside/on it. Never attempt to place items into closed containers.",
+      "target": "5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it."
+    },
+    {
+      "op": "replace",
+      "content": "8. **Rely on admissible actions**: Treat the admissible action list as the ground truth for object names, locations, and current state. Check if `take <object>` is available; if missing, you may already be holding it or your hands are full. Use this signal to adjust your strategy rather than assuming the object is elsewhere.",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions."
+    }
+  ]
+}

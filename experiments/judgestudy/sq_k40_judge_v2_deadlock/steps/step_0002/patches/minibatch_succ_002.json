@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treat fragmented or Jeopardy-style clues as direct requests for a specific entity or term, mapping descriptors to context matches.",
+    "Extract answers verbatim as short phrases or single words, avoiding paraphrasing, expansions, or conversational filler.",
+    "Scan document titles and snippets for keyword overlaps with the question's clue, prioritizing explicit links between the clue and candidate answer.",
+    "Wrap final answers strictly in <answer>...</answer> tags with minimal external reasoning."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories involve Jeopardy-style or trivia fill-in-the-blank questions. The agents consistently succeed by treating incomplete clues as direct entity requests, extracting exact short phrases from the context without paraphrasing, and using keyword scanning to map descriptors to candidates. Encoding these extraction and reading strategies will generalize across similar trivia tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Concise Formatting**: Keep answers strictly within `<answer>...</answer>` tags. Limit to a few words or a short phrase. Do not repeat the question or include conversational filler.\n- **Minimal Reasoning**: Provide a single sentence explaining how the context supports the chosen entity before outputting the final answer.\n\n## Answer Extraction Rules\n- **Exact Match Priority**: For trivia, Jeopardy-style, or fill-in-the-blank questions, output the *exact* word or short phrase requested. Do not paraphrase or add descriptive clauses.\n- **Avoid Expansions**: If the expected answer is a single letter, abbreviation, or surname, output only that. Do not expand abbreviations or add full names unless explicitly asked.\n- **Direct Entity Response**: When a question asks for a person, band, place, or object, provide only the entity name. Do not answer with descriptions or full sentences.\n\n## Reading & Disambiguation Strategy\n- **Clue-to-Context Mapping**: Treat descriptive or incomplete-sentence questions as clues. Match key descriptors directly to named entities in the context.\n- **Keyword Scanning**: Quickly scan document titles and snippets for terms overlapping with the question's clue. Iterate through `[DOC]` passages for exact matches or strong semantic overlaps.\n- **Explicit Link Verification**: Prioritize passages that explicitly connect the clue's subject to the candidate answer. If multiple documents mention the topic, select the one that directly satisfies the specific constraint (date, location, or attribute).\n- **Handle Quotes & Paraphrases**: If the question contains a partial quote or translated phrase, locate its counterpart in the context to identify the target answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

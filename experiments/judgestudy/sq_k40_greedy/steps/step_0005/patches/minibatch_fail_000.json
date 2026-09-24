@@ -1,0 +1,36 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Agents consistently over-specify answers by appending titles, surnames, or campus suffixes when the gold standard requires a concise core identifier."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 3,
+      "description": "Agents fail to resolve implicit question slots in statement/fragment prompts, often repeating the prompt or selecting tangential attributes instead of the intended target."
+    },
+    {
+      "failure_type": "other",
+      "count": 2,
+      "description": "Ambiguous entity selection and misinterpretation of relational pointers lead to incorrect candidate choice despite matching surface constraints."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals two dominant failure modes: (1) over-specification where agents retain titles, surnames, or branch names that should be stripped to match the gold standard's core identifier, and (2) failure to resolve implicit blanks in fragment-style prompts, causing agents to repeat the query or pick co-occurring distractors. The proposed edits tighten extraction rules to aggressively strip non-essential modifiers while preserving canonical names, and explicitly guide the agent to fill logical blanks rather than echoing the prompt.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Answers must be stripped to their core identifier, but preserve essential modifiers, plurals, and canonical forms.",
+        "content": "Answers must be stripped to their core identifier. Aggressively remove titles, honorifics, surnames, and campus/institutional suffixes (e.g., 'of Brunei', '-Superior', 'Bonaparte', 'Tweed') unless strictly required for disambiguation. Preserve essential descriptors only if they form the canonical name (e.g., 'Forbes magazine'), but prefer the shortest exact match to the clue's implied blank."
+      },
+      {
+        "op": "insert_after",
+        "target": "Many questions are phrased as statements or incomplete phrases (common in trivia/Jeopardy). Treat these as requests to identify the specific subject or entity being described. Do not respond with \"True\"/\"False\", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+        "content": "\n- **Implicit Slot Filling**: When a prompt is a statement or fragment, never repeat the prompt itself. Infer the missing logical slot (e.g., person → country/work; film → original source; series description → subject matter). Scan the context for the exact term that satisfies the relational pointer or completes the thought, ignoring co-occurring but tangential entities."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

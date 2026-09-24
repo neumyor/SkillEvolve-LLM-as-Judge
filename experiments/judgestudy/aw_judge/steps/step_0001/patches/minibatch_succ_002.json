@@ -1,0 +1,26 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Always verify and open the target receptacle before placing an object.",
+    "Process multi-object tasks sequentially (complete one cycle before starting the next).",
+    "Close appliances after interaction to maintain environmental state."
+  ],
+  "patch": {
+    "reasoning": "Analysis of the batch reveals consistent patterns around receptacle state management and sequential task execution. Agents frequently fail or waste steps when attempting to place items into closed containers, trying to hold multiple objects, or leaving appliances open. Encoding these explicit state-check and closure rules will prevent logical deadlocks and enforce robust environmental interaction protocols.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "9. **Receptacle readiness**: Before placing an object into any container (drawer, cabinet, fridge, microwave), verify it is open. If closed, open it first. Never attempt to place into a closed receptacle."
+      },
+      {
+        "op": "append",
+        "content": "10. **Sequential multi-object processing**: For tasks requiring multiple instances of an object, complete the entire find-take-transform-place cycle for the first item before searching for the second. Do not attempt to hold multiple objects simultaneously."
+      },
+      {
+        "op": "append",
+        "content": "11. **Appliance closure protocol**: After interacting with an appliance (e.g., heating in microwave, cooling in fridge), close it (`close <appliance>`) before navigating away to maintain a clean state and avoid blocking future interactions."
+      }
+    ]
+  },
+  "source_type": "success"
+}

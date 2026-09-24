@@ -1,0 +1,45 @@
+{
+  "step": 1,
+  "action": "reject",
+  "n_total": 39,
+  "n_fail": 7,
+  "failure_patterns": [
+    {
+      "pattern": "navigation_loop: Agents repeatedly cycle through the same furniture type (drawers, shelves, cabinets) without switching categories or exhausting other location types.",
+      "count": 7,
+      "task_ids": [
+        "train:0036",
+        "train:0030",
+        "train:0034",
+        "train:0024",
+        "train:0025",
+        "train:0021",
+        "train:0015"
+      ]
+    }
+  ],
+  "score_before": 0.8888888888888888,
+  "score_after": 0.8888888888888888,
+  "rejected_edits": [
+    {
+      "op": "insert_after",
+      "content": "\n9. **Verify holdings & identity**: If the target object is not visible, check your inventory (`inventory`) before continuing to search. Before applying a transformation, confirm the acquired object exactly matches the task's target noun (e.g., 'pot' vs 'pan').\n10. **Strict multi-object sequencing**: For tasks requiring multiple instances, fully resolve one sub-task (locate -> acquire -> transform -> deliver) before starting the next. Never attempt to hold multiple objects simultaneously; place the first item at its destination before retrieving the second.\n11. **Appliance & Lamp protocols**: Interact with appliances according to their required state (open -> interact -> close). For examination tasks, locate the light source after picking up the object, verify you are holding it, then execute `use <lamp>` prior to examination.",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions."
+    },
+    {
+      "op": "replace",
+      "content": "2. **Heuristic & Systematic Exploration**: Begin searches in high-probability locations based on object type (e.g., food -> fridge/countertops; utensils -> cabinets/drawers/sink; electronics -> desks/shelves). Once started, search each surface/container exactly once before revisiting. Always open closed containers/appliances before searching inside.",
+      "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty."
+    },
+    {
+      "op": "replace",
+      "content": "4. **Transform before placing**: Perform cleaning/heating/cooling at the correct appliance *before* navigating to the final destination. Follow full appliance interaction cycles: open closed appliances, execute the transform action, close/reopen as required, and retrieve items if deposited.",
+      "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination."
+    },
+    {
+      "op": "append",
+      "content": "\n## Search Optimization\n- **Category Switching**: If a specific container type (e.g., drawers, shelves, cabinets) yields no results after checking multiple instances, immediately pivot to a different furniture category (e.g., countertops, dressers, beds, sofas) rather than cycling through the same type.\n- **Exact Object Matching**: Verify the exact object name matches the goal. Do not substitute similar items (e.g., 'pot' for 'pan', 'bowl' for 'plate'). If the target is not found, re-examine recently visited surfaces carefully before assuming it is hidden.",
+      "target": ""
+    }
+  ]
+}

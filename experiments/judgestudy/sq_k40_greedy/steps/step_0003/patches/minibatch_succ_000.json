@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Treating demonstrative placeholders like \"this man\" or \"this phenomenon\" as direct pointers to the target entity.",
+    "Preserving full canonical names (e.g., first + last) when they constitute the standard identifier, avoiding overly aggressive stripping."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories rely on recognizing demonstrative placeholders ('this man', 'this phenomenon') as direct queries for a specific entity. Additionally, the current precision rule risks over-stripping full names, which caused prior failures; reinforcing the preservation of canonical full names aligns with the batch's successful outputs (e.g., 'Oliver Brown', 'John Fogerty').",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.",
+        "content": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier, but **preserve full canonical names** when they match the gold or are standard (e.g., output \"Oliver Brown\" or \"John Fogerty\", not just \"Brown\" or \"Fogerty\").\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name."
+      },
+      {
+        "op": "insert_after",
+        "target": "Extract the exact entity being pointed to.",
+        "content": "\n- **Handling Demonstrative Placeholders**: Clues frequently use phrases like \"this man,\" \"this woman,\" \"this phenomenon,\" or \"this group\" as direct placeholders for the target. Treat these as explicit pointers to the answer category. Locate the entity in the context that fits the description and the placeholder role, then output the exact name."
+      }
+    ]
+  },
+  "source_type": "success"
+}

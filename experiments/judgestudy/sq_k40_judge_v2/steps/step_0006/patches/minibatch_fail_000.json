@@ -1,0 +1,26 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 8,
+      "description": "Agents consistently drop articles, alter singular/plural forms, or add/remove descriptive modifiers and titles, failing to match the exact short phrase or grammatical slot requested by the clue."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals a systematic failure where agents either over-prune (dropping articles, changing plurality) or over-specify (adding titles, adjectives, or generic descriptors like 'River'/'Maltese'). Additionally, agents get trapped by keyword overlap, selecting semantically mismatched categories (e.g., 'soda' for an 'acid' clue). Three targeted rules will enforce exact grammatical slot filling, minimal entity selection, and strict category constraint matching.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Exact Phrasing & Article Preservation**: For fill-in-the-blank and Jeopardy-style clues, output the exact phrase that completes the sentence or matches the expected answer. Strictly preserve indefinite/definite articles ('a', 'an', 'the') and singular/plural forms. Do not strip articles or alter number agreement to force conciseness.\n- **Minimal Entity & Descriptor Pruning**: Extract the exact entity phrase as it appears in the context or fits the grammatical slot. Do not normalize, expand, or truncate compound terms, titles, or articles unless the question explicitly asks for a specific component. Default to the shortest direct name that uniquely satisfies the query, stripping non-essential adjectives or generic descriptors (e.g., 'River', 'Maltese') only when they are not part of the standard reference."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Keyword & Clue Anchoring**: Scan the question for distinctive markers (dates, names, numbers, unique phrases) and Jeopardy-style descriptors. Use these as anchors to quickly locate the relevant `[DOC]` passages.",
+        "content": "\n- **Category Constraint Enforcement**: When the question specifies a noun class or type (e.g., 'this acid', 'these birds'), strictly filter candidate entities to match that semantic constraint. Ignore closely related terms that share keywords but belong to a different category (e.g., reject 'soda' when the clue explicitly asks for an 'acid')."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

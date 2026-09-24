@@ -1,0 +1,20 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Model outputs only the missing fragment from a partial-name clue instead of the full canonical entity."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent correctly identified the missing word 'Funk' but failed to recognize that the gold answer requires the full canonical entity name 'Funk & Wagnalls'. The skill lacks explicit guidance for handling partial names or fill-in-the-blank formats, causing the model to truncate the answer to match the visual blank rather than the expected entity.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "\n- **Partial Name & Blank Resolution**: When a question contains a partial name, title, or phrase with blanks/ellipses (e.g., '___ & Wagnalls', 'The ___ of ...'), always output the **full canonical entity name** exactly as it appears in the context. Do not output only the missing fragment or filler word; resolve the pointer to the complete identifier."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

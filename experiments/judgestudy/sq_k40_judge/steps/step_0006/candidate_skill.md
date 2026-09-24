@@ -1,0 +1,35 @@
+# Question Answering Skill
+
+## Core Retrieval & Reasoning Principles
+- **Clue & Entity Recognition**: Treat questions (especially trivia, Jeopardy-style, or incomplete prompts) as direct requests for a specific person, place, title, or concept. Parse the prompt to filter out introductory cues or "fluff" and isolate the core factual query.
+- **Implicit Reference Resolution**: Treat demonstratives and anaphors ("this man", "this plant", "this film", "it") as primary query anchors. Crucially, treat the accompanying descriptive clauses as *active filtering constraints*, not noise. Use them to narrow down candidates and discard entities that fail the specific attributes mentioned.
+
+- **Declarative Clue Parsing & Implicit Query Resolution**: Treat declarative statements, descriptive fragments, and Jeopardy-style prompts as direct requests for the *implied* answer, not the stated entity. If the prompt names an entity (e.g., a film, book, or series), determine what is actually being queried about it (e.g., its source material, subject matter, or creator) and extract that target. Never mirror the prompt's explicit noun phrase unless it directly completes the semantic gap.
+- **Uniform Clue Processing**: Treat all prompt formats—complete questions, fragmented phrases, declarative statements, or incomplete prompts—as direct fill-in-the-blank requests. Strip any parenthetical introductions, speaker credits, category headers, or trailing metadata before parsing. Focus solely on the semantic gap.
+- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. When a clue contains multiple independent attributes, actively cross-reference across *multiple* document snippets to intersect constraints. Discard candidates that satisfy only a subset of conditions or belong to a different category.
+- **Constraint-Driven Verification & Entity Disambiguation**: Prioritize exact matches for numerical, temporal, or proper-noun constraints. When clues use relative labels like "current," "modern," or "former," cross-reference them with specific historical anchors (dates, events, locations) in the context. Discard candidates that match the label but fail unique factual identifiers, and avoid relying on external knowledge or ambiguous status tags.
+
+## Trivia & Clue Extraction Rules
+- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.
+- **Clue Syntax Mapping**: Use structural cues like "this film", "it's the cry of", or "named for" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.
+
+- **Category, Syntactic & Morphological Alignment**: Verify that the candidate entity matches the exact grammatical role, categorical type, and number agreement implied by the clue (e.g., person vs. place, singular vs. plural, city vs. state). Discard candidates that satisfy factual constraints but fail the syntactic, categorical, or morphological filter.
+
+- **Multi-Constraint Synthesis**: When a clue provides multiple independent attributes (e.g., date, role, location, party, quantity), intersect these constraints to isolate the single matching entity. Discard candidates that satisfy only a subset of conditions.
+- **Canonical Phrasing & Granularity Alignment**: Prioritize exact canonical string matching over heuristic expansion or contraction. Trivia and Jeopardy answers often require specific articles, honorifics, titles, or full names (e.g., "Sir Isaac Newton", "the Amazon", "a eucalyptus tree") that must be preserved exactly. Do not strip titles, articles, or generic descriptors (like "River" or "Speech") unless explicitly instructed by the clue. Conversely, do not append explanatory modifiers or default to full names if the canonical answer is a surname or short phrase. Match the exact capitalization, plurality, and phrasing of the expected answer.
+
+- **Predicate-Entity Alignment**: Before extracting, verify that the candidate entity actually performs, possesses, or is located at the specific attribute/action described in the clue. Do not select an entity simply because it shares keywords with the prompt; confirm the semantic relationship holds in the context.
+- **Noise Filtering**: In search-result-style or repetitive contexts, rapidly scan titles and snippets for exact keyword matches, then verify in the passage body before extracting. Ignore duplicated passages.
+- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.
+- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses.
+- When multiple entities appear in the context, select the one that directly completes the clue or matches the expected brevity.
+- Strip modifiers and use only surnames or key terms if the gold answer is minimal (e.g., output "C" not "Vitamin C", "Genet" not "Jean Genet").
+- Do not guess based on metaphorical phrasing without verifying factual alignment.
+- Avoid converting declarative clues into Yes/No answers.
+
+## Answer Formatting Rules
+- **Strict Tag Usage**: Always wrap the final answer in `<answer>...</answer>` tags.
+- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer. Ensure zero-leakage by stripping any leading labels, reasoning fragments, trailing punctuation, or prompt artifacts before closing the tag.
+- **Minimal Reasoning**: Skip verbose derivations for straightforward retrieval tasks. If step-by-step reasoning is performed, place it outside the answer tags and keep it brief.
+
+- **Semantic Category Constraint Verification**: Cross-check the clue's explicit categorical keywords (e.g., "acid", "tree", "artist", "river") against candidate entities. If a clue specifies a type (e.g., "caustic acid"), discard candidates that belong to a different category (e.g., "caustic soda"/base) even if they share other attributes. Ensure the selected entity strictly satisfies the semantic type requested by the prompt.

@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Direct extraction of exact terms/names from context without over-paraphrasing",
+    "Effective noise filtering across multiple mixed-quality documents",
+    "Strict adherence to concise, unadorned output within <answer> tags"
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories demonstrate highly efficient information retrieval: agents quickly filter noisy context, extract exact answers verbatim or near-verbatim, and output them concisely within tags. Encoding these behaviors will prevent over-explanation and improve precision on trivia/exact-match tasks.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Core Principles\n- **Direct Extraction**: Prioritize pulling the exact term, name, or phrase directly stated in the context. Avoid over-paraphrasing or adding explanatory fluff.\n- **Noise Filtering**: Rapidly scan all provided documents to isolate the single passage that directly addresses the question's key entities or clues. Disregard tangential or unrelated snippets.\n- **Concise Formatting**: Always wrap the final answer in `<answer>...</answer>` tags. Keep the content inside strictly to the answer itself (typically a few words or a short phrase), omitting introductory phrases or reasoning."
+      }
+    ]
+  },
+  "source_type": "success"
+}

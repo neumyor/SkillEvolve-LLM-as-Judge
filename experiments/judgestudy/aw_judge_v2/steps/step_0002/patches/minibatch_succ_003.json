@@ -1,0 +1,28 @@
+{
+  "batch_size": 6,
+  "success_patterns": [
+    "Strict appliance interaction cycle (open-place-close-use-open-retrieve)",
+    "Heuristic-driven search prioritizing high-probability locations",
+    "Explicit state verification before appliance interactions"
+  ],
+  "patch": {
+    "reasoning": "Trajectories consistently demonstrate a rigid sequence for appliance interactions (open, place inside, close, use, open, retrieve) and prioritize searching high-probability locations based on object semantics before falling back to systematic checks. Encoding these reduces wasted steps and prevents state errors.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "4. **Appliance interaction cycle**: For heating, cooling, or cleaning, strictly follow: open appliance -> place object inside (if not already) -> close appliance -> use appliance -> open appliance -> retrieve object. Do not skip intermediate states."
+      },
+      {
+        "op": "insert_after",
+        "target": "3. **Grab immediately**: When a required object is visible and reachable, take it right away before moving elsewhere.",
+        "content": "3.5. **Prioritize likely locations**: During search, target areas where the object type is commonly stored (e.g., food in fridge/countertops, electronics on desks/shelves, cleaning items near sinks/bathrooms). If unsuccessful, fall back to systematic container checking."
+      },
+      {
+        "op": "append",
+        "content": "\n- **Incorrect appliance sequencing**: Failing to open/close appliances or place objects inside them before using them. Always verify the appliance state matches the required action."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,18 @@
+{
+  "batch_size": 1,
+  "success_patterns": [
+    "Cross-document entity resolution for nicknames and slogans",
+    "Strict adherence to concise answer formatting within XML-like tags"
+  ],
+  "patch": {
+    "reasoning": "The successful trajectory demonstrates two key capabilities: resolving a colloquial nickname ('Happiest Place on Earth') by synthesizing clues across multiple documents, and strictly following the prescribed output format. Encoding these as general rules will help the agent handle similar reading comprehension tasks efficiently.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "(No learned rules yet. Rules will be added through the reflection process.)",
+        "content": "## Context Navigation & Inference\n- **Leverage Structural Tags**: Use `[DOC]`, `[TLE]`, and `[PAR]` markers to segment and scan the context efficiently.\n- **Resolve Nicknames & Slogans**: When questions contain colloquial phrases, brand names, or slogans, search across multiple documents for explicit mappings or parenthetical clarifications that link the phrase to a concrete entity.\n\n## Answer Formatting\n- **Enclose Answers**: Always place the final answer inside `<answer>...</answer>` tags.\n- **Be Concise**: Provide only the direct answer (typically a few words or a short phrase). Do not repeat the question or include reasoning/explanations inside the tags."
+      }
+    ]
+  },
+  "source_type": "success"
+}

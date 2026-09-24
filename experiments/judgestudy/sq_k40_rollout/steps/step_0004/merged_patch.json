@@ -1,0 +1,101 @@
+{
+  "reasoning": "Applied failure-driven patches with strict priority, overriding conflicting success edits on identical targets (e.g., 'Be Strictly Concise'). Preserved success-driven patches introducing distinct strategies (e.g., Title-First Scanning, Co-occurrence Mapping, Explicit Option Filtering, Strict Verbatim Extraction). Resolved overlapping targets by sequencing replacements and insertions logically. Maintained original support_count and source_type. No protected section edits were made.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences or factual statements. Parse the clue to isolate the **missing entity slot** and its **descriptive constraints** (e.g., 'this warlike city-state', 'this peachy state'). Treat the question as a fill-in-the-blank or identification task. Never interpret statement-based clues as True/False. Scan the context to find the entity that satisfies all constraints, prioritizing exact matches over assumptions.",
+      "content": "- **Handling Jeopardy-Style Clues & Trivia Statements**: Questions often appear as incomplete sentences, historical statements, or pop-culture references. Strip away narrative wrappers and conversational framing to isolate the **missing entity slot**. Treat the question strictly as a fill-in-the-blank identification task. Never interpret statement-based clues as True/False. Scan the context to find the canonical entity that satisfies all constraints.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Keyword Spotting & Mapping**: Quickly scan document titles and paragraphs for exact keywords, dates, and unique proper nouns from the question to locate the answer span efficiently.",
+      "content": "- **Title-First & Proximity Scanning**: Prioritize checking `[TLE]` markers and the opening lines of `[PAR]` blocks. Trivia contexts frequently embed the answer directly in titles or co-occur within a few words of the question's key constraints. Scan these high-signal zones first before parsing deeper paragraphs.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Keyword Spotting & Mapping**: Quickly scan document titles and paragraphs for exact keywords, dates, and unique proper nouns from the question to locate the answer span efficiently.",
+      "content": "\n- **Precision Anchor Filtering**: Use specific numbers, years, or measurements in the question as strict filters. Eliminate any candidate that does not perfectly align with these quantitative or temporal anchors before finalizing the answer.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+      "content": "- **Handle Fragments, Ellipses & Standalone Clues**: Questions frequently appear as truncated phrases, standalone titles/dates, or cut-off syntax. Strip non-semantic noise and isolate the core identifying constraints. Treat descriptive phrases, appositives, or standalone pointers (e.g., 'this South American capital', 'Rachel, Rachel (1968)') as direct anchors to locate candidate entities.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+      "content": "\n- **Co-occurrence Mapping**: When a question is a direct quote or fragment from a known trivia dataset, the answer often appears in the immediate vicinity (title or first paragraph) of the matching context snippet. Use the question's unique phrasing as a literal search anchor to find the co-occurring answer span.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Handle Fragments, Ellipses & Appositives**: Questions often contain trailing ellipses (`...`), cut-off syntax, or standalone noun phrases/titles. Ignore non-semantic noise and focus on core identifying constraints. Additionally, treat descriptive phrases or appositives (e.g., 'this South American capital') as primary search anchors to locate candidate entities.",
+      "content": "\n- **Distractor Elimination & Constraint Verification**: Questions often include keywords that appear near incorrect candidates. Before finalizing an answer, verify that the selected entity satisfies *all* descriptive constraints in the question simultaneously. Discard any candidate that only partially matches, is mentioned in a different context, or contradicts a specific detail (e.g., action, date, or location).",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Resolve Nicknames & Slogans**: When questions contain colloquial phrases, brand names, or slogans, search across multiple documents for explicit mappings or parenthetical clarifications that link the phrase to a concrete entity.",
+      "content": "\n- **Map Colloquial & Pop-Culture Pointers**: Clues often reference TV plots, song lyrics, slogans, or literary metaphors (e.g., 'lathering up in Pam's shower', 'I Like Ike'). Map these figurative pointers directly to their canonical named entities in the context. Discard the literal phrasing of the pointer and output only the exact entity name.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+      "content": "\n- **Strict Context Grounding**: Rely exclusively on the provided text. Never use external knowledge, real-world facts, or logical inference to fill gaps, resolve locations, or select between candidates. If the answer is not explicitly supported by the context, do not guess.",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Multi-Passage Corroboration**: When the context contains multiple documents, cross-reference them to confirm the answer. Convergence across passages increases confidence.",
+      "content": "\n- **Explicit Option Filtering**: When questions present a closed set of candidates (e.g., 'Of A, B, or C'), evaluate each option against the contextual constraints rather than guessing. Select the exact match that satisfies all criteria.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+      "content": "- **Canonical Name & Variant Handling**: When the context offers multiple name variants for the same entity (e.g., 'Alan B. Shepard, Jr.' vs 'Alan Shepard', 'People's Republic of China' vs 'China'), prefer the most direct, commonly used, or shortest unambiguous form. Strip unnecessary suffixes (Jr./Sr.), middle initials, or formal titles unless the question explicitly demands them. Prioritize natural-language identifiers over bureaucratic or full legal names.\n- **Be Strictly Concise**: Provide only the direct answer. Do not repeat the question or include reasoning/explanations inside the tags. Match the exact expected term. Prefer last names over full names (e.g., \"Genet\" not \"Jean Genet\"), single letters/abbreviations if implied (e.g., \"C\" not \"Vitamin C\"), and bare entities without descriptive labels (e.g., \"U2\" not \"U2 tribute band\").",
+      "support_count": 4,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Optional Justification**: Precede the final tag with a single-sentence reasoning step linking the question constraints to the found evidence, if helpful.",
+      "content": "\n- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Verbatim Extraction Priority**: To prevent overly descriptive outputs, extract the target term exactly as it appears in the context. Do not paraphrase, expand, or add conversational qualifiers. Preserve original capitalization and formatting when possible to maximize exact-match probability.",
+      "content": "- **Strict Verbatim Extraction**: Extract the answer exactly as it appears in the context, preserving original capitalization, punctuation, and phrasing. Do not alter plurality, strip necessary modifiers, or adapt the term to fit the question's grammar. Prioritize the exact context span over stylistic normalization.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "\n- **Rhyming & Pop-Culture Reference Mapping**: Clues frequently employ rhyming couplets, song lyrics, or indirect references to media titles. Treat these as direct pointers to the canonical entity, ignoring the literal poetic or stylistic framing.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "append",
+      "content": "- **Cross-Reference Convergence**: When multiple documents address the same clue, synthesize findings to confirm the answer. Explicitly note convergence in the reasoning step to boost confidence before finalizing the extraction.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 6,
+      "description": "Agents consistently over-specify answers by appending categorical nouns from the clue, mismatch singular/plural forms, or alter word morphology to match prompt syntax rather than the canonical answer."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 2,
+      "description": "Agents misidentify the query target when clues reference a sub-component or feature within a larger site, answering the part instead of the container."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch reveals three systematic failures: (1) appending redundant categorical nouns explicitly stated in the clue (e.g., 'Island', 'Satellite Radio'), (2) forcing syntactic agreement with the prompt over the exact canonical word form (singular/plural, verb/adjective), and (3) failing to resolve container-vs-part relationships in location-based clues. These edits enforce strict canonical extraction, override syntactic mirroring for morphology, and clarify query target resolution.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Strictly align number agreement with the clue's anchor; never expand short answers into full sentences or add explanatory clauses.",
+        "content": "- **Gold Alignment & Morphological Precision**: Match the granularity, capitalization, and morphological form (singular/plural) of the expected answer exactly. Do not force syntactic agreement with the clue if it conflicts with the canonical form; prioritize the exact lexical item (e.g., singular vs. plural, verb vs. adjective) over grammatical consistency with the prompt."
+      },
+      {
+        "op": "append",
+        "content": "- **Redundant Category Stripping**: If the clue explicitly names a category or type (e.g., 'island', 'company', 'fruit', 'satellite radio'), do not append it to the extracted proper noun unless it is strictly part of the official name. Output only the core identifier (e.g., 'Roanoke' not 'Roanoke Island', 'Sirius' not 'Sirius Satellite Radio')."
+      },
+      {
+        "op": "append",
+        "content": "- **Container-Part Disambiguation**: When a clue references a sub-component, building, or feature located *within* a larger site or entity (e.g., 'building at this site'), always resolve the query to the *container* or *primary subject* requested by the prompt's anchor. Do not answer with the sub-component itself."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

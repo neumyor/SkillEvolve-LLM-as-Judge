@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Generalized 'this [Noun]' Placeholder Resolution",
+    "Head-Noun Extraction from Compound Phrases/Titles",
+    "Verbatim Snippet/Title Exact Match Priority"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories consistently treat generic demonstratives (e.g., 'this gland', 'this series', 'this company') as direct blanks resolved via surrounding descriptive filters. They also reliably extract the core head-noun from compound terms or titles (e.g., 'Omelet' from 'Denver Omelet', 'McCormick' from 'McCormick & Company') without over-specifying. Reinforcing these patterns directly addresses the over-stripping/over-specification failures from previous steps while capitalizing on the verbatim nature of trivia-to-context mappings.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **\"this [Category]\" Placeholders**: Jeopardy-style questions routinely replace the target entity with demonstrative placeholders like \"this nation,\" \"this state,\" or \"this group.\" Treat these as direct blanks to be filled by the specific entity described, rather than resolving them as complex relational pointers.",
+        "content": "- **\"this [Noun]\" Placeholder Resolution**: Trivia questions routinely replace the target entity with demonstrative placeholders like \"this nation,\" \"this gland,\" \"this series,\" or \"this company.\" Treat these as direct blanks to be filled by the specific entity described. Use the surrounding descriptive clauses as mandatory filters to locate the exact match in the context, rather than resolving them as complex relational pointers."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Strip Generic Suffixes & Modifiers**: Remove non-essential geographic, corporate, or institutional suffixes (e.g., \"Island\", \"Satellite Radio\", \"University\", \"Inc.\") and middle initials unless they are strictly required for disambiguation. Prioritize the shortest canonical identifier that satisfies all constraints (e.g., \"Roanoke\" not \"Roanoke Island\", \"Sirius\" not \"Sirius Satellite Radio\", \"George Bush\" not \"George H. W. Bush\").",
+        "content": "\n- **Head-Noun Extraction from Compound Terms**: When the context presents a compound phrase or title (e.g., \"Egg White Denver Omelet\", \"McCormick & Company\", \"Henry V\"), extract the core head-noun or primary identifier (e.g., \"Omelet\", \"McCormick\", \"Henry V\") unless the full compound is the recognized canonical name. Avoid outputting unnecessary modifiers, adjectives, or conjunctions that do not change the entity's identity."
+      },
+      {
+        "op": "replace",
+        "target": "- **Snippet/Title Density Heuristic**: Trivia questions are typically sourced from summaries or catalog entries where the answer appears early. When multiple anchors are present, prioritize documents where the *highest concentration* of these anchors appears in the title or first sentence/snippet, rather than scattering across paragraphs.",
+        "content": "- **Snippet/Title Exact Match Priority**: Trivia questions are frequently copied verbatim or near-verbatim from quiz databases. Prioritize scanning document titles and snippets for *exact or near-exact string matches* with the question's anchor phrases. When a significant clause matches a title or snippet verbatim, treat that document as the definitive source and extract the answer directly, bypassing deeper paragraph analysis."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Grammatical & Category Alignment: Agents consistently select entities that precisely match the syntactic role and categorical type requested by the clue, avoiding semantically related but incorrect categories (e.g., state vs. city).",
+    "Implicit Reference & Fragment Resolution: Agents seamlessly map demonstratives ('this state', 'this city') and sentence fragments to concrete entities without requiring complete interrogative syntax.",
+    "Minimal Verifier Output: Agents bypass verbose derivations, relying on rapid context scanning and direct extraction to produce concise, tag-wrapped answers."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories uniformly resolve implicit references and fragmentary clues by strictly aligning the extracted entity with the grammatical and categorical slot requested. This directly counters the recent failure mode where agents returned semantically related but syntactically incorrect entities. Encoding this alignment principle will sharpen precision on incomplete and Jeopardy-style prompts while reinforcing existing retrieval strategies.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Multi-Constraint Synthesis",
+        "content": "\n- **Grammatical & Category Alignment**: Verify that the candidate entity matches the exact grammatical role and categorical type implied by the clue (e.g., if the clue asks for a 'state', output the state name, not a city or institution within it). Discard candidates that satisfy factual constraints but fail the syntactic or categorical filter."
+      }
+    ]
+  },
+  "source_type": "success"
+}

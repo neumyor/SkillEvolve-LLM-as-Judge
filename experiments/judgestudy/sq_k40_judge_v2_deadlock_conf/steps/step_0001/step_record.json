@@ -1,0 +1,102 @@
+{
+  "step": 1,
+  "epoch": 1,
+  "step_in_epoch": 0,
+  "timing": {
+    "rollout_s": 25.1,
+    "reflect_s": 30.2,
+    "aggregate_s": 42.1,
+    "select_s": 0.0,
+    "update_s": 0.0,
+    "evaluate_s": 18.0
+  },
+  "tokens": {
+    "analyst": {
+      "calls": 6,
+      "prompt_tokens": 57042,
+      "completion_tokens": 15690
+    },
+    "judge_gate": {
+      "calls": 1,
+      "prompt_tokens": 6653,
+      "completion_tokens": 3171
+    },
+    "merge": {
+      "calls": 2,
+      "prompt_tokens": 3329,
+      "completion_tokens": 6232
+    },
+    "rollout": {
+      "calls": 40,
+      "prompt_tokens": 47960,
+      "completion_tokens": 27340
+    }
+  },
+  "rollout_hard": 0.825,
+  "rollout_soft": 0.870833,
+  "rollout_n": 40,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1043,
+      "n_envs": 40,
+      "hard": 0.825,
+      "soft": 0.8708333333333333,
+      "n_failure_patches": 1,
+      "n_success_patches": 5
+    }
+  ],
+  "n_patches": 6,
+  "n_failure_patches": 1,
+  "n_success_patches": 5,
+  "n_edits_merged": 2,
+  "n_edits_ranked": 2,
+  "edit_budget": 4,
+  "lr_control_mode": "fixed",
+  "support_counts": [
+    7,
+    7
+  ],
+  "candidate_hash": "aea1a5fea6eaa89b",
+  "candidate_skill_len": 1602,
+  "edit_apply_summary": {
+    "total": 2,
+    "applied": 2,
+    "skipped": 0,
+    "errors": 0
+  },
+  "gate_metric": "hard",
+  "gate_kind": "judge",
+  "judge_prompt_variant": "v2",
+  "judge_verdict": "ACCEPT",
+  "judge_confidence": "medium",
+  "judge_reason": "The candidate introduces explicit constraints against verbosity and guessing that directly map to the 5 observed failures (e.g., predicting 'Jean Genet' instead of 'Genet', or 'U2 tribute band' instead of 'U2'). As the current skill is an empty placeholder below the consolidation floor, the size increase is permissible, and the new rules provide actionable guidance likely to reduce these specific error modes.",
+  "judge_parse_failed": false,
+  "judge_calls": 1,
+  "judge_error": "",
+  "judge_response_chars": 911,
+  "judge_usage": {
+    "prompt_tokens": 6653,
+    "completion_tokens": 3171,
+    "total_tokens": 9824
+  },
+  "judge_evidence_cards": 24,
+  "judge_evidence_total": 40,
+  "judge_defect_mechanism": "Over-extraction and imprecise answer formatting (adding descriptors/titles or misinterpreting short clues as open-ended queries)",
+  "judge_evidence_count": 5,
+  "judge_counter_evidence_count": 0,
+  "judge_expected_window_delta": "improve",
+  "judge_falsifier": "If the strict minimal output and exact match rules cause the agent to incorrectly truncate or reject valid multi-word gold answers or contextually necessary descriptors in future tasks.",
+  "judge_rule_override": "v2: confidence=medium below required 'high'",
+  "judge_accepted": false,
+  "rollout_hard_after": 0.825,
+  "candidate_gate_score": 0.745,
+  "action": "reject",
+  "current_score": 0.745,
+  "best_score": 0.745,
+  "best_step": 0,
+  "current_origin": "initial_skill",
+  "best_origin": "initial_skill",
+  "skill_len": 104,
+  "wall_time_s": 115.5
+}

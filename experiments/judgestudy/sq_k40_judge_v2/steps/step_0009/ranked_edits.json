@@ -1,0 +1,42 @@
+{
+  "reasoning": "Applied failure-driven patches with highest priority per guidelines. Replaced 'Exact Term Preference' with the comprehensive failure-driven 'Exact Term & Variant Alignment' rule. Added success-driven 'Acronym & Abbreviation Expansion' and 'Shared Attribute Inference' immediately following it. Retained failure-driven 'Clue & Fragment Parsing' and success-driven 'Primary Subject Isolation' as sequential inserts after 'Reference Resolution'. Applied success-driven 'Definitive Filter Bridging' after 'Keyword & Clue Anchoring'. Replaced 'Trivia/Fragment Handling' with success-driven 'Jeopardy & Cloze Subject Mapping' as it addresses a distinct cloze/predicate-mapping pattern not overridden by failure edits. Updated workflow step 3 with success-driven brevity instruction. All edits preserve support counts and source types. Overlapping patterns were resolved by prioritizing failure versions where direct conflicts occurred, while preserving distinct success insights. [optimizer-ranked: selected 4/7 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+      "content": "- **Exact Term & Variant Alignment**: When multiple variants of an entity exist in the context (e.g., full vs. short names, formal vs. nicknames, expanded vs. abbreviated), strictly default to the shortest, most direct identifier that matches the question's implied length. For company, organization, or location names, strip generic descriptive suffixes (e.g., 'Cards', 'Inc.', 'Company', 'Group', 'Foundation', 'Mountains', 'of Venus') unless explicitly required by the question or integral to the official short name. Strip non-essential middle names, initials, and geographic/event suffixes. Prefer the most commonly used or context-primary variant over obscure alternatives.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "\n- **Primary Subject Isolation**: When contexts mention multiple related entities or tangential examples, isolate the single entity that directly satisfies the question's core descriptor. Discard loosely matching items, historical anecdotes, or secondary mentions to prevent over-specification.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "insert_after",
+      "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the answer.",
+      "content": "\n- **Clue & Fragment Parsing**: For Jeopardy-style clues, name pairs, or declarative statements, isolate the single core entity, location, or concept being queried. Do not infer relationships, repeat parts of the question, or output descriptive phrases. Anchor strictly to the definitive factual noun or proper name.",
+      "support_count": 8,
+      "source_type": "failure"
+    },
+    {
+      "op": "replace",
+      "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+      "content": "3. Perform a rapid, single-sentence verification linking the question's core descriptor to the extracted entity, confirming exact textual alignment and grammatical slot satisfaction. Skip extended analysis for straightforward matches to maintain speed.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [0] ranks highest due to its highly actionable, systematic rules for resolving pervasive entity variant and length mismatches, directly boosting answer precision. Edit [3] targets the frequent failure mode of multi-entity confusion by enforcing primary subject isolation, preventing over-specification. Edit [2] provides clear, general principles for fragment and Jeopardy-style queries, ensuring direct entity anchoring and blocking descriptive fluff. Edit [6] optimizes the reasoning step by mandating concise, single-sentence verification, which aligns with the strict conciseness goal and improves processing speed. Together, they cover extraction accuracy, entity disambiguation, query-type robustness, and workflow efficiency with minimal overlap.",
+    "selected_indices": [
+      0,
+      3,
+      2,
+      6
+    ]
+  }
+}

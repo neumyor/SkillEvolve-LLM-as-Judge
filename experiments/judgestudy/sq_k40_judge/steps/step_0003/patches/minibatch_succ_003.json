@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Declarative Clue Parsing",
+    "Cross-Document Constraint Matching",
+    "Answer-Type Priming"
+  ],
+  "patch": {
+    "reasoning": "The batch consistently handles declarative Jeopardy-style clues, navigates noisy multi-document contexts using unique constraint matching, and primes answer categories via early syntactic cues. Encoding these patterns will improve retrieval precision, reduce false positives from loosely related terms, and standardize how the agent processes non-interrogative prompts.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "Implicit Reference Resolution",
+        "content": "\n- **Declarative Clue Parsing**: Treat declarative statements, descriptive fragments, and incomplete prompts identically to interrogative questions. Identify the grammatical slot or subject being described and treat it as a direct request for the missing entity."
+      },
+      {
+        "op": "replace",
+        "target": "- **Constraint-Driven Verification**: Prioritize exact matches for numerical, temporal, or proper-noun constraints embedded in the clue. Discard candidates that satisfy the general topic but fail specific quantitative or categorical filters.",
+        "content": "- **Constraint-Driven Verification**: Prioritize exact matches for numerical, temporal, or proper-noun constraints embedded in the clue. Use these unique identifiers to cross-reference multiple documents or snippets, discarding candidates that satisfy the general topic but fail specific quantitative or categorical filters."
+      },
+      {
+        "op": "replace",
+        "target": "- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.",
+        "content": "- **Clue Syntax Mapping & Type Priming**: Use early structural cues (e.g., \"this substance\", \"author of\", \"named for\") to pre-constrain the expected answer category (person, place, object, concept). Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt."
+      }
+    ]
+  },
+  "source_type": "success"
+}

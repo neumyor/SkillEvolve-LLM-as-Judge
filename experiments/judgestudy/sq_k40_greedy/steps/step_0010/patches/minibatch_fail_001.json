@@ -1,0 +1,20 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Over-specification of full names (First Last) when the gold standard or context expects only the surname/core identifier."
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent correctly identified the target entity but incorrectly expanded it to a full name ('Wesley Clark') instead of the expected surname ('Clark'). This reflects a recurring pattern of over-specification in trivia contexts where surname-only answers are standard. The added rule explicitly enforces surname preference for persons to align with gold standards and minimize unnecessary name components.",
+    "edits": [
+      {
+        "op": "append",
+        "content": "- **Surname-Only Preference for Persons**: In trivia and Jeopardy-style contexts, default to returning only the surname for persons (e.g., 'Clark' not 'Wesley Clark'). Only include first/middle names if explicitly requested by the question or required to resolve ambiguity among multiple candidates with the same surname."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

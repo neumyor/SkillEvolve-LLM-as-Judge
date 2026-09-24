@@ -1,0 +1,41 @@
+{
+  "reasoning": "Failure-driven patches were prioritized per guidelines. The 'Systematic exploration' and 'Avoid loops' principles were replaced with failure versions to enforce strict visited-location tracking, category pivoting, and forced jumps to break cycles. Two failure-driven appends ('Appliance & Inventory verification' and 'Pre-placement state check') were added to address post-transformation state loss and premature placement. Success-driven patches were preserved for semantic search guidance, direct navigation, admissible action reliance, inventory management, and common mistake warnings. Overlapping points regarding inventory/state verification were deduplicated by retaining the more explicit failure-driven edits and adjusting the success-driven 'Track progress' rule to focus solely on objective counting. [optimizer-ranked: selected 4/10 edits]",
+  "edits": [
+    {
+      "op": "append",
+      "content": "**Appliance & Inventory verification**: After any transformation (heating, cooling, cleaning) or appliance interaction, always check your inventory (`inventory`) to confirm what you are holding. Objects often remain inside appliances; retrieve them before navigating elsewhere.",
+      "support_count": 7,
+      "source_type": "failure"
+    },
+    {
+      "op": "insert_after",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+      "content": "\n9. **Manage inventory constraints**: You can typically hold only one object at a time. For multi-object tasks, place the first item at the destination before retrieving the second. If a 'take' action returns 'Nothing happens', your inventory is full; place the held item first.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "5. **Direct delivery**: Once holding the transformed (or untransformed) goal object, navigate straight to the target receptacle and place it.",
+      "content": "**Direct delivery**: Navigate to the target receptacle. If the receptacle is a closed storage container, open it first. Then place the object inside/on it. Never attempt to place items into closed containers.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+      "content": "8. **Rely on admissible actions**: Treat the admissible action list as the ground truth for object names, locations, and current state. Check if `take <object>` is available; if missing, you may already be holding it or your hands are full. Use this signal to adjust your strategy rather than assuming the object is elsewhere.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [2] addresses the most pervasive failure mode in embodied navigation: forgetting to retrieve objects from appliances after transformations. Edit [8] solves a critical bottleneck for multi-step tasks by explicitly managing single-slot inventory constraints and interpreting 'Nothing happens' feedback. Edit [5] prevents invalid placement attempts by mandating receptacle opening, saving significant steps. Edit [7] upgrades the admissible action list from a passive constraint to an active state-inference tool, helping the agent diagnose why actions fail. Together, they cover appliance handling, inventory management, placement logic, and environmental grounding—filling key gaps with high systematic impact and clear actionability.",
+    "selected_indices": [
+      2,
+      8,
+      5,
+      7
+    ]
+  }
+}

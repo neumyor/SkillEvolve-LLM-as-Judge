@@ -1,0 +1,13 @@
+dataset:
+  # Shared split manifests kept with the SkillOpt package.
+  manifest_dir: "../../skillopt/data/searchqa_id_split"
+  # Materialized runnable splits land here (test/items.json)
+  split_dir: "data/searchqa_split"
+  hf_dataset: "lucadiliello/searchqa"
+
+rollout:
+  max_context_chars: 6000   # SkillOpt rollout.py _MAX_CONTEXT_CHARS
+  max_completion_tokens: 16384
+  max_turns: 1              # single-turn QA
+  workers: 24               # SkillOpt configs/searchqa/default.yaml
+  exec_timeout: 120

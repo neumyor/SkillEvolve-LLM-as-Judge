@@ -1,0 +1,23 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Contextual Noise Filtering: Agents successfully ignore platform artifacts, dates, URLs, and metadata in search snippets/wiki pages, focusing solely on semantic entity mentions.",
+    "Verifiable Grounding via Exact Span Quoting: Agents consistently quote or directly reference the exact context span that satisfies the clue, explicitly linking question descriptors to verified evidence to prevent external knowledge drift."
+  ],
+  "patch": {
+    "reasoning": "The batch demonstrates consistent success in parsing noisy, metadata-heavy search results while strictly grounding answers in the provided text. Previous failures involved external knowledge application and overly descriptive outputs. These edits reinforce noise filtering during context navigation and mandate exact-span quoting in reasoning to ensure verifiable, context-bound answers.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Leverage Structural Tags**: Use `[DOC]`, `[TLE]`, and `[PAR]` markers to segment and scan the context efficiently.",
+        "content": "\n- **Filter Contextual Noise & Metadata**: Actively ignore boilerplate, dates, URLs, platform labels (e.g., \"Wikipedia\", \"IMDb\", \"Privacy Policy\"), and navigational text in `[TLE]` and `[PAR]` blocks. Focus scanning exclusively on semantic sentences containing named entities and factual claims."
+      },
+      {
+        "op": "replace",
+        "target": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly state how the found evidence satisfies each constraint from the question (e.g., 'The text confirms X is Y, matching the clue about Z'). This forces alignment between the query's requirements and the extracted span.",
+        "content": "- **Explicit Constraint Mapping**: In the reasoning step, explicitly quote or reference the exact context span that satisfies each constraint from the question. Directly link the question's descriptors to the verified evidence (e.g., 'The text states \"[exact span]\", confirming X matches the clue about Z'). This forces verifiable grounding and strictly prevents reliance on external knowledge."
+      }
+    ]
+  },
+  "source_type": "success"
+}

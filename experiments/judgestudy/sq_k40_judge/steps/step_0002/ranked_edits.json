@@ -1,0 +1,42 @@
+{
+  "reasoning": "Failure-driven patches are prioritized per guidelines. Corrective rules for proper name formatting, category-vs-instance distinction, and exact grammatical alignment are preserved as primary directives. Success-driven patches addressing noisy context scanning, constraint-driven verification, comprehensive slot-filling/clue syntax mapping, and enhanced conciseness are retained as they cover distinct, well-supported patterns. Where overlap exists (e.g., modifier stripping vs. name preservation), the failure-driven version takes precedence. All edits retain their original support counts and source types. [optimizer-ranked: selected 4/7 edits]",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- Many questions are incomplete clues or trivia statements. Identify the missing subject, object, or keyword rather than summarizing the context.",
+      "content": "- **Slot-Filling Strategy**: Treat Jeopardy-style and incomplete prompts as direct fill-in-the-blank requests. Identify the grammatical slot (subject, object, location) being queried and extract the exact term that fills it.\n- **Clue Syntax Mapping**: Use structural cues like \"this film\", \"it's the cry of\", or \"named for\" to determine the expected answer type. Isolate the specific query target when multiple entities or conditions are present; do not return any entity merely mentioned in the prompt.\n- **Canonical Phrasing & Modifier Stripping**: Preserve definite articles or standard modifiers only if they constitute the canonical trivia answer (e.g., \"the atmosphere\", \"South Park\"). Otherwise, strip non-essential adjectives, full biographical names, or contextual descriptors.\n- **Noise Filtering**: In search-result-style or repetitive contexts, rapidly scan titles and snippets for exact keyword matches, then verify in the passage body before extracting. Ignore duplicated passages.\n- **No Syntactic Mirroring**: Never repeat the prompt's phrasing, complete the sentence grammatically, or append contextual modifiers to the answer. Output only the isolated entity requested.\n- **Gold Alignment**: Match the granularity and phrasing of the expected answer exactly. If the gold answer is a single word or short phrase, do not expand it into a full sentence or add explanatory clauses inside the answer tags.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Verification**: Cross-reference candidate answers against explicit mentions and question constraints (dates, names, descriptors) before finalizing.",
+      "content": "- **Constraint-Driven Verification**: Prioritize exact matches for numerical, temporal, or proper-noun constraints embedded in the clue. Discard candidates that satisfy the general topic but fail specific quantitative or categorical filters.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler.",
+      "content": "- **Conciseness & Minimal Entities**: Prioritize exact, minimal entity extraction. The content inside tags must be the exact entity or a very short phrase. Preserve standard capitalization, omit leading articles unless integral, and avoid full sentences, explanations, or conversational filler. Never repeat the question's phrasing or append contextual modifiers to the answer.",
+      "support_count": 8,
+      "source_type": "success"
+    },
+    {
+      "op": "replace",
+      "target": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches or defining phrases. When multiple passages restate the same fact, quickly identify the clearest, most direct mention and treat it as ground truth. Ignore tangential details.",
+      "content": "- **Direct Extraction & Context Scanning**: Systematically scan `[DOC]`, `[TLE]`, and `[PAR]` blocks for exact keyword matches. In noisy or repetitive contexts (e.g., scraped lists, flashcard dumps), ignore duplicated passages and isolate the single mention that directly defines or completes the query.",
+      "support_count": 8,
+      "source_type": "success"
+    }
+  ],
+  "ranking_details": {
+    "reasoning": "Edit [5] offers the highest systematic impact by transforming a single vague bullet into a structured, multi-rule framework for clue parsing, slot-filling, syntax mapping, and anti-mirroring, directly addressing pervasive failures in trivia and incomplete prompts. Edit [4] upgrades verification to a constraint-driven approach, systematically preventing common 'topic-match but constraint-fail' errors. Edit [6] reinforces output formatting by explicitly banning prompt phrasing repetition and unnecessary modifier appending, a frequent LLM formatting flaw. Edit [3] tackles noisy/repetitive context parsing, a core RAG vulnerability, ensuring accurate extraction before verification. These four edits collectively strengthen the pipeline across clue interpretation, constraint checking, context scanning, and final formatting with high actionability and generality.",
+    "selected_indices": [
+      5,
+      4,
+      6,
+      3
+    ]
+  }
+}

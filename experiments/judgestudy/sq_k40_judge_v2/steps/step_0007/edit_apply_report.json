@@ -1,0 +1,30 @@
+[
+  {
+    "op": "replace",
+    "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand",
+    "content_preview": "- **Exact Term & Grammatical Fidelity**: Extract the exact term matching the question's grammatical slot. Strictly preserve singular/plural forms, parts of speech, and capitalization. Drop generic geo",
+    "status": "applied_replace",
+    "index": 1
+  },
+  {
+    "op": "replace",
+    "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or g",
+    "content_preview": "- **Jeopardy, Cloze & Definition Mapping**: Treat fragmentary, Jeopardy-style, declarative clues, definitions, slogans, and trailing blanks as direct fill-in-the-blank requests. Isolate the core subje",
+    "status": "applied_replace",
+    "index": 2
+  },
+  {
+    "op": "insert_after",
+    "target": "- **Reference Resolution**: When questions contain demonstratives or possessives (e.g., \"this country\", \"its\"), explicitly identify the exact entity they refer to in the context before formulating the",
+    "content_preview": "- **Slot & Role Alignment**: Identify the exact semantic role requested by the question (e.g., person, location, concept). Do not default to adjacent nouns or descriptive phrases mentioned in the clue",
+    "status": "applied_insert_after",
+    "index": 3
+  },
+  {
+    "op": "replace",
+    "target": "3. Provide a brief step-by-step reasoning trace to justify the selection and verify against context.",
+    "content_preview": "3. Provide a concise verification trace that explicitly quotes the exact sentence or phrase from the context confirming the answer. Directly link the question's core descriptor to this textual evidenc",
+    "status": "applied_replace",
+    "index": 4
+  }
+]

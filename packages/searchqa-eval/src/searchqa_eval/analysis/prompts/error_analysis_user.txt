@@ -1,0 +1,46 @@
+Here is the target agent's task execution log (raw text). The question and the retrieved context are included in the "## Task" section:
+
+<agent_log>
+{agent_log}
+</agent_log>
+
+Please conduct the error analysis in your working directory: `{working_dir}`.
+
+You can find all relevant files there, including:
+- `agent_work/` — the target agent's working directory, containing:
+    - `input.json` — the question and the retrieved context the agent saw
+    - `output.json` — the agent's answer (and its raw response, when recorded)
+    - `gold.json` — the ground-truth answers
+
+Write your `output_fixed.json` into the `agent_work/` subdirectory, in the same
+format as `output.json`:
+
+    {{"id": "<id>", "answer": "<corrected answer>"}}
+
+## How to use the evaluation tool
+
+{evaluate_usage}
+
+The report shows:
+- Overall PASS or FAIL with a summary line.
+- EM / F1 / sub-EM scores.
+- The candidate answer raw and after the scorer's normalization.
+- Each gold answer with a `[==]` / `[!=]` match marker.
+
+STRICTLY follow the system prompt required workflow!
+1. **Understand the task and failure surface**
+    - Understand the question and what the retrieved context supports.
+    - Identify exactly *what is wrong* with the answer: wrong entity, right entity with extra or missing words, wrong granularity, an unextractable response, or an unsupported answer.
+    - Use the `evaluate_output` tool and small inspection scripts where useful.
+
+2. **Trace the failure to agent behavior**
+   - Read the agent log and locate the reasoning step that produced the wrong answer.
+   - Identify the concrete failure mechanism (e.g., fixated on a distractor passage, answered a different question, omitted the `<answer>` tags, hedged instead of committing, copied a clause instead of the answer span).
+
+3. **Validate the root cause with a minimal fix**
+   - Write the smallest corrected answer consistent with your diagnosis.
+   - Write it as `output_fixed.json` in `agent_work/`.
+
+4. **Re-evaluate**
+   - Score `output_fixed.json` against `gold.json` using the `evaluate_output` tool.
+   - If it still fails, **return to steps 1–3** and revise your diagnosis.

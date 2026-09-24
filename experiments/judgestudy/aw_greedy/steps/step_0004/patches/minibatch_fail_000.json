@@ -1,0 +1,51 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "rule_ignored",
+      "count": 3,
+      "description": "Agents repeatedly examine objects post-transformation to verify state, triggering infinite loops despite skill guidelines to trust outcomes."
+    },
+    {
+      "failure_type": "navigation_loop",
+      "count": 3,
+      "description": "Agents cycle through known empty containers/surfaces without marking them as searched or pivoting to admissible action hints."
+    },
+    {
+      "failure_type": "premature_stop",
+      "count": 2,
+      "description": "Agents misinterpret neutral terminal responses as failure, causing them to restart workflows after successful placements."
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 1,
+      "description": "Agents discard functionally equivalent items (synonyms) prematurely, forcing unnecessary blind searches."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch exhibits four systematic failures: (1) over-verification of transformed states causing action loops, (2) rigid cycling through empty locations ignoring exhaustion rules, (3) misunderstanding success termination leading to redundant restarts, and (4) premature rejection of object synonyms. These edits strengthen state-trust protocols, enforce dynamic location exhaustion, clarify termination signals, and optimize synonym acceptance to break recurring failure modes.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "6. **Trust Transformation & Proceed**: After a successful `heat`, `cool`, or `clean` action, trust the outcome immediately. Do not use `examine` or `inventory` to re-verify the object's state, as this often triggers infinite loops. Proceed directly to the next sub-goal (usually delivery) without delay.",
+        "content": "6. **Strict State Trust Post-Transformation**: After `heat`, `cool`, or `clean`, the object's state changes instantly. Do NOT use `examine` or `inventory` to verify temperature/cleanliness. Observations frequently return generic labels (e.g., \"normal cup\") regardless of actual state. Blindly trusting the action success prevents infinite verification loops. Proceed directly to delivery."
+      },
+      {
+        "op": "replace",
+        "target": "- **Location Exhaustion Rule**: If you visit a container or surface twice and find it empty, mark it as permanently searched. Immediately navigate to a completely different, unvisited location or room. Never repeat the same search pattern more than once.",
+        "content": "- **Dynamic Location Exhaustion**: Mark any container or surface as permanently searched after checking it once. If you visit three consecutive locations and find them empty, or if admissible actions suggest a target location (`take [obj] from [loc]`), immediately pivot to that location. Never cycle through previously checked empty spots; prioritize unvisited zones or follow environmental probes."
+      },
+      {
+        "op": "replace",
+        "target": "- **Success Termination Protocol**: Once the final placement action succeeds (observation confirms movement to target), the task is complete. Cease all further actions. Do not perform `look`, `inventory`, or `examine` after successful completion unless the goal explicitly requires tracking multiple distinct items.",
+        "content": "- **Success Termination Protocol**: Once the final placement action succeeds (observation confirms movement to target), the task is complete. Cease all further actions. Do not attempt `stop` or `done()` repeatedly if the environment does not immediately exit; the successful observation text is sufficient confirmation. Avoid restarting the workflow based on neutral terminal responses."
+      },
+      {
+        "op": "replace",
+        "target": "- **Object Synonymy**: If the exact goal object is missing after thorough searching, accept functionally equivalent items commonly used in the environment (e.g., treat `pot` as `pan`, `cup` as `mug`, `bowl` as `plate`) to prevent infinite search loops.",
+        "content": "- **Object Synonymy Application**: If the exact goal object is missing after checking 2-3 high-probability locations, immediately accept functionally equivalent items (e.g., `pot` as `pan`, `cup` as `mug`, `bowl` as `plate`). Do not discard synonyms to continue blind searching unless a perfect match is found elsewhere. Acquiring a synonym saves critical steps and prevents navigation loops."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

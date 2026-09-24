@@ -1,0 +1,21 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 8,
+      "description": "Model consistently over-specifies answers by extracting longer, compound, or formally named spans from the context, failing to strip non-essential modifiers, adjust plurality/articles, or select single terms over lists."
+    }
+  ],
+  "patch": {
+    "reasoning": "The current 'Strict Verbatim Extraction' rule forces preservation of all modifiers and exact context phrasing, directly causing over-specification failures when clues target base nouns or simpler references. Replacing this rule with guidance to prioritize clue-matching granularity, strip non-essential modifiers, and normalize articles/plurality resolves the batch's systematic extraction issues.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Strict Verbatim Extraction**: Extract the answer exactly as it appears in the context, preserving original capitalization, punctuation, and phrasing. Do not alter plurality, strip necessary modifiers, or adapt the term to fit the question's grammar. Prioritize the exact context span over stylistic normalization.",
+        "content": "- **Granularity-First Extraction**: Prioritize the exact phrase length and structure implied by the clue. Strip non-essential geographic, proper-noun, or descriptive modifiers when the clue targets a base category (e.g., output 'eagle' not 'White Eagle', 'falcon' not 'Maltese Falcon'). Normalize articles and plurality to match the question's syntax (e.g., 'Fungi' not 'Fungus', 'a balloon' not 'Speech balloon'). Select the single most direct term; avoid listing multiple synonyms or alternatives found in the text. Only retain modifiers if strictly required to satisfy the clue's constraints."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

@@ -1,0 +1,45 @@
+{
+  "batch_size": 8,
+  "failure_summary": [
+    {
+      "failure_type": "navigation_loop",
+      "count": 7,
+      "description": "Agents cycle repeatedly through the same furniture category (shelves, drawers, cabinets) without expanding search to other valid locations."
+    },
+    {
+      "failure_type": "missed_object",
+      "count": 5,
+      "description": "Agents overlook visible target objects on surfaces or confuse semantically similar items (e.g., pot vs pan)."
+    },
+    {
+      "failure_type": "action_loop",
+      "count": 3,
+      "description": "Agents enter repetitive take-cool-place-retrieve cycles due to incorrect sequencing or lack of state verification."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch shows severe navigation loops where agents fixate on one furniture category and ignore others. They also frequently miss visible targets or confuse similar objects, leading to wasted steps. The skill needs stricter traversal rules, explicit loop-breaking protocols using inventory checks, and clearer guidance on object identity and immediate pickup.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "2. **Systematic exploration**: Search each surface and container exactly once before revisiting. Open closed containers (drawers, cabinets, fridge) before judging them empty.",
+        "content": "2. **Systematic exploration**: Categorize locations into Containers (drawers, cabinets, fridge) and Surfaces (countertops, tables, shelves, dressers). Check every Container and Surface in the room exactly once before any revisit. Always open closed containers before judging them empty."
+      },
+      {
+        "op": "append",
+        "content": "\n## Loop Recovery Protocol\nWhen systematic searching yields no results or you detect a loop:\n1. **Check Inventory**: Run `inventory` to confirm what you are holding. If holding the goal object, go directly to the destination.\n2. **Switch Category**: If you have exhausted Containers, pivot entirely to Surfaces (and vice versa).\n3. **Verify Admissible Actions**: Only choose actions explicitly listed. Do not assume object names; match exact strings (e.g., 'pan' vs 'pot').\n4. **Break Cycles**: If you return to a previously checked location, force a move to an unvisited location immediately."
+      },
+      {
+        "op": "replace",
+        "target": "3. **Grab immediately**: When a required object is visible and reachable, take it right away before moving elsewhere.",
+        "content": "3. **Grab immediately**: When the exact goal object (or its closest valid match) is visible and reachable, take it immediately. Do not skip visible items to search elsewhere. Verify object names carefully against the task description to avoid picking up distractors."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Action loops**: Repeatedly toggling or examining the same object wastes steps. Move on to new locations instead.",
+        "content": "- **Fixating on one furniture type**: Cycling through only drawers or only shelves ignores other high-probability locations. Alternate between containers and surfaces.\n- **Object identity confusion**: Picking up a 'pot' when asked for a 'pan' (or vice versa) wastes steps. Always verify the exact object name in observations and admissible actions before interacting."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

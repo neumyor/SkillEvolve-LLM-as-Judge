@@ -1,0 +1,24 @@
+{
+  "batch_size": 5,
+  "success_patterns": [
+    "Direct Cloze/Jeopardy Mapping: Treating descriptive fragments and clue-like questions as direct fill-in-the-blank requests that point to a single target entity.",
+    "Contextual Gap Bridging: Leveraging precise internal knowledge when context identifiers are strong but the explicit answer is absent, while strictly maintaining entity-level conciseness.",
+    "Zero-Friction Extraction: Bypassing intermediate categorization or relationship descriptions to output only the exact noun/entity requested."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently treat trivia and cloze-style questions as direct pointers to a single entity, bypassing intermediate categorization. They also seamlessly bridge contextual gaps using targeted internal knowledge without losing conciseness. These patterns reinforce existing rules but add critical guidance for sparse contexts and direct mapping strategies that prevent over-specification.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Trivia/Fragment Handling**: Treat incomplete sentences or clue-like questions as direct requests for a missing keyword. Identify the target entity immediately without describing relationships or generating categories.",
+        "content": "\n- **Direct Cloze Mapping**: Treat descriptive fragments, Jeopardy clues, and declarative prompts as direct fill-in-the-blank requests. Map the descriptor straight to the target noun/entity without generating categories, explanations, or relational phrases."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Exact Term Preference**: Prioritize the exact term found in the context over synonyms, acronyms, or full names. If the context uses \"C\", answer \"C\". If it uses \"Genet\", answer \"Genet\". Only expand if explicitly asked.",
+        "content": "\n- **Contextual Gap Bridging**: If the context provides strong identifiers but lacks the explicit answer, leverage precise internal knowledge to retrieve the exact entity. Maintain strict conciseness and do not hallucinate details; anchor only to the verified entity name."
+      }
+    ]
+  },
+  "source_type": "success"
+}

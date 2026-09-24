@@ -1,0 +1,25 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Explicitly open appliance doors (microwave, fridge, sink) before heating, cooling, cleaning, or placing items.",
+    "Verify object state (temperature/cleanliness) matches goal conditions before final placement; re-process if mismatched.",
+    "Clear inventory by placing the first object before searching for subsequent objects in multi-item tasks.",
+    "Use the inventory command to verify held items and progress when navigation or search becomes ambiguous."
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently demonstrate the necessity of managing appliance door states (opening before interaction), verifying transformation outcomes (e.g., ensuring 'hot' vs 'cold' matches the goal), and clearing inventory capacity when handling multiple objects. Additionally, agents occasionally use the inventory command to resolve ambiguity. These patterns prevent deadlocks and state mismatches, which are common failure modes in ALFWorld.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "4. **Transform before placing**: If the task requires cleaning, heating, or cooling, perform the state change at the appropriate appliance before heading to the final destination.",
+        "content": "4. **Manage appliance states**: Always open closed appliances (microwave, fridge, sink) before attempting to heat, cool, clean, or place items. Ensure doors are open for placement interactions.\n5. **Verify transformation state**: Before final placement, confirm the object's state matches the goal (e.g., 'hot', 'cold', 'clean'). If the state is incorrect, return to the appliance to re-process rather than placing a mismatched item.\n6. **Clear inventory for multi-object tasks**: When handling multiple items, place the first acquired object at the destination to free your inventory before searching for and acquiring the remaining items."
+      },
+      {
+        "op": "insert_after",
+        "target": "8. **Only choose admissible actions**: Always pick an action from the admissible action list. Do not invent actions.",
+        "content": "\n9. **Check inventory when stuck**: If unsure about held items or progress, use the `inventory` command to verify carried objects and adjust your search strategy accordingly."
+      }
+    ]
+  },
+  "source_type": "success"
+}

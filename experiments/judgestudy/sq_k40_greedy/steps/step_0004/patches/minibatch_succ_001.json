@@ -1,0 +1,29 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Title-first search strategy for structured contexts",
+    "Fuzzy matching for minor query typos/variants",
+    "Broadening target extraction to include common nouns, roles, and categories alongside proper nouns"
+  ],
+  "patch": {
+    "reasoning": "Successful trajectories consistently leverage document titles ([TLE]) as primary anchors for rapid answer location, apply fuzzy matching to overcome minor query typos (e.g., 'steaing'), and correctly extract non-proper-noun targets (e.g., 'Center', 'Violet', 'Baby Boomers') when the clue specifies a role, category, or common noun. These patterns enhance robustness against noisy queries and structured metadata.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "Trivia questions are often copied verbatim or near-verbatim from context sentences, titles, or flashcards. Prioritize scanning for exact or near-exact string matches in document titles and snippets before attempting semantic reasoning or keyword stripping.",
+        "content": "Trivia questions are often lifted verbatim or near-verbatim from context titles, headings, or flashcards. Treat document titles (`[TLE]`) as high-priority lookup targets; if the question matches a title or its immediate context, the title itself often contains or directly points to the answer."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Direct Keyword Matching & Scanning**: Strip quotes, punctuation, filler words (e.g., \"&\", \"who\"), and ellipses from the question to extract core anchor phrases. Prioritize scanning document titles and snippets for exact matches on these anchors, then verify with paragraph content before reading deeply.",
+        "content": "\n- **Typo & Variant Tolerance**: Queries may contain minor misspellings, OCR errors, or phonetic variants (e.g., \"steaing\" for \"stealing\"). Apply fuzzy matching or semantic equivalence when scanning for anchor phrases, prioritizing conceptual matches over strict string equality."
+      },
+      {
+        "op": "replace",
+        "target": "Do not respond with \"True\"/\"False\", nor with a generic category or descriptive phrase. Instead, extract the exact proper noun or term that fits the blank or completes the thought.",
+        "content": "Do not respond with \"True\"/\"False\", nor with vague descriptions. Instead, extract the exact term—whether a proper noun, common noun, role, or specific category—that precisely fits the blank or completes the thought."
+      }
+    ]
+  },
+  "source_type": "success"
+}

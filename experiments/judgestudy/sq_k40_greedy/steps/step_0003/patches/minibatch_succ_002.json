@@ -1,0 +1,28 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Jeopardy-style clue parsing with demonstrative pointers ('this/these')",
+    "Balanced answer precision preserving standard full names",
+    "Paraphrase and synonym mapping for descriptive clues"
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories are Jeopardy-style trivia or descriptive statements. Agents consistently succeed by resolving demonstrative pointers ('this nation', 'this way'), mapping paraphrased descriptions to canonical terms, and avoiding overly aggressive name-stripping that previously caused mismatches. Encoding these behaviors will solidify robust clue interpretation and prevent regression on formatting/precision rules.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "## Answer Precision and Conciseness\nAnswers must be stripped to their core identifier.\n- Omit articles, descriptors, and explanatory phrases (e.g., output \"Genet\" not \"Jean Genet\", \"C\" not \"Vitamin C\", \"U2\" not \"A U2 tribute band\").\n- If the context uses a surname, nickname, or single letter, prefer that form.\n- Do not add titles, roles, or units unless they are part of the official name.",
+        "content": "## Answer Precision and Conciseness\n- Strip filler words, articles, and non-essential descriptors, but **preserve the standard full name or commonly accepted form** if stripping it risks mismatching the gold answer.\n- Prefer the exact term as it appears in the context or is conventionally known (e.g., keep \"Johnny Cash\" rather than just \"Cash\"; keep \"Alice Walker\" rather than \"Walker\").\n- Do not add titles, roles, or units unless they are integral to the official name.\n- Keep the final answer strictly to the core identifier inside `<answer>...</answer>` tags."
+      },
+      {
+        "op": "insert_after",
+        "target": "Extract the exact entity being pointed to.",
+        "content": "\n- **\"This/These\" Pointers**: Jeopardy-style clues frequently use demonstratives like \"this nation,\" \"this crime,\" or \"this way.\" Treat these as direct placeholders for the target category. Map them immediately to the specific entity satisfying all other constraints in the clue."
+      },
+      {
+        "op": "append",
+        "content": "- **Paraphrase & Synonym Mapping**: Clues rarely quote the answer verbatim. Instead, they describe attributes, roles, or associations. Match descriptive phrases (e.g., \"subject of an 1872 satire,\" \"play country music this way\") to their canonical terms using contextual anchors and domain knowledge."
+      }
+    ]
+  },
+  "source_type": "success"
+}
