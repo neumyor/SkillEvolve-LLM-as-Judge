@@ -1,6 +1,7 @@
 import json
 import sys
 from pathlib import Path
+import pytest
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
@@ -42,3 +43,30 @@ def test_pending_tasks_reports_failure_and_missing_result(tmp_path):
     pending=supervisor.pending_tasks(out)
     assert [(row['case_id'],row['failure_class']) for row in pending]==[
         ('bad','provider_http_error'),('missing','missing_result')]
+
+
+def test_full_run_rejects_preflight_from_another_endpoint(tmp_path, monkeypatch):
+    preflight = tmp_path / 'preflight'
+    preflight.mkdir()
+    names = [f'{benchmark}_{mode}' for benchmark in ('searchqa', 'alfworld')
+             for mode in ('baseline', 'judge')]
+    (preflight / 'verification.json').write_text(json.dumps({
+        name: {'status': 'passed'} for name in names}))
+    (preflight / 'plan.json').write_text(json.dumps({'max_requests_per_minute': 24}))
+    monkeypatch.setattr(supervisor, 'audit_run', lambda _path: [])
+    monkeypatch.setattr(supervisor, 'load_local_config', lambda: {
+        'searchqa-eval': {'base_url': 'https://current.example/v1'},
+        'alfworld-eval': {'base_url': 'https://current.example/v1'},
+    })
+    for name in names:
+        run = preflight / name
+        run.mkdir()
+        (run / 'implementation.json').write_text('{}')
+        (run / 'study_manifest.json').write_text(json.dumps({
+            'model': 'qwen3.6-flash-distill', 'judge_model': 'qwen3.6-flash-distill',
+            'judge_prompt_variant': 'v3', 'base_url': 'https://previous.example/v1',
+        }))
+    monkeypatch.setattr(sys, 'argv', ['run_rethinkskill_full.py', '--root',
+        str(tmp_path / 'full'), '--preflight', str(preflight)])
+    with pytest.raises(ValueError, match='Preflight endpoint differs'):
+        supervisor.main()

@@ -96,6 +96,7 @@ def main():
     expected={f'{b}_{m}' for b in ('searchqa','alfworld') for m in ('baseline','judge')}
     if set(verification)!=expected or any(v['status']!='passed' for v in verification.values()):
         raise ValueError('Four real paired smoke settings must pass before launch')
+    config=load_local_config()
     implementation=json.loads((pre/'searchqa_baseline/implementation.json').read_text())
     for name in expected:
         if audit_run(pre/name) or json.loads((pre/name/'implementation.json').read_text())!=implementation:
@@ -103,6 +104,10 @@ def main():
         manifest=json.loads((pre/name/'study_manifest.json').read_text())
         if manifest['model'] != args.model or manifest['judge_model'] != args.model or manifest['judge_prompt_variant'] != 'v3':
             raise ValueError('Preflight must use the campaign model and Judge prompt version')
+        benchmark=name.split('_',1)[0]
+        section=config.get(f'{benchmark}-eval',config.get('default',{}))
+        if manifest['base_url'] != section.get('base_url'):
+            raise ValueError('Preflight endpoint differs from current local configuration')
     for name,digest in implementation.items():
         if hashlib.sha256((ROOT/'packages'/name).read_bytes()).hexdigest()!=digest:
             raise ValueError('Implementation changed after real smoke')
@@ -122,7 +127,6 @@ def main():
     root.mkdir(parents=True,exist_ok=True)
     lock=(root/'supervisor.lock').open('a')
     fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-    config=load_local_config()
     jobs=[];inputs={}
     for bench in ('searchqa','alfworld'):
         section=config.get(f'{bench}-eval',config.get('default',{}))
